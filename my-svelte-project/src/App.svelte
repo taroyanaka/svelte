@@ -7,11 +7,13 @@ mounted
 async/await
 -->
 <script>
-let hello_fetch_data = "";
+let hello_fetch_data = [];
 const fetch_hello = async () => {
-	const response = await fetch("http://localhost:8000/");
+	// const response = await fetch("http://localhost:8000/");
+	const response = await fetch("http://localhost:8000/read_all");
 	const data = await response.json();
-	hello_fetch_data = data.message;
+	// hello_fetch_data = data.message;
+	hello_fetch_data = data;
 };
 
 let ramda_js_sample = R.add(40, 2);
@@ -37,7 +39,17 @@ const show_data_from_chrome_console = () => console.log(window.app.$capture_stat
 
 <div>
 	<button on:click={fetch_hello}>fetch_hello</button>
-	<p>{hello_fetch_data}</p>
+	<!-- <button on:mount={fetch_hello}>fetch_hello</button> -->
+	<!-- <p>{hello_fetch_data}</p> -->
+	<ul>
+		{#each hello_fetch_data as item, index}
+			<!-- <li key={index}>{item}</li> -->
+			<li>{item['id']}</li>
+			<li>{Object.keys(item)}</li>
+			<!-- <li>{item[Object.keys(item)]}</li> -->
+			<!-- <li>{index}</li> -->
+		{/each}
+	</ul>
 </div>
 
 <span>edit: </span>
