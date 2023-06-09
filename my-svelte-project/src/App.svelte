@@ -1,10 +1,11 @@
-<!-- 2 way data bind
-v-model
+<!-- vue.js to svelte
+2 way data bind(v-model)
 v-for
 @click
 $refs
 mounted
-async/await -->
+async/await
+-->
 <script>
 let ramda_js_sample = R.add(40, 2);
 let message = "Hello Svelte!";
@@ -21,6 +22,8 @@ const fetchData = async () => {
 	fetch_message = data.title;
 };
 </script>
+
+
 
 
 
