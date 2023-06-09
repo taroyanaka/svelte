@@ -21,6 +21,12 @@
     "svelte": "^3.55.0"
   },
   "dependencies": {
-    "sirv-cli": "^2.0.0"
+    "sirv-cli": "^2.0.0",
+    "better-sqlite3": "^8.4.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.2",
+    "ramda": "^0.29.0",
+    "validator": "^13.9.0",
+    "body-parser": "^1.20.2"
   }
 }
