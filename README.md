@@ -1,3 +1,5 @@
+https://taroyanaka.github.io/svelte/
+
 taroyanaka: svelteの導入方法
 
 GitHub Copilot: Svelteは、npmを使用してインストールできます。以下の手順に従って、Svelteをインストールしてください。
