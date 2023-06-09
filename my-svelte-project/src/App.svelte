@@ -29,6 +29,8 @@ const show_data_from_chrome_console = () => console.log(window.app.$capture_stat
 
 
 
+<span>edit: </span>
+<a href="https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte">https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte</a>
 
 <p>ramda.js sample: {ramda_js_sample}</p>
 
