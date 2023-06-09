@@ -21,6 +21,9 @@ const fetchData = async () => {
 	const data = await response.json();
 	fetch_message = data.title;
 };
+// ja: svelteの変数や関数にchromeのdev toolのconsoleからアクセスする方法
+// en: How to access svelte variables and functions from chrome dev tool console
+const show_data_from_chrome_console = () => console.log(window.app.$capture_state().ramda_js_sample);
 </script>
 
 
@@ -55,6 +58,11 @@ const fetchData = async () => {
 	<button on:click={fetchData}>fetchData</button>
 	<p>{fetch_message}</p>
 </div>
+
+<button on:click={show_data_from_chrome_console}>
+	show_data_from_chrome_console:
+	"window.app.$capture_state().ANY_PROPERTY_OR_FN_NAME"
+</button>
 
 
 
