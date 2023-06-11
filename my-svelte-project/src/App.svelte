@@ -26,7 +26,20 @@ const get_POST_object = (BODY_OBJ) => {
 let NAME = 'user1';
 let PASSWORD = 'user_pass1';
 let LINK = 'https://yanaka.dev/';
+let COMMENT = 'comment1';
+let COMMENT_REPLY = 'comment_reply1';
+let TAG = 'tag1';
 const fetch_insert_link = async () => await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK })).json();
+
+const fetch_delete_link = async (LINK_ID) => await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID })).json();
+const fetch_like_increment_or_decrement = async (LINK_ID) => await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID })).json();
+const fetch_insert_comment = async (LINK_ID) => await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT })).json();
+const fetch_delete_comment = async (COMMENT_ID) => await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, id: COMMENT_ID })).json();
+const fetch_insert_comment_reply = async (COMMENT_ID) => await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY })).json();
+const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, id: COMMENT_REPLY_ID })).json();
+const fetch_insert_tag = async (LINK_ID) => await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG })).json();
+const fetch_get_tags_for_autocomplete = async () => await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD, tag: TAG })).json();
+const fetch_delete_tag = async (LINK_ID, TAG_ID) => await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID })).json();
 
 
 
@@ -55,6 +68,12 @@ const show_data_from_chrome_console = () => console.log(window.app.$capture_stat
 <input bind:value={NAME} type="text" placeholder="name">
 <input bind:value={PASSWORD} type="text" placeholder="password">
 <input bind:value={LINK} type="text" placeholder="link_url">
+<!-- comment, comment_reply, tagも同様にinputを作る	 -->
+<input bind:value={COMMENT} type="text" placeholder="comment">
+<input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
+<input bind:value={TAG} type="text" placeholder="tag">
+
+
 <button on:click={fetch_insert_link}>insert_link</button>
 
 
