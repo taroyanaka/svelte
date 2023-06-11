@@ -10,11 +10,21 @@ async/await
 import { onMount } from 'svelte';
 import { afterUpdate } from 'svelte';
 
-let hello_fetch_data = [];
-const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
-onMount(fetch_hello);
-afterUpdate(fetch_hello);
+let message = "Hello Svelte!";
+let items = ["item1", "item2", "item3"];
+let myInput_for_refs_sample;
+let mounted_sample = "mounted_sample Svelte!";
+let fetch_message = "";
 
+let hello_fetch_data = [];
+let NAME = 'user1';
+let PASSWORD = 'user_pass1';
+let LINK = 'https://yanaka.dev/';
+let COMMENT = 'comment1';
+let COMMENT_REPLY = 'comment_reply1';
+let TAG = 'tag1';
+
+const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
 const get_POST_object = (BODY_OBJ) => {
   return {
 	method: 'POST',
@@ -23,14 +33,8 @@ const get_POST_object = (BODY_OBJ) => {
 	}
 };
 
-let NAME = 'user1';
-let PASSWORD = 'user_pass1';
-let LINK = 'https://yanaka.dev/';
-let COMMENT = 'comment1';
-let COMMENT_REPLY = 'comment_reply1';
-let TAG = 'tag1';
-const fetch_insert_link = async () => await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK })).json();
 
+const fetch_insert_link = async () => await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK })).json();
 const fetch_delete_link = async (LINK_ID) => await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID })).json();
 const fetch_like_increment_or_decrement = async (LINK_ID) => await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID })).json();
 const fetch_insert_comment = async (LINK_ID) => await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT })).json();
@@ -41,42 +45,30 @@ const fetch_insert_tag = async (LINK_ID) => await fetch('http://localhost:8000/i
 const fetch_get_tags_for_autocomplete = async () => await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD, tag: TAG })).json();
 const fetch_delete_tag = async (LINK_ID, TAG_ID) => await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID })).json();
 
-
-
 let ramda_js_sample = R.add(40, 2);
-let message = "Hello Svelte!";
-let items = ["item1", "item2", "item3"];
 const handleClick = () => console.log("Button clicked");
-let myInput_for_refs_sample;
 const refs_sample = () => myInput_for_refs_sample.focus();
-let mounted_sample = "mounted_sample Svelte!";
 const handleMount = () => console.log("Component mounted.");
-let fetch_message = "";
 const fetchData = async () => {
 	const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
 	const data = await response.json();
 	fetch_message = data.title;
 };
-// ja: svelteの変数や関数にchromeのdev toolのconsoleからアクセスする方法
-// en: How to access svelte variables and functions from chrome dev tool console
 const show_data_from_chrome_console = () => console.log(window.app.$capture_state().ramda_js_sample);
+
+
+// onMount(fetch_hello);
+afterUpdate(fetch_hello);
 </script>
 
-
-
-<!-- <input bind:this={name} bind:value={name} type="text" placeholder="name"> -->
 <input bind:value={NAME} type="text" placeholder="name">
 <input bind:value={PASSWORD} type="text" placeholder="password">
 <input bind:value={LINK} type="text" placeholder="link_url">
-<!-- comment, comment_reply, tagも同様にinputを作る	 -->
 <input bind:value={COMMENT} type="text" placeholder="comment">
 <input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
 <input bind:value={TAG} type="text" placeholder="tag">
 
-
 <button on:click={fetch_insert_link}>insert_link</button>
-
-
 
 <ul>
 {#each hello_fetch_data as item, index}
