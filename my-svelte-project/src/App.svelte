@@ -7,14 +7,28 @@ mounted
 async/await
 -->
 <script>
+import { onMount } from 'svelte';
+import { afterUpdate } from 'svelte';
+
 let hello_fetch_data = [];
-const fetch_hello = async () => {
-	// const response = await fetch("http://localhost:8000/");
-	const response = await fetch("http://localhost:8000/read_all");
-	const data = await response.json();
-	// hello_fetch_data = data.message;
-	hello_fetch_data = data;
+const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
+onMount(fetch_hello);
+afterUpdate(fetch_hello);
+
+const get_POST_object = (BODY_OBJ) => {
+  return {
+	method: 'POST',
+	  headers: { 'Content-Type': 'application/json' },
+	  body: JSON.stringify(BODY_OBJ)
+	}
 };
+
+let NAME = 'user1';
+let PASSWORD = 'user_pass1';
+let LINK = 'https://yanaka.dev/';
+const fetch_insert_link = async () => await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK })).json();
+
+
 
 let ramda_js_sample = R.add(40, 2);
 let message = "Hello Svelte!";
@@ -37,20 +51,36 @@ const show_data_from_chrome_console = () => console.log(window.app.$capture_stat
 
 
 
-<div>
-	<button on:click={fetch_hello}>fetch_hello</button>
-	<!-- <button on:mount={fetch_hello}>fetch_hello</button> -->
-	<!-- <p>{hello_fetch_data}</p> -->
+<!-- <input bind:this={name} bind:value={name} type="text" placeholder="name"> -->
+<input bind:value={NAME} type="text" placeholder="name">
+<input bind:value={PASSWORD} type="text" placeholder="password">
+<input bind:value={LINK} type="text" placeholder="link_url">
+<button on:click={fetch_insert_link}>insert_link</button>
+
+
+
+<ul>
+{#each hello_fetch_data as item, index}
+<li>
 	<ul>
-		{#each hello_fetch_data as item, index}
-			<!-- <li key={index}>{item}</li> -->
-			<li>{item['id']}</li>
-			<li>{Object.keys(item)}</li>
-			<!-- <li>{item[Object.keys(item)]}</li> -->
-			<!-- <li>{index}</li> -->
+	{#each Object.entries(item) as ary, key}
+	<li>
+		{typeof ary[1] === 'object' ? [] : ary[1]}
+
+		<ul>
+		{#each (typeof ary[1] === 'object' ? ary[1] : []) as in_ary}
+			{#each Object.entries(in_ary) as in_ary2}
+			<li>{in_ary2[0]}: {in_ary2[1]}</li>
+			{/each}
 		{/each}
+		</ul>
+	</li>
+	{/each}
 	</ul>
-</div>
+</li>
+{/each}
+</ul>
+
 
 <span>edit: </span>
 <a href="https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte">https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte</a>
