@@ -1,6 +1,7 @@
 <script>
 import { onMount } from 'svelte';
 import { afterUpdate } from 'svelte';
+    import { bubble } from 'svelte/internal';
 
 let message = "Hello Svelte!";
 let items = ["item1", "item2", "item3"];
@@ -16,7 +17,7 @@ let NAME = 'user1';
 let PASSWORD = 'user_pass1';
 let LINK = 'https://yanaka.dev/';
 let COMMENT = 'comment1';
-let COMMENT_REPLY = 'comment_reply1';
+let COMMENT_REPLY = 'reply1';
 let TAG = 'tag1';
 let RESPONSE;
 
@@ -37,9 +38,10 @@ const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000
 const fetch_like_increment_or_decrement = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json();
 const fetch_insert_comment = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
 const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
-
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
-const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, id: COMMENT_REPLY_ID }))).json();
+const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
+
+
 const fetch_insert_tag = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 const fetch_get_tags_for_autocomplete = async () => RESPONSE = (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD, tag: TAG }))).json();
 const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
@@ -63,21 +65,10 @@ afterUpdate(fetch_hello);
 <ul>
 	{#each hello_fetch_data as item, index}
 	<li>
-		<ul>{#each item.comments_and_replies as comments_and_reply, key}
-			<li>comment: {comments_and_reply[key]['comment']}</li>
-			<li>created_at: {comments_and_reply[key]['created_at']}</li>
-			<li>id: {comments_and_reply[key]['id']}</li>
-			<button on:click={fetch_delete_comment(comments_and_reply[key]['id'])}>fetch_delete_comment</button>
-			<li>updated_at: {comments_and_reply[key]['updated_at']}</li>
-			<li>user_id: {comments_and_reply[key]['user_id']}</li>
-			<li>username: {comments_and_reply[key]['username']}</li>
-
-			<li>comment_replies: {comments_and_reply['comment_replies']}</li>
-		{/each}</ul>
 		<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
 		<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
 
-		<ul>{#each item.tags as tag, key}
+		<ul>{#each item.tags as tag, INDEX}
 			<li>{tag.id}{tag.tag}</li>
 			{/each}</ul>
 
@@ -90,8 +81,31 @@ afterUpdate(fetch_hello);
 		<div>like_count: {item.like_count}</div>
 		<button on:click={fetch_like_increment_or_decrement(item.id)}>like_increment_or_decrement</button>
 
+		<ul class="comment_zone">{#each item.comments_and_replies as comments_and_reply, INDEX}
+			<li>comment: {comments_and_reply[INDEX]['comment']}</li>
+			<li>created_at: {comments_and_reply[INDEX]['created_at']}</li>
+			<li>id: {comments_and_reply[INDEX]['id']}</li>
+			<button on:click={fetch_delete_comment(comments_and_reply[INDEX]['id'])}>fetch_delete_comment</button>
+			<li>updated_at: {comments_and_reply[INDEX]['updated_at']}</li>
+			<li>user_id: {comments_and_reply[INDEX]['user_id']}</li>
+			<li>username: {comments_and_reply[INDEX]['username']}</li>
 
-
+			<!-- fetch_insert_comment_reply -->
+			<input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
+			<button on:click={fetch_insert_comment_reply(comments_and_reply[INDEX]['id'])}>fetch_insert_comment_reply</button>
+			<li class="reply_zone">comment_replies:
+				<ul>{#each comments_and_reply['comment_replies'] as comment_reply, INDEX}
+					<!-- <li>comment_reply: {comment_reply['comment_reply']}</li> -->
+					<!-- <li>created_at: {comment_reply['created_at']}</li> -->
+					<!-- <li>id: {comment_reply['id']}</li> -->
+					<li>reply: {comment_reply['reply']}</li>
+					<!-- <li>updated_at: {comment_reply['updated_at']}</li> -->
+					<!-- <li>user_id: {comment_reply['user_id']}</li> -->
+					<li>username: {comment_reply['username']}</li>
+					<button on:click={fetch_delete_comment_reply(comment_reply['id'])}>fetch_delete_comment_reply</button>
+				{/each}</ul>
+			</li>
+		{/each}</ul>
 	</li>
 	{/each}
 </ul>
@@ -134,11 +148,14 @@ afterUpdate(fetch_hello);
 </button>
 
 <style>
-	div {
+	/* div {
 		text-align: center;
 		padding: 1em;
 		max-width: 240px;
 		margin: 0 auto;
+	} */
+	.comment_zone, .reply_zone{
+		margin-left: 2rem;
 	}
 
 	@media (min-width: 640px) {
