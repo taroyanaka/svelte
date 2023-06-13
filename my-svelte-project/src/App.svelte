@@ -68,12 +68,10 @@ afterUpdate(fetch_hello);
 		<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
 		<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
 
-		<!-- tags each -->
 		{#each item.tags as tags, INDEX}
 		<!-- <div>id: {tags.id}</div> -->
 		<div>tag: {tags.tag}</div>
 		{/each}
-		<!-- fetch_insert_tag -->
 		<input type="text" name="" id="" bind:value={TAG} placeholder="tag">
 		<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		
