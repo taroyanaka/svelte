@@ -41,10 +41,10 @@ const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
-
 const fetch_insert_tag = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+
 const fetch_get_tags_for_autocomplete = async () => RESPONSE = (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD, tag: TAG }))).json();
-const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
+// const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
 
 // let ramda_js_sample = R.add(40, 2);
 const refs_sample = () => myInput_for_refs_sample.focus();
@@ -68,9 +68,15 @@ afterUpdate(fetch_hello);
 		<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
 		<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
 
-		<ul>{#each item.tags as tag, INDEX}
-			<li>{tag.id}{tag.tag}</li>
-			{/each}</ul>
+		<!-- tags each -->
+		{#each item.tags as tags, INDEX}
+		<!-- <div>id: {tags.id}</div> -->
+		<div>tag: {tags.tag}</div>
+		{/each}
+		<!-- fetch_insert_tag -->
+		<input type="text" name="" id="" bind:value={TAG} placeholder="tag">
+		<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
+		
 
 		<div>id: {item.id}</div>
 		<div>link: {item.link}</div>
