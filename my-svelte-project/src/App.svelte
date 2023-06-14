@@ -9,7 +9,7 @@ let myInput_for_refs_sample;
 // let mounted_sample = "mounted_sample Svelte!";
 let fetch_message = "";
 
-$: if(fetch_message) {fetch_hello();console.log("fetch_message");}
+// $: if(fetch_message) {fetch_hello();console.log("fetch_message");}
 
 
 let hello_fetch_data = [];
@@ -19,9 +19,11 @@ let LINK = 'https://yanaka.dev/';
 let COMMENT = 'comment1';
 let COMMENT_REPLY = 'reply1';
 let TAG = 'tag1';
+let ALL_TAGS = [];
 let RESPONSE;
 
 const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
+
 const get_POST_object = (BODY_OBJ) => {
   return {
 	method: 'POST',
@@ -43,11 +45,17 @@ const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await
 
 const fetch_insert_tag = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 
-const fetch_get_tags_for_autocomplete = async () => RESPONSE = (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD, tag: TAG }))).json();
+const fetch_get_tags_for_autocomplete = async () => {
+	const json = (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
+					.json();
+	const RES = await json;
+	ALL_TAGS = await RES.tags;
+};
 // const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
 
 // let ramda_js_sample = R.add(40, 2);
-const refs_sample = () => myInput_for_refs_sample.focus();
+// const refs_sample = () => myInput_for_refs_sample.focus();
+const refs_sample = () => console.log(myInput_for_refs_sample.value);
 const handleMount = () => console.log("Component mounted.");
 const fetchData = async () => {
 	const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
@@ -58,9 +66,24 @@ const show_data_from_chrome_console = () => console.log(window.app.$capture_stat
 
 onMount(fetch_hello);
 afterUpdate(fetch_hello);
+
+let the_val = "";
+const get_the_val = () => console.log(the_val.value);
 </script>
 
 
+<!-- fetch_get_tags_for_autocomplete -->
+<div>
+	<!-- <input bind:this={myInput_for_refs_sample} /> -->
+	<!-- <button on:click={refs_sample}>Focus input</button> -->
+	<input bind:this={the_val} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
+    <datalist id="autocomplete_list">
+		{#each ALL_TAGS as item, index}
+		<option value={item.tag}>
+		{/each}
+    </datalist>
+	<button on:click={get_the_val}>get_the_val</button>
+</div>
 
 <ul>
 	{#each hello_fetch_data as item, index}
@@ -68,15 +91,17 @@ afterUpdate(fetch_hello);
 		<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
 		<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
 
-		{#each item.tags as tags, INDEX}
-		<!-- <div>id: {tags.id}</div> -->
-		<div>tag: {tags.tag}</div>
-		{/each}
-		<input type="text" name="" id="" bind:value={TAG} placeholder="tag">
+
 		<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		
 
 		<div>id: {item.id}</div>
+		<div>tag:
+			{#each item.tags as tags, INDEX}
+			<!-- <div>id: {tags.id}</div> -->
+			<div>tag: {tags.tag}</div>
+			{/each}
+		</div>	
 		<div>link: {item.link}</div>
 		<div>created_at: {item.created_at}</div>
 		<div>updated_at: {item.updated_at}</div>
@@ -120,7 +145,6 @@ afterUpdate(fetch_hello);
 <input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
 <input bind:value={TAG} type="text" placeholder="tag">
 <button on:click={fetch_insert_link}>insert_link</button>
-
 
 <span>edit: </span>
 <a href="https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte">https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte</a>
