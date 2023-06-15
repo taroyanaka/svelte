@@ -21,6 +21,8 @@ let COMMENT_REPLY = 'reply1';
 let TAG = 'tag1';
 let ALL_TAGS = [];
 let RESPONSE;
+let THE_VAL = "";
+// const get_THE_VAL = () => console.log();
 
 const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
 
@@ -43,7 +45,10 @@ const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
-const fetch_insert_tag = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+const fetch_insert_tag = async (LINK_ID) => {
+	TAG = THE_VAL.value;
+	RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+};
 
 const fetch_get_tags_for_autocomplete = async () => {
 	const json = (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
@@ -67,48 +72,49 @@ const show_data_from_chrome_console = () => console.log(window.app.$capture_stat
 onMount(fetch_hello);
 afterUpdate(fetch_hello);
 
-let the_val = "";
-const get_the_val = () => console.log(the_val.value);
+
 </script>
 
 
 <!-- fetch_get_tags_for_autocomplete -->
-<div>
-	<!-- <input bind:this={myInput_for_refs_sample} /> -->
-	<!-- <button on:click={refs_sample}>Focus input</button> -->
-	<input bind:this={the_val} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
-    <datalist id="autocomplete_list">
-		{#each ALL_TAGS as item, index}
-		<option value={item.tag}>
-		{/each}
-    </datalist>
-	<button on:click={get_the_val}>get_the_val</button>
-</div>
 
 <ul>
 	{#each hello_fetch_data as item, index}
-	<li>
-		<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
-		<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
-
-
-		<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
-		
-
+	<li>		
 		<div>id: {item.id}</div>
-		<div>tag:
+		<div>tag: 
 			{#each item.tags as tags, INDEX}
-			<!-- <div>id: {tags.id}</div> -->
-			<div>tag: {tags.tag}</div>
+			<!-- <span>id: {tags.id}</span> -->
+			<span>{tags.tag}, </span>
 			{/each}
-		</div>	
+		</div>
+
+		<div>
+			<!-- <input bind:this={myInput_for_refs_sample} /> -->
+			<!-- <button on:click={refs_sample}>Focus input</button> -->
+			<input bind:this={THE_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
+			<datalist id="autocomplete_list">
+				{#each ALL_TAGS as item, index}
+				<option value={item.tag}>
+				{/each}
+			</datalist>
+			<!-- <button on:click={get_THE_VAL}>get_THE_VAL</button> -->
+			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
+		</div>
+
 		<div>link: {item.link}</div>
 		<div>created_at: {item.created_at}</div>
 		<div>updated_at: {item.updated_at}</div>
 		<div>user_id: {item.user_id}</div>
 		<div>username: {item.username}</div>
+
 		<div>like_count: {item.like_count}</div>
 		<button on:click={fetch_like_increment_or_decrement(item.id)}>like_increment_or_decrement</button>
+
+		<div>
+			<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
+			<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
+		</div>
 
 		<ul class="comment_zone">{#each item.comments_and_replies as comments_and_reply, INDEX}
 			<li>comment: {comments_and_reply[INDEX]['comment']}</li>
