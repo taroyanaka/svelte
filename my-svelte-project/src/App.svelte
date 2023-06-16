@@ -1,7 +1,24 @@
 <script>
+// const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
+
+// let ramda_js_sample = R.add(40, 2);
+// const refs_sample = () => myInput_for_refs_sample.focus();
+// const refs_sample = () => console.log(myInput_for_refs_sample.value);
+// const handleMount = () => console.log("Component mounted.");
+// const fetchData = async () => {
+// 	const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+// 	const data = await response.json();
+// 	fetch_message = data.title;
+// };
+// const show_data_from_chrome_console = () => console.log(window.app.$capture_state().ramda_js_sample);
+
+
+
+
+
+
 import { onMount } from 'svelte';
 import { afterUpdate } from 'svelte';
-    import { bubble } from 'svelte/internal';
 
 let message = "Hello Svelte!";
 let items = ["item1", "item2", "item3"];
@@ -21,8 +38,13 @@ let COMMENT_REPLY = 'reply1';
 let TAG = 'tag1';
 let ALL_TAGS = [];
 let RESPONSE;
-let THE_VAL = "";
-// const get_THE_VAL = () => console.log();
+let TAG_VAL = "";
+const WHITE_LIST_URL_ARRAY = [
+	'https://www.yahoo.co.jp/',
+	'https://www.google.co.jp/',
+	'https://www.youtube.com/',
+];
+let ERROR_MESSAGE = "";
 
 const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
 
@@ -34,7 +56,21 @@ const get_POST_object = (BODY_OBJ) => {
 	}
 };
 
-const fetch_insert_link = async () => (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
+
+
+// URLの配列の文字列から始まる場合はtrueを返す関数を1行で
+const is_include_WHITE_LIST_URL = (target_url_str, WHITE_LIST_URL_ARRAY) => WHITE_LIST_URL_ARRAY.some((WHITE_LIST_URL) => target_url_str.startsWith(WHITE_LIST_URL));
+
+const fetch_insert_link = async () => {
+	try {
+		// LINKがURLの配列の文字列を含む場合はtrueを返す関数を1行で
+		is_include_WHITE_LIST_URL(LINK, WHITE_LIST_URL_ARRAY) ? RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json() : (()=>{throw new Error('URL Error only' + WHITE_LIST_URL_ARRAY.join(" "))})();
+		fetch_hello();
+	} catch (error) {
+		// console.log(error);
+		ERROR_MESSAGE = error.message;
+	}
+};
 
 const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
 // const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
@@ -46,7 +82,7 @@ const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
 const fetch_insert_tag = async (LINK_ID) => {
-	TAG = THE_VAL.value;
+	TAG = TAG_VAL.value;
 	RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 };
 
@@ -56,27 +92,29 @@ const fetch_get_tags_for_autocomplete = async () => {
 	const RES = await json;
 	ALL_TAGS = await RES.tags;
 };
-// const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
 
-// let ramda_js_sample = R.add(40, 2);
-// const refs_sample = () => myInput_for_refs_sample.focus();
-const refs_sample = () => console.log(myInput_for_refs_sample.value);
-const handleMount = () => console.log("Component mounted.");
-const fetchData = async () => {
-	const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-	const data = await response.json();
-	fetch_message = data.title;
-};
-const show_data_from_chrome_console = () => console.log(window.app.$capture_state().ramda_js_sample);
+const remove_error_message = () => ERROR_MESSAGE = "";
+
+
 
 onMount(fetch_hello);
 afterUpdate(fetch_hello);
-
-
 </script>
 
 
-<!-- fetch_get_tags_for_autocomplete -->
+
+
+
+<!-- ERROR_MESSAGEを表示するdivタグ。クリックしたら非表示になる -->
+<!-- svelte-ignore a11y-missing-attribute -->
+<a on:click={remove_error_message}>{ERROR_MESSAGE}</a>
+
+
+
+<input bind:value={NAME} type="text" placeholder="name">
+<input bind:value={PASSWORD} type="text" placeholder="password">
+<input bind:value={LINK} type="text" placeholder="link_url">
+<button on:click={fetch_insert_link}>insert_link</button>
 
 <ul>
 	{#each hello_fetch_data as item, index}
@@ -92,13 +130,13 @@ afterUpdate(fetch_hello);
 		<div>
 			<!-- <input bind:this={myInput_for_refs_sample} /> -->
 			<!-- <button on:click={refs_sample}>Focus input</button> -->
-			<input bind:this={THE_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
+			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
 			<datalist id="autocomplete_list">
 				{#each ALL_TAGS as item, index}
 				<option value={item.tag}>
 				{/each}
 			</datalist>
-			<!-- <button on:click={get_THE_VAL}>get_THE_VAL</button> -->
+			<!-- <button on:click={get_TAG_VAL}>get_TAG_VAL</button> -->
 			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		</div>
 
@@ -144,17 +182,30 @@ afterUpdate(fetch_hello);
 	</li>
 	{/each}
 </ul>
-<input bind:value={NAME} type="text" placeholder="name">
-<input bind:value={PASSWORD} type="text" placeholder="password">
-<input bind:value={LINK} type="text" placeholder="link_url">
-<input bind:value={COMMENT} type="text" placeholder="comment">
-<input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
-<input bind:value={TAG} type="text" placeholder="tag">
-<button on:click={fetch_insert_link}>insert_link</button>
 
-<span>edit: </span>
+
+<!-- <input bind:value={COMMENT} type="text" placeholder="comment"> -->
+<!-- <input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply"> -->
+<!-- <input bind:value={TAG} type="text" placeholder="tag"> -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <span>edit: </span>
 <a href="https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte">https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte</a>
-<!-- <p>ramda.js sample: {ramda_js_sample}</p> -->
+<p>ramda.js sample: {ramda_js_sample}</p>
 <div>
 	<input bind:value={message} />
 	<p>{message}</p>
@@ -168,9 +219,7 @@ afterUpdate(fetch_hello);
 	<input bind:this={myInput_for_refs_sample} />
 	<button on:click={refs_sample}>Focus input</button>
 </div>
-<!-- <div on:mount={handleMount}> -->
-	<!-- <p>{mounted_sample}</p> -->
-<!-- </div> -->
+
 <div>
 	<button on:click={fetchData}>fetchData</button>
 	<p>{fetch_message}</p>
@@ -179,7 +228,7 @@ afterUpdate(fetch_hello);
 <button on:click={show_data_from_chrome_console}>
 	show_data_from_chrome_console:
 	"window.app.$capture_state().ANY_PROPERTY_OR_FN_NAME"
-</button>
+</button> -->
 
 <style>
 	/* div {
