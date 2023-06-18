@@ -46,7 +46,88 @@ const WHITE_LIST_URL_ARRAY = [
 ];
 let ERROR_MESSAGE = "";
 
-const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
+
+
+
+// app.get('/read_all_test', (req, res) => {
+//     const STANDARD_READ_QUERY = `
+//     SELECT
+//     links.id AS id, links.link AS link, links.created_at AS created_at, links.updated_at AS updated_at,
+//     users.id AS user_id, users.username AS username,
+//     (SELECT COUNT(*) FROM likes WHERE likes.link_id = links.id) AS like_count
+//     FROM links
+//     LEFT JOIN users ON links.user_id = users.id
+//     LEFT JOIN likes ON links.id = likes.link_id`;
+//     // req.bodyに ASC,DESC,TAG,USERがある場合は、それぞれの条件に合わせてSQL文を変更する関数
+//     const read_query = (req) => {
+//         const ORDER_BY = req.query.order_by ? req.query.order_by : 'DESC';
+//         const ORDER_BY_COLUMN = req.query.order_by_column ? req.query.order_by_column : 'links.id';
+//         const REQ_TAG = req.query.tag ? req.query.tag : null;
+//         const USER = req.query.user ? req.query.user : null;
+//         const WHERE_TAG = REQ_TAG ? `WHERE tags.tag = '${REQ_TAG}'` : '';
+//         const WHERE_USER = USER ? `WHERE users.username = '${USER}'` : '';
+//         const WHERE_TAG_AND_USER = REQ_TAG && USER ? `WHERE tags.tag = '${REQ_TAG}' AND users.username = '${USER}'` : '';
+//         const WHERE_TAG_OR_USER = REQ_TAG || USER ? `WHERE tags.tag = '${REQ_TAG}' OR users.username = '${USER}'` : '';
+//         const WHERE = WHERE_TAG_AND_USER || WHERE_TAG_OR_USER || WHERE_TAG || WHERE_USER;
+//         switch (req.query) {
+//             case 'ASC':
+//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ASC`;
+//             case 'DESC':
+//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} DESC`;
+//             case 'TAG':
+//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
+//             case 'USER':
+//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
+//             default:
+//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
+//         }
+//     };
+//     console.log(read_query(req));
+//     const result = db.prepare(read_query(req)).all();
+//     console.log(result);
+// });
+
+let ORDER_BY = 'DESC';
+let ORDER_BY_COLUMN = 'links.id';
+let REQ_TAG = '';
+let USER = '';
+
+const fetch_hello = async (PATTERN_NUM_PARAM) => {
+	const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 4;
+	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
+	switch(PATTERN_NUM){
+		case 1: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
+		case 2: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
+		case 3: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
+		case 4: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
+		case 5: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
+		case 6: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
+		case 7: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
+		case 8: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
+		case 9: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,null]; break;
+		default: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
+	}
+	// console.log([ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]);
+	// getパラメーターを作る関数。[ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]にnullが含まれている場合はパラメーターに含めない
+	const make_get_param = () => {
+		const get_param_array = [];
+		if(ORDER_BY) get_param_array.push(`order_by=${ORDER_BY}`);
+		if(ORDER_BY_COLUMN) get_param_array.push(`order_by_column=${ORDER_BY_COLUMN}`);
+		if(REQ_TAG) get_param_array.push(`tag=${REQ_TAG}`);
+		if(USER) get_param_array.push(`user=${USER}`);
+		// const endpoint = 'http://localhost:8000/read_all_test';
+		const endpoint = 'http://localhost:8000/read_all';
+		const get_param = get_param_array.join('&');
+		return `${endpoint}?${get_param}`;
+	};
+	// const result = await (await fetch(make_get_param())).json();
+	console.log(make_get_param());
+	hello_fetch_data = await (await fetch(make_get_param())).json();
+	// console.log(hello_fetch_data);
+	// hello_fetch_dataには、fetchで取得したデータを格納する
+};
+
+// const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
 
 const get_POST_object = (BODY_OBJ) => {
   return {
@@ -98,7 +179,7 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 
 
 onMount(fetch_hello);
-afterUpdate(fetch_hello);
+// afterUpdate(fetch_hello);
 </script>
 
 
@@ -106,20 +187,32 @@ afterUpdate(fetch_hello);
 
 
 <!-- ERROR_MESSAGEを表示するdivタグ。クリックしたら非表示になる -->
-<!-- svelte-ignore a11y-missing-attribute -->
-<a on:click={remove_error_message}>{ERROR_MESSAGE}</a>
+<div>
+	{ERROR_MESSAGE}
+	{#if ERROR_MESSAGE}
+		<button on:click={remove_error_message}>remove_error_message</button>
+	{/if}
+</div>
 
 
+<div>
+<input bind:value={ORDER_BY} type="text" placeholder="ORDER_BY">
+<input bind:value={ORDER_BY_COLUMN} type="text" placeholder="ORDER_BY_COLUMN">
+<input bind:value={REQ_TAG} type="text" placeholder="REQ_TAG">
+<input bind:value={USER} type="text" placeholder="USER">
+</div>
 
+<div>
 <input bind:value={NAME} type="text" placeholder="name">
 <input bind:value={PASSWORD} type="text" placeholder="password">
 <input bind:value={LINK} type="text" placeholder="link_url">
 <button on:click={fetch_insert_link}>insert_link</button>
+</div>
 
 <ul>
 	{#each hello_fetch_data as item, index}
 	<li>		
-		<div>id: {item.id}</div>
+		<!-- <div>id: {item.id}</div> -->
 		<div>tag: 
 			{#each item.tags as tags, INDEX}
 			<!-- <span>id: {tags.id}</span> -->
@@ -140,13 +233,17 @@ afterUpdate(fetch_hello);
 			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		</div>
 
-		<div>link: {item.link}</div>
+		<a href={item.link} target="_blank">{item.link}</a>
 		<div>created_at: {item.created_at}</div>
-		<div>updated_at: {item.updated_at}</div>
-		<div>user_id: {item.user_id}</div>
+		<!-- <div>updated_at: {item.updated_at}</div> -->
+		<!-- <div>user_id: {item.user_id}</div> -->
 		<div>username: {item.username}</div>
 
-		<div>like_count: {item.like_count}</div>
+		<!-- <div>like_count: {item.like_count}</div> -->
+		<!-- like_countの数だけ😇が表示される -->
+		{#each Array(item.like_count) as item, index}
+		<span>😇</span>
+		{/each}
 		<button on:click={fetch_like_increment_or_decrement(item.id)}>like_increment_or_decrement</button>
 
 		<div>
@@ -157,10 +254,10 @@ afterUpdate(fetch_hello);
 		<ul class="comment_zone">{#each item.comments_and_replies as comments_and_reply, INDEX}
 			<li>comment: {comments_and_reply[INDEX]['comment']}</li>
 			<li>created_at: {comments_and_reply[INDEX]['created_at']}</li>
-			<li>id: {comments_and_reply[INDEX]['id']}</li>
+			<!-- <li>id: {comments_and_reply[INDEX]['id']}</li> -->
 			<button on:click={fetch_delete_comment(comments_and_reply[INDEX]['id'])}>fetch_delete_comment</button>
 			<li>updated_at: {comments_and_reply[INDEX]['updated_at']}</li>
-			<li>user_id: {comments_and_reply[INDEX]['user_id']}</li>
+			<!-- <li>user_id: {comments_and_reply[INDEX]['user_id']}</li> -->
 			<li>username: {comments_and_reply[INDEX]['username']}</li>
 
 			<!-- fetch_insert_comment_reply -->
