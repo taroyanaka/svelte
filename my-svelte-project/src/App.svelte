@@ -2,7 +2,7 @@
 import { onMount } from 'svelte';
 import { afterUpdate } from 'svelte';
 
-// $: if(fetch_message) {fetch_hello();console.log("fetch_message");}
+// $: if(fetch_message) {fetch_hello({});console.log("fetch_message");}
 
 let hello_fetch_data = [];
 let NAME = 'user1';
@@ -21,70 +21,54 @@ const WHITE_LIST_URL_ARRAY = [
 ];
 let ERROR_MESSAGE = "";
 
-
-
-
-// app.get('/read_all_test', (req, res) => {
-//     const STANDARD_READ_QUERY = `
-//     SELECT
-//     links.id AS id, links.link AS link, links.created_at AS created_at, links.updated_at AS updated_at,
-//     users.id AS user_id, users.username AS username,
-//     (SELECT COUNT(*) FROM likes WHERE likes.link_id = links.id) AS like_count
-//     FROM links
-//     LEFT JOIN users ON links.user_id = users.id
-//     LEFT JOIN likes ON links.id = likes.link_id`;
-//     // req.bodyに ASC,DESC,TAG,USERがある場合は、それぞれの条件に合わせてSQL文を変更する関数
-//     const read_query = (req) => {
-//         const ORDER_BY = req.query.order_by ? req.query.order_by : 'DESC';
-//         const ORDER_BY_COLUMN = req.query.order_by_column ? req.query.order_by_column : 'links.id';
-//         const REQ_TAG = req.query.tag ? req.query.tag : null;
-//         const USER = req.query.user ? req.query.user : null;
-//         const WHERE_TAG = REQ_TAG ? `WHERE tags.tag = '${REQ_TAG}'` : '';
-//         const WHERE_USER = USER ? `WHERE users.username = '${USER}'` : '';
-//         const WHERE_TAG_AND_USER = REQ_TAG && USER ? `WHERE tags.tag = '${REQ_TAG}' AND users.username = '${USER}'` : '';
-//         const WHERE_TAG_OR_USER = REQ_TAG || USER ? `WHERE tags.tag = '${REQ_TAG}' OR users.username = '${USER}'` : '';
-//         const WHERE = WHERE_TAG_AND_USER || WHERE_TAG_OR_USER || WHERE_TAG || WHERE_USER;
-//         switch (req.query) {
-//             case 'ASC':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ASC`;
-//             case 'DESC':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} DESC`;
-//             case 'TAG':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
-//             case 'USER':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
-//             default:
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
-//         }
-//     };
-//     console.log(read_query(req));
-//     const result = db.prepare(read_query(req)).all();
-//     console.log(result);
-// });
-
 let ORDER_BY = 'DESC';
 let ORDER_BY_COLUMN = 'links.id';
 let REQ_TAG = '';
 let USER = '';
 
-let foo;
+// testを作る
+// switch(PATTERN_NUM){
+// 		case 1: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
+// 		case 2: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
+// 		case 3: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
+// 		case 4: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1','user1']; break;
+// 		case 5: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1',null]; break;
+// 		case 6: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,'user1']; break;
+// 		case 7: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,null]; break;
 
-const fetch_hello = async (PATTERN_NUM_PARAM) => {
-// async function fetch_hello(PATTERN_NUM_PARAM) {
+// 		case 0: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
+// 		default: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
+// }
+// 上記のswitch文で設定したパターンのテストを作る
 
-	const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 4;
-	console.log(PATTERN_NUM);
-	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
-	switch(PATTERN_NUM){
-		case 1: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
-		case 2: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
-		case 3: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
-		case 4: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
-		case 5: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1','user1']; break;
-		case 6: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1',null]; break;
-		case 7: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,'user1']; break;
-		case 8: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,null]; break;
+// ramda.jsで全ての組み合わせを作る関数
+// R.xprod(['DESC','ASC'], ['links.id','links.name'], ['tag1','tag2','tag3'], ['user1','user2','user3']);
+const pre_res = R.xprod(['tag1','tag2','tag3'], ['user1','user2','user3']);
+// pre_resに['links.id','links.name']を追加する
+const res = R.xprod(['links.id','links.name'], pre_res);
+// resに['DESC','ASC']を追加する
+const more_res = R.xprod(['DESC','ASC'], res);
+// more_resをそれぞれR.flattenする
+const more_res_flatten = more_res.map((item) => R.flatten(item));
+// more_res_flattenをそれぞれconst fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {　の形式にする
+const more_res_flatten_obj = more_res_flatten.map((item) => {
+	return {
+		ORDER_BY: item[0],
+		ORDER_BY_COLUMN: item[1],
+		REQ_TAG: item[2],
+		USER: item[3],
 	}
+});
+
+const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+	// const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 0;
+	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
+	ORDER_BY = ORDER_BY_PARAM; // ? ORDER_BY_PARAM : 'DESC';
+	ORDER_BY_COLUMN = ORDER_BY_COLUMN_PARAM; // ? ORDER_BY_COLUMN_PARAM : 'links.id';
+	REQ_TAG = REQ_TAG_PARAM; // ? REQ_TAG_PARAM : null;
+	USER = USER_PARAM; // ? USER_PARAM : null;
+	// [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null];
+
 	// console.log([ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]);
 	// getパラメーターを作る関数。[ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]にnullが含まれている場合はパラメーターに含めない
 	const make_get_param = () => {
@@ -98,20 +82,15 @@ const fetch_hello = async (PATTERN_NUM_PARAM) => {
 		const get_param = get_param_array.join('&');
 		return `${endpoint}?${get_param}`;
 	};
-	// const result = await (await fetch(make_get_param())).json();
-	console.log(make_get_param());
+	// console.log(make_get_param());
 	hello_fetch_data = await (await fetch(make_get_param())).json();
-	// console.log(hello_fetch_data);
-	// hello_fetch_dataには、fetchで取得したデータを格納する
 };
 
-// const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
-
 const get_POST_object = (BODY_OBJ) => {
-  return {
+	return {
 	method: 'POST',
-	  headers: { 'Content-Type': 'application/json' },
-	  body: JSON.stringify(BODY_OBJ)
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify(BODY_OBJ)
 	}
 };
 
@@ -124,7 +103,7 @@ const fetch_insert_link = async () => {
 	try {
 		// LINKがURLの配列の文字列を含む場合はtrueを返す関数を1行で
 		is_include_WHITE_LIST_URL(LINK, WHITE_LIST_URL_ARRAY) ? RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json() : (()=>{throw new Error('URL Error only' + WHITE_LIST_URL_ARRAY.join(" "))})();
-		fetch_hello();
+		fetch_hello({});
 	} catch (error) {
 		// console.log(error);
 		ERROR_MESSAGE = error.message;
@@ -156,28 +135,17 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 
 
 
-onMount(fetch_hello);
+// onMount(fetch_hello({}));
+onMount(async () => {
+	try {
+		await fetch_hello({});
+		await fetch_get_tags_for_autocomplete();	
+	} catch (error) {
+		console.log(error);		
+	}
+});
+
 // afterUpdate(fetch_hello);
-
-
-// const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
-
-// let ramda_js_sample = R.add(40, 2);
-// const refs_sample = () => myInput_for_refs_sample.focus();
-// const refs_sample = () => console.log(myInput_for_refs_sample.value);
-// const handleMount = () => console.log("Component mounted.");
-// const fetchData = async () => {
-// 	const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-// 	const data = await response.json();
-// 	fetch_message = data.title;
-// };
-// const show_data_from_chrome_console = () => console.log(window.app.$capture_state().ramda_js_sample);
-
-// let message = "Hello Svelte!";
-// let items = ["item1", "item2", "item3"];
-// let myInput_for_refs_sample;
-// let mounted_sample = "mounted_sample Svelte!";
-// let fetch_message = "";
 </script>
 
 
@@ -212,7 +180,20 @@ onMount(fetch_hello);
 		asyncの関数をon:clickをトリガーに実行する場合は
 		{() => FUNCTION_NAME()}
 		と書く(キショイ書き方だと思った) -->
-  <button on:click={() => fetch_hello()}>clear condition</button>
+	<button on:click={() => fetch_hello({})}>clear condition</button>
+	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
+	<!-- more_res_flatten_objをeachでfetch_helloのボタンを作る -->
+	{#each more_res_flatten_obj as item, index}
+		<button on:click={() => fetch_hello(
+			{
+				ORDER_BY: item['ORDER_BY'],
+				ORDER_BY_COLUMN: item['ORDER_BY_COLUMN'],
+				REQ_TAG: item['REQ_TAG'],
+				USER: item['USER']
+			}
+		)}>{[item['ORDER_BY'],item['ORDER_BY_COLUMN'],item['REQ_TAG'],item['USER']].join("  ")}</button>
+	{/each}
+	
 </div>
 
 
@@ -228,15 +209,12 @@ onMount(fetch_hello);
 		</div>
 
 		<div>
-			<!-- <input bind:this={myInput_for_refs_sample} /> -->
-			<!-- <button on:click={refs_sample}>Focus input</button> -->
 			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
 			<datalist id="autocomplete_list">
 				{#each ALL_TAGS as item, index}
 				<option value={item.tag}>
 				{/each}
 			</datalist>
-			<!-- <button on:click={get_TAG_VAL}>get_TAG_VAL</button> -->
 			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		</div>
 
@@ -286,50 +264,8 @@ onMount(fetch_hello);
 	</li>
 	{/each}
 </ul>
-
-
-<!-- <input bind:value={COMMENT} type="text" placeholder="comment"> -->
-<!-- <input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply"> -->
-<!-- <input bind:value={TAG} type="text" placeholder="tag"> -->
-
-
-
-
-
-<!-- <span>edit: </span>
-<a href="https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte">https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte</a>
-<p>ramda.js sample: {ramda_js_sample}</p>
-<div>
-	<input bind:value={message} />
-	<p>{message}</p>
-</div>  
-<ul>
-{#each items as item, index}
-	<li key={index}>{item}</li>
-{/each}
-</ul>
-<div>
-	<input bind:this={myInput_for_refs_sample} />
-	<button on:click={refs_sample}>Focus input</button>
-</div>
-
-<div>
-	<button on:click={fetchData}>fetchData</button>
-	<p>{fetch_message}</p>
-</div>
-
-<button on:click={show_data_from_chrome_console}>
-	show_data_from_chrome_console:
-	"window.app.$capture_state().ANY_PROPERTY_OR_FN_NAME"
-</button> -->
-
+	
 <style>
-	/* div {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	} */
 	.comment_zone, .reply_zone{
 		margin-left: 2rem;
 	}
