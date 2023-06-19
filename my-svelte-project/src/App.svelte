@@ -92,20 +92,24 @@ let ORDER_BY_COLUMN = 'links.id';
 let REQ_TAG = '';
 let USER = '';
 
-const fetch_hello = async (PATTERN_NUM_PARAM) => {
+let foo;
+
+// const fetch_hello = async (PATTERN_NUM_PARAM) => {
+async function fetch_hello(PATTERN_NUM_PARAM) {
+	foo = PATTERN_NUM_PARAM;
+	console.log('PATTERN_NUM_PARAM is', PATTERN_NUM_PARAM);
 	const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 4;
+	console.log(PATTERN_NUM);
 	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
 	switch(PATTERN_NUM){
 		case 1: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
 		case 2: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
 		case 3: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
 		case 4: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
-		case 5: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
-		case 6: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
-		case 7: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
-		case 8: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
-		case 9: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,null]; break;
-		default: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
+		case 5: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1','user1']; break;
+		case 6: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1',null]; break;
+		case 7: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,'user1']; break;
+		case 8: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,null]; break;
 	}
 	// console.log([ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]);
 	// getパラメーターを作る関数。[ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]にnullが含まれている場合はパラメーターに含めない
@@ -208,6 +212,12 @@ onMount(fetch_hello);
 <input bind:value={LINK} type="text" placeholder="link_url">
 <button on:click={fetch_insert_link}>insert_link</button>
 </div>
+
+<div>
+	<!-- asyncの関数をon:clickをトリガーに実行する場合は {() => FUNCTION_NAME()} と書く(キショイ書き方だと思った) -->
+  <button on:click={() => fetch_hello()}>fetch_hello</button>
+</div>
+
 
 <ul>
 	{#each hello_fetch_data as item, index}
