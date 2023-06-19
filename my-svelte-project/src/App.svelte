@@ -213,7 +213,10 @@ onMount(fetch_hello);
 </div>
 
 <div>
-	<!-- asyncの関数をon:clickをトリガーに実行する場合は {() => FUNCTION_NAME()} と書く(キショイ書き方だと思った) -->
+	<!-- svelteにおいて
+		asyncの関数をon:clickをトリガーに実行する場合は
+		{() => FUNCTION_NAME()}
+		と書く(キショイ書き方だと思った) -->
   <button on:click={() => fetch_hello()}>clear condition</button>
 </div>
 
