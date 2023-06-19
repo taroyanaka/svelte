@@ -215,7 +215,7 @@ onMount(fetch_hello);
 
 <div>
 	<!-- asyncの関数をon:clickをトリガーに実行する場合は {() => FUNCTION_NAME()} と書く(キショイ書き方だと思った) -->
-  <button on:click={() => fetch_hello()}>fetch_hello</button>
+  <button on:click={() => fetch_hello()}>clear condition</button>
 </div>
 
 
