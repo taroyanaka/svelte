@@ -21,57 +21,13 @@ const WHITE_LIST_URL_ARRAY = [
 ];
 let ERROR_MESSAGE = "";
 
-
-
-
-// app.get('/read_all_test', (req, res) => {
-//     const STANDARD_READ_QUERY = `
-//     SELECT
-//     links.id AS id, links.link AS link, links.created_at AS created_at, links.updated_at AS updated_at,
-//     users.id AS user_id, users.username AS username,
-//     (SELECT COUNT(*) FROM likes WHERE likes.link_id = links.id) AS like_count
-//     FROM links
-//     LEFT JOIN users ON links.user_id = users.id
-//     LEFT JOIN likes ON links.id = likes.link_id`;
-//     // req.bodyに ASC,DESC,TAG,USERがある場合は、それぞれの条件に合わせてSQL文を変更する関数
-//     const read_query = (req) => {
-//         const ORDER_BY = req.query.order_by ? req.query.order_by : 'DESC';
-//         const ORDER_BY_COLUMN = req.query.order_by_column ? req.query.order_by_column : 'links.id';
-//         const REQ_TAG = req.query.tag ? req.query.tag : null;
-//         const USER = req.query.user ? req.query.user : null;
-//         const WHERE_TAG = REQ_TAG ? `WHERE tags.tag = '${REQ_TAG}'` : '';
-//         const WHERE_USER = USER ? `WHERE users.username = '${USER}'` : '';
-//         const WHERE_TAG_AND_USER = REQ_TAG && USER ? `WHERE tags.tag = '${REQ_TAG}' AND users.username = '${USER}'` : '';
-//         const WHERE_TAG_OR_USER = REQ_TAG || USER ? `WHERE tags.tag = '${REQ_TAG}' OR users.username = '${USER}'` : '';
-//         const WHERE = WHERE_TAG_AND_USER || WHERE_TAG_OR_USER || WHERE_TAG || WHERE_USER;
-//         switch (req.query) {
-//             case 'ASC':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ASC`;
-//             case 'DESC':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} DESC`;
-//             case 'TAG':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
-//             case 'USER':
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
-//             default:
-//                 return `${STANDARD_READ_QUERY} ${WHERE} ORDER BY ${ORDER_BY_COLUMN} ${ORDER_BY}`;
-//         }
-//     };
-//     console.log(read_query(req));
-//     const result = db.prepare(read_query(req)).all();
-//     console.log(result);
-// });
-
 let ORDER_BY = 'DESC';
 let ORDER_BY_COLUMN = 'links.id';
 let REQ_TAG = '';
 let USER = '';
 
-let foo;
 
 const fetch_hello = async (PATTERN_NUM_PARAM) => {
-// async function fetch_hello(PATTERN_NUM_PARAM) {
-
 	const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 4;
 	console.log(PATTERN_NUM);
 	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
@@ -98,14 +54,9 @@ const fetch_hello = async (PATTERN_NUM_PARAM) => {
 		const get_param = get_param_array.join('&');
 		return `${endpoint}?${get_param}`;
 	};
-	// const result = await (await fetch(make_get_param())).json();
-	console.log(make_get_param());
+	// console.log(make_get_param());
 	hello_fetch_data = await (await fetch(make_get_param())).json();
-	// console.log(hello_fetch_data);
-	// hello_fetch_dataには、fetchで取得したデータを格納する
 };
-
-// const fetch_hello = async () => hello_fetch_data = await (await fetch("http://localhost:8000/read_all")).json();
 
 const get_POST_object = (BODY_OBJ) => {
   return {
@@ -158,26 +109,6 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 
 onMount(fetch_hello);
 // afterUpdate(fetch_hello);
-
-
-// const fetch_delete_tag = async (LINK_ID, TAG_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, id: TAG_ID }))).json();
-
-// let ramda_js_sample = R.add(40, 2);
-// const refs_sample = () => myInput_for_refs_sample.focus();
-// const refs_sample = () => console.log(myInput_for_refs_sample.value);
-// const handleMount = () => console.log("Component mounted.");
-// const fetchData = async () => {
-// 	const response = await fetch("https://jsonplaceholder.typicode.com/todos/1");
-// 	const data = await response.json();
-// 	fetch_message = data.title;
-// };
-// const show_data_from_chrome_console = () => console.log(window.app.$capture_state().ramda_js_sample);
-
-// let message = "Hello Svelte!";
-// let items = ["item1", "item2", "item3"];
-// let myInput_for_refs_sample;
-// let mounted_sample = "mounted_sample Svelte!";
-// let fetch_message = "";
 </script>
 
 
@@ -228,15 +159,12 @@ onMount(fetch_hello);
 		</div>
 
 		<div>
-			<!-- <input bind:this={myInput_for_refs_sample} /> -->
-			<!-- <button on:click={refs_sample}>Focus input</button> -->
 			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
 			<datalist id="autocomplete_list">
 				{#each ALL_TAGS as item, index}
 				<option value={item.tag}>
 				{/each}
 			</datalist>
-			<!-- <button on:click={get_TAG_VAL}>get_TAG_VAL</button> -->
 			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		</div>
 
@@ -287,49 +215,7 @@ onMount(fetch_hello);
 	{/each}
 </ul>
 
-
-<!-- <input bind:value={COMMENT} type="text" placeholder="comment"> -->
-<!-- <input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply"> -->
-<!-- <input bind:value={TAG} type="text" placeholder="tag"> -->
-
-
-
-
-
-<!-- <span>edit: </span>
-<a href="https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte">https://github.com/taroyanaka/svelte/blob/main/my-svelte-project/src/App.svelte</a>
-<p>ramda.js sample: {ramda_js_sample}</p>
-<div>
-	<input bind:value={message} />
-	<p>{message}</p>
-</div>  
-<ul>
-{#each items as item, index}
-	<li key={index}>{item}</li>
-{/each}
-</ul>
-<div>
-	<input bind:this={myInput_for_refs_sample} />
-	<button on:click={refs_sample}>Focus input</button>
-</div>
-
-<div>
-	<button on:click={fetchData}>fetchData</button>
-	<p>{fetch_message}</p>
-</div>
-
-<button on:click={show_data_from_chrome_console}>
-	show_data_from_chrome_console:
-	"window.app.$capture_state().ANY_PROPERTY_OR_FN_NAME"
-</button> -->
-
 <style>
-	/* div {
-		text-align: center;
-		padding: 1em;
-		max-width: 240px;
-		margin: 0 auto;
-	} */
 	.comment_zone, .reply_zone{
 		margin-left: 2rem;
 	}
