@@ -94,10 +94,9 @@ let USER = '';
 
 let foo;
 
-// const fetch_hello = async (PATTERN_NUM_PARAM) => {
-async function fetch_hello(PATTERN_NUM_PARAM) {
-	foo = PATTERN_NUM_PARAM;
-	console.log('PATTERN_NUM_PARAM is', PATTERN_NUM_PARAM);
+const fetch_hello = async (PATTERN_NUM_PARAM) => {
+// async function fetch_hello(PATTERN_NUM_PARAM) {
+
 	const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 4;
 	console.log(PATTERN_NUM);
 	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
