@@ -83,6 +83,18 @@ const test_inert_comment = () =>{
 	// expect(error).to.equal('OK');
 	error === 'OK' ? "" : console.log('error is not OK');
 	};
+
+	// db.prepare(`SELECT COUNT(*) AS count FROM comments WHERE user_id = ? AND link_id = ?`).get(user.user_id, req.body.link_id).count > 0 ? (()=>{throw new Error('既に同じcommentが存在する場合はエラー')})() : null;
+	const test_9 = ()=>{
+	// 'should return an error message when the comment already exists'
+	error_check_insert_comment('This comment already exists', DATA_LIMIT);
+	// 同じcommentを入れる
+	error = error_check_insert_comment('This comment already exists', DATA_LIMIT);
+	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
+	error === '既に同じcommentが存在する場合はエラー' ? "" : console.log('error is not 既に同じcommentが存在する場合はエラー');
+	};
+
+	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
 }
 
 
