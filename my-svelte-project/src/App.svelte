@@ -26,6 +26,67 @@ let ORDER_BY_COLUMN = 'links.id';
 let REQ_TAG = '';
 let USER = '';
 
+const test_inert_comment = () =>{
+	const DATA_LIMIT = 100;
+
+	const test_1 = ()=>{
+	// 'should return an error message when the comment is undefined'
+	let error = error_check_insert_comment(undefined, DATA_LIMIT);
+	// expect(error).to.equal('commentが空の場合はエラー');
+	error === 'commentが空の場合はエラー' ? "" : console.log('error is not commentが空の場合はエラー');
+	};
+	const test_2 = ()=>{
+	// 'should return an error message when the comment length exceeds the data limit'
+	let comment = 'a'.repeat(DATA_LIMIT + 1);
+	error = error_check_insert_comment(comment, DATA_LIMIT);
+	// expect(error).to.equal('commentの文字数がdata_limitを超える場合はエラー');
+	error === 'commentの文字数がdata_limitを超える場合はエラー' ? "" : console.log('error is not commentの文字数がdata_limitを超える場合はエラー');
+	};
+	const test_3 = ()=>{
+	// 'should return an error message when the comment length is 0'
+	error = error_check_insert_comment('', DATA_LIMIT);
+	// expect(error).to.equal('0文字の場合はエラー');
+	error === '0文字の場合はエラー' ? "" : console.log('error is not 0文字の場合はエラー');
+	};
+	const test_4 = ()=>{
+	// 'should return an error message when the comment contains symbols'
+	comment = 'This is a comment with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
+	error = error_check_insert_comment(comment, DATA_LIMIT);
+	// expect(error).to.equal('記号を含む場合はエラー');
+	error === '記号を含む場合はエラー' ? "" : console.log('error is not 記号を含む場合はエラー');
+	};
+	const test_5 = ()=>{
+	// 'should return an error message when the comment contains whitespace'
+	comment = 'This is a comment with whitespace';
+	error = error_check_insert_comment(comment, DATA_LIMIT);
+	// expect(error).to.equal('空白を含む場合はエラー');
+	error === '空白を含む場合はエラー' ? "" : console.log('error is not 空白を含む場合はエラー');
+	};
+	const test_6 = ()=>{
+	// 'should return an error message when the comment length is greater than 300'
+	comment = 'a'.repeat(301);
+	error = error_check_insert_comment(comment, DATA_LIMIT);
+	// expect(error).to.equal('300文字以上はエラー');
+	error === '300文字以上はエラー' ? "" : console.log('error is not 300文字以上はエラー');
+	};
+	const test_7 = ()=>{
+	// 'should return an error message when the comment contains a reserved SQL word'
+	comment = 'SELECT * FROM comments';
+	error = error_check_insert_comment(comment, DATA_LIMIT);
+	// expect(error).to.equal('SQLの予約語を含む場合はエラー');
+	error === 'SQLの予約語を含む場合はエラー' ? "" : console.log('error is not SQLの予約語を含む場合はエラー');
+	};
+	const test_8 = ()=>{
+	// 'should return OK when the comment is valid'
+	comment = 'This is a valid comment';
+	error = error_check_insert_comment(comment, DATA_LIMIT);
+	// expect(error).to.equal('OK');
+	error === 'OK' ? "" : console.log('error is not OK');
+	};
+}
+
+
+
 // testを作る
 // switch(PATTERN_NUM){
 // 		case 1: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
@@ -102,7 +163,10 @@ const is_include_WHITE_LIST_URL = (target_url_str, WHITE_LIST_URL_ARRAY) => WHIT
 const fetch_insert_link = async () => {
 	try {
 		// LINKがURLの配列の文字列を含む場合はtrueを返す関数を1行で
-		is_include_WHITE_LIST_URL(LINK, WHITE_LIST_URL_ARRAY) ? RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json() : (()=>{throw new Error('URL Error only' + WHITE_LIST_URL_ARRAY.join(" "))})();
+		// is_include_WHITE_LIST_URL(LINK, WHITE_LIST_URL_ARRAY) ? RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json() : (()=>{throw new Error('URL Error only' + WHITE_LIST_URL_ARRAY.join(" "))})();
+
+		RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
+
 		fetch_hello({});
 	} catch (error) {
 		// console.log(error);
