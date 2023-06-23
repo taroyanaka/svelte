@@ -326,7 +326,7 @@ const test_inert_comment_reply = () =>{
 	}
 
 	const test_4 = () =>{
-		
+
 		// 'should return a JSON response with a success message and comment reply ID'
 		const json = { result: 'success', comment_reply_id: 1 };
 		const status = 200;
@@ -341,6 +341,37 @@ const test_inert_comment_reply = () =>{
 	}
 
 }
+
+const test_like_increment_or_decrement = () =>{
+	const test_1 = () =>{
+		// 'no existing user_id should return 400'
+		const user = { user_id: 100 };
+		const req = { body: { link_id: 1 } };
+		const result = 
+		result === undefined ? res.status(400).send('User does not exist') : null;
+
+		// 'no existing link_id should return 400'
+		const user = { user_id: 1 };
+		const req = { body: { link_id: 100 } };
+		const result =
+		result === undefined ? res.status(400).send('Link does not exist') : null;
+	}
+	const test_2 = () => {
+		// 'should throw an error when the user has already liked the link'
+		let like_exists = { id: 1, user_id: 100, link_id: 100 };
+			like_fetch();
+		error === 'そんなlikeは無えよ' ? null : console.log('そんなlikeは無えよ無えよ error');
+
+
+		// 'should not throw an error when the user has not liked the link before'
+		like_exists = { id: 1, user_id: 1, link_id: 1 };
+		like_fetch();
+		error === 'そんなlikeは無えよ' ? console.log('そんなlikeは無えよ無えよ error') : null;
+	}
+	
+
+}
+
 
 
 // testを作る
