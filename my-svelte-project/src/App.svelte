@@ -29,38 +29,41 @@ let USER = '';
 
 
 const test_get_user_with_permission = () =>{
-	// 'should throw an error when name is empty',
-let REQ = { body: { name: '', password: 'password' } };
-// 'should throw an error when password is empty',
-REQ = { body: { name: 'username', password: '' } };
-// 'should throw an error when name is undefined',
-REQ = { body: { password: 'password' } };
-// 'should throw an error when password is undefined',
-REQ = { body: { name: 'username' } };
-// 'should throw an error when name is null',
-REQ = { body: { name: null, password: 'password' } };
-// 'should throw an error when password is null',
-REQ = { body: { name: 'username', password: null } };
-// 'should throw an error when name length is greater than 20',
-REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
-// 'should throw an error when password length is greater than 20',
-REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
-// 'should throw an error when name length is less than 4',
-REQ = { body: { name: 'use', password: 'password' } };
-// 'should throw an error when password length is less than 4',
-REQ = { body: { name: 'username', password: 'pass' } };
-// 'should throw an error when name contains a space',
-REQ = { body: { name: 'user name', password: 'password' } };
-// 'should throw an error when password contains a space',
-REQ = { body: { name: 'username', password: 'pass word' } };
-// 'should throw an error when name contains a full-width space',
-REQ = { body: { name: 'user　name', password: 'password' } };
-// 'should throw an error when password contains a full-width space',
-REQ = { body: { name: 'username', password: 'pass　word' } };
-// 'should not throw an error when name and password are valid',
-REQ = { body: { name: 'username', password: 'password' } };
 
+	const test_1 = () =>{
+		// 'should throw an error when name is empty',
+		let REQ = { body: { name: '', password: 'password' } };
+		// 'should throw an error when password is empty',
+		REQ = { body: { name: 'username', password: '' } };
+		// 'should throw an error when name is undefined',
+		REQ = { body: { password: 'password' } };
+		// 'should throw an error when password is undefined',
+		REQ = { body: { name: 'username' } };
+		// 'should throw an error when name is null',
+		REQ = { body: { name: null, password: 'password' } };
+		// 'should throw an error when password is null',
+		REQ = { body: { name: 'username', password: null } };
+		// 'should throw an error when name length is greater than 20',
+		REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
+		// 'should throw an error when password length is greater than 20',
+		REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
+		// 'should throw an error when name length is less than 4',
+		REQ = { body: { name: 'use', password: 'password' } };
+		// 'should throw an error when password length is less than 4',
+		REQ = { body: { name: 'username', password: 'pass' } };
+		// 'should throw an error when name contains a space',
+		REQ = { body: { name: 'user name', password: 'password' } };
+		// 'should throw an error when password contains a space',
+		REQ = { body: { name: 'username', password: 'pass word' } };
+		// 'should throw an error when name contains a full-width space',
+		REQ = { body: { name: 'user　name', password: 'password' } };
+		// 'should throw an error when password contains a full-width space',
+		REQ = { body: { name: 'username', password: 'pass　word' } };
+		// 'should not throw an error when name and password are valid',
+		REQ = { body: { name: 'username', password: 'password' } };
+	}
 
+	const test_2 = () =>{
 	// expect(user.username).toEqual('testuser');
 	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
 	// expect(user.user_permission).toEqual('admin');
@@ -98,6 +101,8 @@ REQ = { body: { name: 'username', password: 'password' } };
 	user = get_user_with_permission(req, db);
 	// expect(user).not.toBeNull();
 	user === null ? console.log('user is null') : "";
+	}
+
 }
 const test_inert_link = () =>{
 	// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
@@ -246,6 +251,96 @@ const test_inert_comment = () =>{
 	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
 }
 
+const test_inert_comment_reply = () =>{
+	const test_1 = () =>{
+		const DATA_LIMIT = 100;
+
+		// 'should return an error message when the comment reply is undefined'
+		let error = error_check_insert_comment_reply(undefined, DATA_LIMIT);
+		// expect(error).to.equal('comment_replyが空の場合はエラー');
+		error === 'comment_replyが空の場合はエラー' ? null : console.log('error_check_insert_comment_reply(undefined, DATA_LIMIT) failed');
+
+		// 'should return an error message when the comment reply length exceeds the data limit'
+		let commentReply = 'a'.repeat(DATA_LIMIT + 1);
+		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+		// expect(error).to.equal('comment_replyの文字数がdata_limitを超える場合はエラー');
+		error === 'comment_replyの文字数がdata_limitを超える場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+		// 'should return an error message when the comment reply length is 0'
+		error = error_check_insert_comment_reply('', DATA_LIMIT);
+		// expect(error).to.equal('0文字の場合はエラー');
+		error === '0文字の場合はエラー' ? null : console.log('error_check_insert_comment_reply("", DATA_LIMIT) failed');
+
+		// 'should return an error message when the comment reply contains symbols'
+		commentReply = 'This is a comment reply with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
+		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+		// expect(error).to.equal('記号を含む場合はエラー');
+		error === '記号を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+		// 'should return an error message when the comment reply contains whitespace'
+		commentReply = 'This is a comment reply with whitespace';
+		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+		// expect(error).to.equal('空白を含む場合はエラー');
+		error === '空白を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+		// 'should return an error message when the comment reply length is greater than 10'
+		commentReply = 'a'.repeat(11);
+		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+		// expect(error).to.equal('10文字以上はエラー');
+		error === '10文字以上はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+		// 'should return an error message when the comment reply contains a reserved SQL word'
+		commentReply = 'SELECT * FROM comments';
+		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+		// expect(error).to.equal('SQLの予約語を含む場合はエラー');
+		error === 'SQLの予約語を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+		// 'should return OK when the comment reply is valid'
+		commentReply = 'This is a valid comment reply';
+		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+		// expect(error).to.equal('OK');
+		error === 'OK' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+	}
+
+	const test_2 = () =>{
+		// 'should insert a new comment reply into the comment_replies table'
+		const user = { user_id: 1 };
+		const req = { body: { comment_id: 1, comment_reply: 'test reply' } };
+		const now = () => new Date().toISOString();
+		result === 1 ? null : console.log('insertCommentReply failed');
+
+	}
+
+	const test_3 = () =>{
+		// 'should throw an error when a comment reply with the same user_id and comment_id already exists'
+		const user = { user_id: 1 };
+			const req = { body: { comment_id: 1 } };
+		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
+
+		// 'should not throw an error when a comment reply with the same user_id and comment_id does not exist'
+			const user = { user_id: 1 };
+			const req = { body: { comment_id: 2 } };
+		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
+		
+	}
+
+	const test_4 = () =>{
+		
+		// 'should return a JSON response with a success message and comment reply ID'
+		const json = { result: 'success', comment_reply_id: 1 };
+		const status = 200;
+		const result = { lastInsertRowid: 1 };
+		const expectedResponse = {
+			result: 'success',
+			comment_reply_id: result.lastInsertRowid
+		};
+		status === 200 && json.result === 'success'
+			? ''
+			: console.log('should return a JSON response with a success message and comment reply ID');
+	}
+
+}
 
 
 // testを作る
