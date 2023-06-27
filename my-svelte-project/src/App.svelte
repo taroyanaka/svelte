@@ -416,9 +416,15 @@ const fetch_hello2 = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links
 	// await (await fetch('http://localhost:8000/read_all3')).json();
 }
 const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+	console.log(
+		ORDER_BY_PARAM,
+		ORDER_BY_PARAM,
+		ORDER_BY_COLUMN_PARAM,
+		REQ_TAG_PARAM,
+		USER_PARAM
+	)
 	// const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 0;
 	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
-	ORDER_BY = ORDER_BY_PARAM; // ? ORDER_BY_PARAM : 'DESC';
 	ORDER_BY = ORDER_BY_PARAM; // ? ORDER_BY_PARAM : 'DESC';
 	ORDER_BY_COLUMN = ORDER_BY_COLUMN_PARAM; // ? ORDER_BY_COLUMN_PARAM : 'links.id';
 	REQ_TAG = REQ_TAG_PARAM; // ? REQ_TAG_PARAM : null;
@@ -434,7 +440,8 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 		if(REQ_TAG) get_param_array.push(`tag=${REQ_TAG}`);
 		if(USER) get_param_array.push(`user=${USER}`);
 		// const endpoint = 'http://localhost:8000/read_all_test';
-		const endpoint = 'http://localhost:8000/read_all';
+		// const endpoint = 'http://localhost:8000/read_all';
+		const endpoint = 'http://localhost:8000/read_all2';
 		const get_param = get_param_array.join('&');
 		return `${endpoint}?${get_param}`;
 	};
@@ -498,7 +505,6 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 // onMount(fetch_hello({}));
 onMount(async () => {
 	try {
-		await fetch_hello2({});
 		await fetch_hello({});
 		await fetch_get_tags_for_autocomplete();	
 	} catch (error) {
@@ -547,10 +553,10 @@ onMount(async () => {
 	{#each more_res_flatten_obj as item, index}
 		<button on:click={() => fetch_hello(
 			{
-				ORDER_BY: item['ORDER_BY'],
-				ORDER_BY_COLUMN: item['ORDER_BY_COLUMN'],
-				REQ_TAG: item['REQ_TAG'],
-				USER: item['USER']
+				ORDER_BY_PARAM: item['ORDER_BY'],
+				// ORDER_BY_COLUMN_PARAM: item['ORDER_BY_COLUMN'],
+				REQ_TAG_PARAM: item['REQ_TAG'],
+				USER_PARAM: item['USER']
 			}
 		)}>{[item['ORDER_BY'],item['ORDER_BY_COLUMN'],item['REQ_TAG'],item['USER']].join("  ")}</button>
 	{/each}
