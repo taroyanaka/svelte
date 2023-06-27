@@ -5,7 +5,6 @@ import { afterUpdate } from 'svelte';
 // $: if(fetch_message) {fetch_hello({});console.log("fetch_message");}
 
 let hello_fetch_data = [];
-let hello_fetch_data2 = [];
 let NAME = 'user1';
 let PASSWORD = 'user_pass1';
 let LINK = 'https://yanaka.dev/';
@@ -395,8 +394,8 @@ let USER = '';
 // ramda.jsで全ての組み合わせを作る関数
 // R.xprod(['DESC','ASC'], ['links.id','links.name'], ['tag1','tag2','tag3'], ['user1','user2','user3']);
 const pre_res = R.xprod(['tag1','tag2','tag3'], ['user1','user2','user3']);
-// pre_resに['links.id','links.name']を追加する
-const res = R.xprod(['links.id','links.name'], pre_res);
+// pre_resに['links.id','like_count']を追加する
+const res = R.xprod(['links.id','like_count'], pre_res);
 // resに['DESC','ASC']を追加する
 const more_res = R.xprod(['DESC','ASC'], res);
 // more_resをそれぞれR.flattenする
@@ -411,13 +410,9 @@ const more_res_flatten_obj = more_res_flatten.map((item) => {
 	}
 });
 
-const fetch_hello2 = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
-	hello_fetch_data2 = await (await fetch('http://localhost:8000/read_all2')).json();
-	// await (await fetch('http://localhost:8000/read_all3')).json();
-}
 const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+	try {
 	console.log(
-		ORDER_BY_PARAM,
 		ORDER_BY_PARAM,
 		ORDER_BY_COLUMN_PARAM,
 		REQ_TAG_PARAM,
@@ -440,13 +435,20 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 		if(REQ_TAG) get_param_array.push(`tag=${REQ_TAG}`);
 		if(USER) get_param_array.push(`user=${USER}`);
 		// const endpoint = 'http://localhost:8000/read_all_test';
-		// const endpoint = 'http://localhost:8000/read_all';
-		const endpoint = 'http://localhost:8000/read_all2';
+		const endpoint = 'http://localhost:8000/read_all';
+		// const endpoint = 'http://localhost:8000/read_all2';
 		const get_param = get_param_array.join('&');
 		return `${endpoint}?${get_param}`;
 	};
 	// console.log(make_get_param());
+	const res = await (await fetch(make_get_param())).json();
+	// resのjsonが{result: 'fail', error: error.message}の場合はエラーを投げる
+	if(res.result === 'fail') throw new Error(res.error);
 	hello_fetch_data = await (await fetch(make_get_param())).json();
+	} catch (error) {
+		console.log(error);
+	}
+
 };
 
 const get_POST_object = (BODY_OBJ) => {
@@ -554,7 +556,7 @@ onMount(async () => {
 		<button on:click={() => fetch_hello(
 			{
 				ORDER_BY_PARAM: item['ORDER_BY'],
-				// ORDER_BY_COLUMN_PARAM: item['ORDER_BY_COLUMN'],
+				ORDER_BY_COLUMN_PARAM: item['ORDER_BY_COLUMN'],
 				REQ_TAG_PARAM: item['REQ_TAG'],
 				USER_PARAM: item['USER']
 			}
@@ -562,14 +564,6 @@ onMount(async () => {
 	{/each}
 	
 </div>
-
-<ul>
-	{#each hello_fetch_data2 as item, index}
-	<li>		
-		<div>{ item }</div>
-	</li>
-	{/each}
-</ul>
 
 <ul>
 	{#each hello_fetch_data as item, index}
