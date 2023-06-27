@@ -5,6 +5,7 @@ import { afterUpdate } from 'svelte';
 // $: if(fetch_message) {fetch_hello({});console.log("fetch_message");}
 
 let hello_fetch_data = [];
+let hello_fetch_data2 = [];
 let NAME = 'user1';
 let PASSWORD = 'user_pass1';
 let LINK = 'https://yanaka.dev/';
@@ -28,349 +29,351 @@ let USER = '';
 
 
 
-const test_get_user_with_permission = () =>{
+// const test_get_user_with_permission = () =>{
 
-	const test_1 = () =>{
-		// 'should throw an error when name is empty',
-		let REQ = { body: { name: '', password: 'password' } };
-		// 'should throw an error when password is empty',
-		REQ = { body: { name: 'username', password: '' } };
-		// 'should throw an error when name is undefined',
-		REQ = { body: { password: 'password' } };
-		// 'should throw an error when password is undefined',
-		REQ = { body: { name: 'username' } };
-		// 'should throw an error when name is null',
-		REQ = { body: { name: null, password: 'password' } };
-		// 'should throw an error when password is null',
-		REQ = { body: { name: 'username', password: null } };
-		// 'should throw an error when name length is greater than 20',
-		REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
-		// 'should throw an error when password length is greater than 20',
-		REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
-		// 'should throw an error when name length is less than 4',
-		REQ = { body: { name: 'use', password: 'password' } };
-		// 'should throw an error when password length is less than 4',
-		REQ = { body: { name: 'username', password: 'pass' } };
-		// 'should throw an error when name contains a space',
-		REQ = { body: { name: 'user name', password: 'password' } };
-		// 'should throw an error when password contains a space',
-		REQ = { body: { name: 'username', password: 'pass word' } };
-		// 'should throw an error when name contains a full-width space',
-		REQ = { body: { name: 'user　name', password: 'password' } };
-		// 'should throw an error when password contains a full-width space',
-		REQ = { body: { name: 'username', password: 'pass　word' } };
-		// 'should not throw an error when name and password are valid',
-		REQ = { body: { name: 'username', password: 'password' } };
-	}
+// 	const test_1 = () =>{
+// 		// 'should throw an error when name is empty',
+// 		let REQ = { body: { name: '', password: 'password' } };
+// 		// 'should throw an error when password is empty',
+// 		REQ = { body: { name: 'username', password: '' } };
+// 		// 'should throw an error when name is undefined',
+// 		REQ = { body: { password: 'password' } };
+// 		// 'should throw an error when password is undefined',
+// 		REQ = { body: { name: 'username' } };
+// 		// 'should throw an error when name is null',
+// 		REQ = { body: { name: null, password: 'password' } };
+// 		// 'should throw an error when password is null',
+// 		REQ = { body: { name: 'username', password: null } };
+// 		// 'should throw an error when name length is greater than 20',
+// 		REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
+// 		// 'should throw an error when password length is greater than 20',
+// 		REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
+// 		// 'should throw an error when name length is less than 4',
+// 		REQ = { body: { name: 'use', password: 'password' } };
+// 		// 'should throw an error when password length is less than 4',
+// 		REQ = { body: { name: 'username', password: 'pass' } };
+// 		// 'should throw an error when name contains a space',
+// 		REQ = { body: { name: 'user name', password: 'password' } };
+// 		// 'should throw an error when password contains a space',
+// 		REQ = { body: { name: 'username', password: 'pass word' } };
+// 		// 'should throw an error when name contains a full-width space',
+// 		REQ = { body: { name: 'user　name', password: 'password' } };
+// 		// 'should throw an error when password contains a full-width space',
+// 		REQ = { body: { name: 'username', password: 'pass　word' } };
+// 		// 'should not throw an error when name and password are valid',
+// 		REQ = { body: { name: 'username', password: 'password' } };
+// 	}
 
-	const test_2 = () =>{
-	// expect(user.username).toEqual('testuser');
-	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
-	// expect(user.user_permission).toEqual('admin');
-	user.user_permission === 'admin' ? "" : console.log('user.user_permission is not admin');
-	// expect(user.deletable).toEqual(1);
-	user.deletable === 1 ? "" : console.log('user.deletable is not 1');
-	// expect(user.writable).toEqual(1);
-	user.writable === 1 ? "" : console.log('user.writable is not 1');
-	// expect(user.readable).toEqual(1);
-	user.readable === 1 ? "" : console.log('user.readable is not 1');
-	// expect(user.likable).toEqual(1);
-	user.likable === 1 ? "" : console.log('user.likable is not 1');
-	// expect(user.commentable).toEqual(1);
-	user.commentable === 1 ? "" : console.log('user.commentable is not 1');
+// 	const test_2 = () =>{
+// 	// expect(user.username).toEqual('testuser');
+// 	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
+// 	// expect(user.user_permission).toEqual('admin');
+// 	user.user_permission === 'admin' ? "" : console.log('user.user_permission is not admin');
+// 	// expect(user.deletable).toEqual(1);
+// 	user.deletable === 1 ? "" : console.log('user.deletable is not 1');
+// 	// expect(user.writable).toEqual(1);
+// 	user.writable === 1 ? "" : console.log('user.writable is not 1');
+// 	// expect(user.readable).toEqual(1);
+// 	user.readable === 1 ? "" : console.log('user.readable is not 1');
+// 	// expect(user.likable).toEqual(1);
+// 	user.likable === 1 ? "" : console.log('user.likable is not 1');
+// 	// expect(user.commentable).toEqual(1);
+// 	user.commentable === 1 ? "" : console.log('user.commentable is not 1');
 
-	req = { body: { name: 'testuser', password: 'wrongpassword' } };
-	user = get_user_with_permission(req, db);
-	// expect(user).toBeNull();
-	user === null ? "" : console.log('user is not null');
-
-
-	req = { body: { name: 'nonexistentuser', password: 'password' } };
-	user = get_user_with_permission(req, db);
-	// expect(user).toBeNull();
-	user === null ? "" : console.log('user is not null');
+// 	req = { body: { name: 'testuser', password: 'wrongpassword' } };
+// 	user = get_user_with_permission(req, db);
+// 	// expect(user).toBeNull();
+// 	user === null ? "" : console.log('user is not null');
 
 
-	req = { body: { name: "testuser'; DROP TABLE users; --", password: 'password' } };
-	user = get_user_with_permission(req, db);
-	// expect(user).toBeNull();
-	user === null ? "" : console.log('user is not null');
+// 	req = { body: { name: 'nonexistentuser', password: 'password' } };
+// 	user = get_user_with_permission(req, db);
+// 	// expect(user).toBeNull();
+// 	user === null ? "" : console.log('user is not null');
 
 
-	req = { body: { name: 'testuser', password: 'password' } };
-	user = get_user_with_permission(req, db);
-	// expect(user).not.toBeNull();
-	user === null ? console.log('user is null') : "";
-	}
-
-}
-const test_inert_link = () =>{
-	// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
-	error_check_for_insert_link(undefined) === null ? console.log('error_check_for_insert_link(undefined) is null') : "";
-	// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
-	error_check_for_insert_link('SELECT') === null ? console.log('error_check_for_insert_link(SELECT) is null') : "";
-	// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
-	error_check_for_insert_link('https::///google.co.jp') === null ? console.log('error_check_for_insert_link(https::///google.co.jp) is null') : "";
-	// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
-	error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? console.log('error_check_for_insert_link(https://google.co.jp/.repeat(1000)) is null') : "";
-	// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
-	error_check_for_insert_link('https://hogehoge.com/') === null ? console.log('error_check_for_insert_link(https://hogehoge.com/) is null') : "";
-	// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
-	error_check_for_insert_link('https://www.yahoo.co.jp/') === null ? console.log('error_check_for_insert_link(https://www.yahoo.co.jp/) is null') : "";
-	// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
-	error_check_for_insert_link('https://www.google.co.jp/') === null ? console.log('error_check_for_insert_link(https://www.google.co.jp/) is null') : "";
-	// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
-	error_check_for_insert_link('https://www.youtube.com/') === null ? console.log('error_check_for_insert_link(https://www.youtube.com/) is null') : "";
+// 	req = { body: { name: "testuser'; DROP TABLE users; --", password: 'password' } };
+// 	user = get_user_with_permission(req, db);
+// 	// expect(user).toBeNull();
+// 	user === null ? "" : console.log('user is not null');
 
 
-	req = { body: { name: 'testuser', password: 'password' } };
-	user = get_user_with_permission(req, db);
-	// expect(user).not.toBeNull();
-	user === null ? console.log('user is null') : "";
-	// expect(user.writable).toEqual(1);
-	user.writable === 1 ? "" : console.log('user.writable is not 1');
-	// expect(user.user_permission).toEqual('admin');
-	user.user_permission === 'admin' ? "" : console.log('user.user_permission is not admin');
-	// expect(user.username).toEqual('testuser');
-	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
-	// expect(user.commentable).toEqual(1);
-	user.commentable === 1 ? "" : console.log('user.commentable is not 1');
-	// expect(user.deletable).toEqual(1);
-	user.deletable === 1 ? "" : console.log('user.deletable is not 1');
-	// expect(user.likable).toEqual(1);
-	user.likable === 1 ? "" : console.log('user.likable is not 1');
-	// expect(user.readable).toEqual(1);
-	user.readable === 1 ? "" : console.log('user.readable is not 1');
+// 	req = { body: { name: 'testuser', password: 'password' } };
+// 	user = get_user_with_permission(req, db);
+// 	// expect(user).not.toBeNull();
+// 	user === null ? console.log('user is null') : "";
+// 	}
 
+// }
+// const test_insert_link = () =>{
+// 	// get_user_with_permission周りのテストはここで全部やる
+// 	const test_1 = () => {
+// 		req = { body: { name: 'testtest_user', password: 'password' } };
+// 		test_user = get_test_user_with_permission(req, db);
+// 		// expect(test_user).not.toBeNull();
+// 		test_user === null ? console.log('test_user is null') : "";
+// 		// expect(test_user.writable).toEqual(1);
+// 		test_user.writable === 1 ? "" : console.log('test_user.writable is not 1');
+// 		// expect(test_user.test_user_permission).toEqual('admin');
+// 		test_user.test_user_permission === 'admin' ? "" : console.log('test_user.test_user_permission is not admin');
+// 		// expect(test_user.test_username).toEqual('testtest_user');
+// 		test_user.test_username === 'testtest_user' ? "" : console.log('test_user.test_username is not testtest_user');
+// 		// expect(test_user.commentable).toEqual(1);
+// 		test_user.commentable === 1 ? "" : console.log('test_user.commentable is not 1');
+// 		// expect(test_user.deletable).toEqual(1);
+// 		test_user.deletable === 1 ? "" : console.log('test_user.deletable is not 1');
+// 		// expect(test_user.likable).toEqual(1);
+// 		test_user.likable === 1 ? "" : console.log('test_user.likable is not 1');
+// 		// expect(test_user.readable).toEqual(1);
+// 		test_user.readable === 1 ? "" : console.log('test_user.readable is not 1');
+// 	}
 
-	const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
-	// expect(link_exists).not.toBeNull();
-	link_exists === null ? console.log('link_exists is null') : "";
-	const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
-	// expect(link_not_exists).toBeUndefined();
-	link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
+// 	const test_2 = () => {
+// 		// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
+// 		error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
+// 		// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
+// 		error_check_for_insert_link('SELECT') === null ? null : console.log('SQLの予約語を含む場合はエラー error');
+// 		// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
+// 		error_check_for_insert_link('https::///google.co.jp') === null ? null : console.log('URLの形式が正しくありません error');
+// 		// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
+// 		error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
+// 		// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
+// 		error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
+// 		// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
+// 		error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
+// 		// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
+// 		error_check_for_insert_link('https://www.google.co.jp/') === 'OK' ? null : console.log('OK error');
+// 		// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
+// 		error_check_for_insert_link('https://www.youtube.com/') === 'OK' ? null : console.log('OK error');
+// 	}
 
+// 	const test_3 = () =>{
+// 		const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
+// 		// expect(link_exists).not.toBeNull();
+// 		link_exists === null ? console.log('link_exists is null') : "";
+// 		const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
+// 		// expect(link_not_exists).toBeUndefined();
+// 		link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
+// 	}
 
+// 	const test_4 = () => {
+// 		let result = error_check_for_insert_tag(undefined);
+// 		result.status === false ? "" : console.log('result.status is not false');
+// 		result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
 
-	const test_error_check_for_insert_tag = () => {
-	let result = error_check_for_insert_tag(undefined);
-	result.status === false ? "" : console.log('result.status is not false');
-	result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
+// 		result = error_check_for_insert_tag('test!');
+// 		result.status === false ? ''  : console.log('result.status is not false');
+// 		result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
 
-	result = error_check_for_insert_tag('test!');
-	result.status === false ? ''  : console.log('result.status is not false');
-	result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
+// 		result = error_check_for_insert_tag('test tag');
+// 		result.status === false ? '' : console.log('result.status is not false');
+// 		result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
 
-	result = error_check_for_insert_tag('test tag');
-	result.status === false ? '' : console.log('result.status is not false');
-	result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
+// 		result = error_check_for_insert_tag('testlong');
+// 		result.status === false ? '' : console.log('result.status is not false');
+// 		result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
 
-	result = error_check_for_insert_tag('testlong');
-	result.status === false ? '' : console.log('result.status is not false');
-	result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
+// 		result = error_check_for_insert_tag('SELECT');
+// 		result.status === false ? '' : console.log('result.status is not false');
+// 		result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
 
-	result = error_check_for_insert_tag('SELECT');
-	result.status === false ? '' : console.log('result.status is not false');
-	result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
+// 		result = error_check_for_insert_tag('test');
+// 		result.status === true ? '' : console.log('result.status is not true');
+// 		result.res === 'OK' ? '' : console.log('result.res is not OK');
+// 	};
 
-	result = error_check_for_insert_tag('test');
-	result.status === true ? '' : console.log('result.status is not true');
-	result.res === 'OK' ? '' : console.log('result.res is not OK');
-	};
-test_error_check_for_insert_tag();
-}
+// }
 
-const test_inert_comment = () =>{
-	const DATA_LIMIT = 100;
+// const test_inert_comment = () =>{
+// 	const DATA_LIMIT = 100;
 
-	const test_1 = ()=>{
-	// 'should return an error message when the comment is undefined'
-	let error = error_check_insert_comment(undefined, DATA_LIMIT);
-	// expect(error).to.equal('commentが空の場合はエラー');
-	error === 'commentが空の場合はエラー' ? "" : console.log('error is not commentが空の場合はエラー');
-	};
-	const test_2 = ()=>{
-	// 'should return an error message when the comment length exceeds the data limit'
-	let comment = 'a'.repeat(DATA_LIMIT + 1);
-	error = error_check_insert_comment(comment, DATA_LIMIT);
-	// expect(error).to.equal('commentの文字数がdata_limitを超える場合はエラー');
-	error === 'commentの文字数がdata_limitを超える場合はエラー' ? "" : console.log('error is not commentの文字数がdata_limitを超える場合はエラー');
-	};
-	const test_3 = ()=>{
-	// 'should return an error message when the comment length is 0'
-	error = error_check_insert_comment('', DATA_LIMIT);
-	// expect(error).to.equal('0文字の場合はエラー');
-	error === '0文字の場合はエラー' ? "" : console.log('error is not 0文字の場合はエラー');
-	};
-	const test_4 = ()=>{
-	// 'should return an error message when the comment contains symbols'
-	comment = 'This is a comment with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
-	error = error_check_insert_comment(comment, DATA_LIMIT);
-	// expect(error).to.equal('記号を含む場合はエラー');
-	error === '記号を含む場合はエラー' ? "" : console.log('error is not 記号を含む場合はエラー');
-	};
-	const test_5 = ()=>{
-	// 'should return an error message when the comment contains whitespace'
-	comment = 'This is a comment with whitespace';
-	error = error_check_insert_comment(comment, DATA_LIMIT);
-	// expect(error).to.equal('空白を含む場合はエラー');
-	error === '空白を含む場合はエラー' ? "" : console.log('error is not 空白を含む場合はエラー');
-	};
-	const test_6 = ()=>{
-	// 'should return an error message when the comment length is greater than 300'
-	comment = 'a'.repeat(301);
-	error = error_check_insert_comment(comment, DATA_LIMIT);
-	// expect(error).to.equal('300文字以上はエラー');
-	error === '300文字以上はエラー' ? "" : console.log('error is not 300文字以上はエラー');
-	};
-	const test_7 = ()=>{
-	// 'should return an error message when the comment contains a reserved SQL word'
-	comment = 'SELECT * FROM comments';
-	error = error_check_insert_comment(comment, DATA_LIMIT);
-	// expect(error).to.equal('SQLの予約語を含む場合はエラー');
-	error === 'SQLの予約語を含む場合はエラー' ? "" : console.log('error is not SQLの予約語を含む場合はエラー');
-	};
-	const test_8 = ()=>{
-	// 'should return OK when the comment is valid'
-	comment = 'This is a valid comment';
-	error = error_check_insert_comment(comment, DATA_LIMIT);
-	// expect(error).to.equal('OK');
-	error === 'OK' ? "" : console.log('error is not OK');
-	};
+// 	const test_1 = ()=>{
+// 	// 'should return an error message when the comment is undefined'
+// 	let error = error_check_insert_comment(undefined, DATA_LIMIT);
+// 	// expect(error).to.equal('commentが空の場合はエラー');
+// 	error === 'commentが空の場合はエラー' ? "" : console.log('error is not commentが空の場合はエラー');
+// 	};
+// 	const test_2 = ()=>{
+// 	// 'should return an error message when the comment length exceeds the data limit'
+// 	let comment = 'a'.repeat(DATA_LIMIT + 1);
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('commentの文字数がdata_limitを超える場合はエラー');
+// 	error === 'commentの文字数がdata_limitを超える場合はエラー' ? "" : console.log('error is not commentの文字数がdata_limitを超える場合はエラー');
+// 	};
+// 	const test_3 = ()=>{
+// 	// 'should return an error message when the comment length is 0'
+// 	error = error_check_insert_comment('', DATA_LIMIT);
+// 	// expect(error).to.equal('0文字の場合はエラー');
+// 	error === '0文字の場合はエラー' ? "" : console.log('error is not 0文字の場合はエラー');
+// 	};
+// 	const test_4 = ()=>{
+// 	// 'should return an error message when the comment contains symbols'
+// 	comment = 'This is a comment with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('記号を含む場合はエラー');
+// 	error === '記号を含む場合はエラー' ? "" : console.log('error is not 記号を含む場合はエラー');
+// 	};
+// 	const test_5 = ()=>{
+// 	// 'should return an error message when the comment contains whitespace'
+// 	comment = 'This is a comment with whitespace';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('空白を含む場合はエラー');
+// 	error === '空白を含む場合はエラー' ? "" : console.log('error is not 空白を含む場合はエラー');
+// 	};
+// 	const test_6 = ()=>{
+// 	// 'should return an error message when the comment length is greater than 300'
+// 	comment = 'a'.repeat(301);
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('300文字以上はエラー');
+// 	error === '300文字以上はエラー' ? "" : console.log('error is not 300文字以上はエラー');
+// 	};
+// 	const test_7 = ()=>{
+// 	// 'should return an error message when the comment contains a reserved SQL word'
+// 	comment = 'SELECT * FROM comments';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('SQLの予約語を含む場合はエラー');
+// 	error === 'SQLの予約語を含む場合はエラー' ? "" : console.log('error is not SQLの予約語を含む場合はエラー');
+// 	};
+// 	const test_8 = ()=>{
+// 	// 'should return OK when the comment is valid'
+// 	comment = 'This is a valid comment';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('OK');
+// 	error === 'OK' ? "" : console.log('error is not OK');
+// 	};
 
-	// db.prepare(`SELECT COUNT(*) AS count FROM comments WHERE user_id = ? AND link_id = ?`).get(user.user_id, req.body.link_id).count > 0 ? (()=>{throw new Error('既に同じcommentが存在する場合はエラー')})() : null;
-	const test_9 = ()=>{
-	// 'should return an error message when the comment already exists'
-	error_check_insert_comment('This comment already exists', DATA_LIMIT);
-	// 同じcommentを入れる
-	error = error_check_insert_comment('This comment already exists', DATA_LIMIT);
-	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
-	error === '既に同じcommentが存在する場合はエラー' ? "" : console.log('error is not 既に同じcommentが存在する場合はエラー');
-	};
+// 	// db.prepare(`SELECT COUNT(*) AS count FROM comments WHERE test_user_id = ? AND link_id = ?`).get(test_user.test_user_id, req.body.link_id).count > 0 ? (()=>{throw new Error('既に同じcommentが存在する場合はエラー')})() : null;
+// 	const test_9 = ()=>{
+// 	// 'should return an error message when the comment already exists'
+// 	error_check_insert_comment('This comment already exists', DATA_LIMIT);
+// 	// 同じcommentを入れる
+// 	error = error_check_insert_comment('This comment already exists', DATA_LIMIT);
+// 	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
+// 	error === '既に同じcommentが存在する場合はエラー' ? "" : console.log('error is not 既に同じcommentが存在する場合はエラー');
+// 	};
 
-	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
-}
+// 	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
+// }
 
-const test_inert_comment_reply = () =>{
-	const test_1 = () =>{
-		const DATA_LIMIT = 100;
+// const test_inert_comment_reply = () =>{
+// 	const test_1 = () =>{
+// 		const DATA_LIMIT = 100;
 
-		// 'should return an error message when the comment reply is undefined'
-		let error = error_check_insert_comment_reply(undefined, DATA_LIMIT);
-		// expect(error).to.equal('comment_replyが空の場合はエラー');
-		error === 'comment_replyが空の場合はエラー' ? null : console.log('error_check_insert_comment_reply(undefined, DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply is undefined'
+// 		let error = error_check_insert_comment_reply(undefined, DATA_LIMIT);
+// 		// expect(error).to.equal('comment_replyが空の場合はエラー');
+// 		error === 'comment_replyが空の場合はエラー' ? null : console.log('error_check_insert_comment_reply(undefined, DATA_LIMIT) failed');
 
-		// 'should return an error message when the comment reply length exceeds the data limit'
-		let commentReply = 'a'.repeat(DATA_LIMIT + 1);
-		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
-		// expect(error).to.equal('comment_replyの文字数がdata_limitを超える場合はエラー');
-		error === 'comment_replyの文字数がdata_limitを超える場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply length exceeds the data limit'
+// 		let commentReply = 'a'.repeat(DATA_LIMIT + 1);
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('comment_replyの文字数がdata_limitを超える場合はエラー');
+// 		error === 'comment_replyの文字数がdata_limitを超える場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
 
-		// 'should return an error message when the comment reply length is 0'
-		error = error_check_insert_comment_reply('', DATA_LIMIT);
-		// expect(error).to.equal('0文字の場合はエラー');
-		error === '0文字の場合はエラー' ? null : console.log('error_check_insert_comment_reply("", DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply length is 0'
+// 		error = error_check_insert_comment_reply('', DATA_LIMIT);
+// 		// expect(error).to.equal('0文字の場合はエラー');
+// 		error === '0文字の場合はエラー' ? null : console.log('error_check_insert_comment_reply("", DATA_LIMIT) failed');
 
-		// 'should return an error message when the comment reply contains symbols'
-		commentReply = 'This is a comment reply with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
-		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
-		// expect(error).to.equal('記号を含む場合はエラー');
-		error === '記号を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply contains symbols'
+// 		commentReply = 'This is a comment reply with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('記号を含む場合はエラー');
+// 		error === '記号を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
 
-		// 'should return an error message when the comment reply contains whitespace'
-		commentReply = 'This is a comment reply with whitespace';
-		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
-		// expect(error).to.equal('空白を含む場合はエラー');
-		error === '空白を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply contains whitespace'
+// 		commentReply = 'This is a comment reply with whitespace';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('空白を含む場合はエラー');
+// 		error === '空白を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
 
-		// 'should return an error message when the comment reply length is greater than 10'
-		commentReply = 'a'.repeat(11);
-		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
-		// expect(error).to.equal('10文字以上はエラー');
-		error === '10文字以上はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply length is greater than 10'
+// 		commentReply = 'a'.repeat(11);
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('10文字以上はエラー');
+// 		error === '10文字以上はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
 
-		// 'should return an error message when the comment reply contains a reserved SQL word'
-		commentReply = 'SELECT * FROM comments';
-		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
-		// expect(error).to.equal('SQLの予約語を含む場合はエラー');
-		error === 'SQLの予約語を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+// 		// 'should return an error message when the comment reply contains a reserved SQL word'
+// 		commentReply = 'SELECT * FROM comments';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('SQLの予約語を含む場合はエラー');
+// 		error === 'SQLの予約語を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
 
-		// 'should return OK when the comment reply is valid'
-		commentReply = 'This is a valid comment reply';
-		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
-		// expect(error).to.equal('OK');
-		error === 'OK' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+// 		// 'should return OK when the comment reply is valid'
+// 		commentReply = 'This is a valid comment reply';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('OK');
+// 		error === 'OK' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
 
-	}
+// 	}
 
-	const test_2 = () =>{
-		// 'should insert a new comment reply into the comment_replies table'
-		const user = { user_id: 1 };
-		const req = { body: { comment_id: 1, comment_reply: 'test reply' } };
-		const now = () => new Date().toISOString();
-		result === 1 ? null : console.log('insertCommentReply failed');
+// 	const test_2 = () =>{
+// 		// 'should insert a new comment reply into the comment_replies table'
+// 		const test_user = { test_user_id: 1 };
+// 		const req = { body: { comment_id: 1, comment_reply: 'test reply' } };
+// 		const now = () => new Date().toISOString();
+// 		result === 1 ? null : console.log('insertCommentReply failed');
 
-	}
+// 	}
 
-	const test_3 = () =>{
-		// 'should throw an error when a comment reply with the same user_id and comment_id already exists'
-		const user = { user_id: 1 };
-			const req = { body: { comment_id: 1 } };
-		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
+// 	const test_3 = () =>{
+// 		// 'should throw an error when a comment reply with the same test_user_id and comment_id already exists'
+// 		const test_user = { test_user_id: 1 };
+// 			const req = { body: { comment_id: 1 } };
+// 		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
 
-		// 'should not throw an error when a comment reply with the same user_id and comment_id does not exist'
-			const user = { user_id: 1 };
-			const req = { body: { comment_id: 2 } };
-		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
+// 		// 'should not throw an error when a comment reply with the same test_user_id and comment_id does not exist'
+// 			const test_user = { test_user_id: 1 };
+// 			const req = { body: { comment_id: 2 } };
+// 		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
 		
-	}
+// 	}
 
-	const test_4 = () =>{
+// 	const test_4 = () =>{
 
-		// 'should return a JSON response with a success message and comment reply ID'
-		const json = { result: 'success', comment_reply_id: 1 };
-		const status = 200;
-		const result = { lastInsertRowid: 1 };
-		const expectedResponse = {
-			result: 'success',
-			comment_reply_id: result.lastInsertRowid
-		};
-		status === 200 && json.result === 'success'
-			? ''
-			: console.log('should return a JSON response with a success message and comment reply ID');
-	}
+// 		// 'should return a JSON response with a success message and comment reply ID'
+// 		const json = { result: 'success', comment_reply_id: 1 };
+// 		const status = 200;
+// 		const result = { lastInsertRowid: 1 };
+// 		const expectedResponse = {
+// 			result: 'success',
+// 			comment_reply_id: result.lastInsertRowid
+// 		};
+// 		status === 200 && json.result === 'success'
+// 			? ''
+// 			: console.log('should return a JSON response with a success message and comment reply ID');
+// 	}
 
-}
+// }
 
-const test_like_increment_or_decrement = () =>{
-	const test_1 = () =>{
-		// 'no existing user_id should return 400'
-		const user = { user_id: 100 };
-		const req = { body: { link_id: 1 } };
-		const result = 
-		result === undefined ? res.status(400).send('User does not exist') : null;
+// const test_like_increment_or_decrement = () =>{
+// 	const test_1 = () =>{
+// 		// 'no existing test_user_id should return 400'
+// 		const test_user = { test_user_id: 100 };
+// 		const req = { body: { link_id: 1 } };
+// 		const result = 
+// 		result === undefined ? res.status(400).send('test_user does not exist') : null;
 
-		// 'no existing link_id should return 400'
-		const user = { user_id: 1 };
-		const req = { body: { link_id: 100 } };
-		const result =
-		result === undefined ? res.status(400).send('Link does not exist') : null;
-	}
-	const test_2 = () => {
-		// 'should throw an error when the user has already liked the link'
-		let like_exists = { id: 1, user_id: 100, link_id: 100 };
-			like_fetch();
-		error === 'そんなlikeは無えよ' ? null : console.log('そんなlikeは無えよ無えよ error');
+// 		// 'no existing link_id should return 400'
+// 		const test_user = { test_user_id: 1 };
+// 		const req = { body: { link_id: 100 } };
+// 		const result =
+// 		result === undefined ? res.status(400).send('Link does not exist') : null;
+// 	}
+// 	const test_2 = () => {
+// 		// 'should throw an error when the test_user has already liked the link'
+// 		let like_exists = { id: 1, test_user_id: 100, link_id: 100 };
+// 			like_fetch();
+// 		error === 'そんなlikeは無えよ' ? null : console.log('そんなlikeは無えよ無えよ error');
 
 
-		// 'should not throw an error when the user has not liked the link before'
-		like_exists = { id: 1, user_id: 1, link_id: 1 };
-		like_fetch();
-		error === 'そんなlikeは無えよ' ? console.log('そんなlikeは無えよ無えよ error') : null;
-	}
+// 		// 'should not throw an error when the test_user has not liked the link before'
+// 		like_exists = { id: 1, test_user_id: 1, link_id: 1 };
+// 		like_fetch();
+// 		error === 'そんなlikeは無えよ' ? console.log('そんなlikeは無えよ無えよ error') : null;
+// 	}
 	
-
-}
+// }
 
 
 
@@ -408,9 +411,14 @@ const more_res_flatten_obj = more_res_flatten.map((item) => {
 	}
 });
 
+const fetch_hello2 = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+	hello_fetch_data2 = await (await fetch('http://localhost:8000/read_all2')).json();
+	// await (await fetch('http://localhost:8000/read_all3')).json();
+}
 const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
 	// const PATTERN_NUM = PATTERN_NUM_PARAM ? PATTERN_NUM_PARAM : 0;
 	// ORDER_BY, ORDER_BY_COLUMN, REQ_TAG, USER これらの変数を設定してread_all_testのエンドポイントを叩く
+	ORDER_BY = ORDER_BY_PARAM; // ? ORDER_BY_PARAM : 'DESC';
 	ORDER_BY = ORDER_BY_PARAM; // ? ORDER_BY_PARAM : 'DESC';
 	ORDER_BY_COLUMN = ORDER_BY_COLUMN_PARAM; // ? ORDER_BY_COLUMN_PARAM : 'links.id';
 	REQ_TAG = REQ_TAG_PARAM; // ? REQ_TAG_PARAM : null;
@@ -461,6 +469,7 @@ const fetch_insert_link = async () => {
 	}
 };
 
+
 const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
 // const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
 
@@ -489,6 +498,7 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 // onMount(fetch_hello({}));
 onMount(async () => {
 	try {
+		await fetch_hello2({});
 		await fetch_hello({});
 		await fetch_get_tags_for_autocomplete();	
 	} catch (error) {
@@ -547,6 +557,13 @@ onMount(async () => {
 	
 </div>
 
+<ul>
+	{#each hello_fetch_data2 as item, index}
+	<li>		
+		<div>{ item }</div>
+	</li>
+	{/each}
+</ul>
 
 <ul>
 	{#each hello_fetch_data as item, index}
