@@ -28,160 +28,165 @@ let USER = '';
 
 
 
-// const test_get_user_with_permission = () =>{
+const test_get_user_with_permission = () =>{
 
-// 	const test_1 = () =>{
-// 		// 'should throw an error when name is empty',
-// 		let REQ = { body: { name: '', password: 'password' } };
-// 		// 'should throw an error when password is empty',
-// 		REQ = { body: { name: 'username', password: '' } };
-// 		// 'should throw an error when name is undefined',
-// 		REQ = { body: { password: 'password' } };
-// 		// 'should throw an error when password is undefined',
-// 		REQ = { body: { name: 'username' } };
-// 		// 'should throw an error when name is null',
-// 		REQ = { body: { name: null, password: 'password' } };
-// 		// 'should throw an error when password is null',
-// 		REQ = { body: { name: 'username', password: null } };
-// 		// 'should throw an error when name length is greater than 20',
-// 		REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
-// 		// 'should throw an error when password length is greater than 20',
-// 		REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
-// 		// 'should throw an error when name length is less than 4',
-// 		REQ = { body: { name: 'use', password: 'password' } };
-// 		// 'should throw an error when password length is less than 4',
-// 		REQ = { body: { name: 'username', password: 'pass' } };
-// 		// 'should throw an error when name contains a space',
-// 		REQ = { body: { name: 'user name', password: 'password' } };
-// 		// 'should throw an error when password contains a space',
-// 		REQ = { body: { name: 'username', password: 'pass word' } };
-// 		// 'should throw an error when name contains a full-width space',
-// 		REQ = { body: { name: 'user　name', password: 'password' } };
-// 		// 'should throw an error when password contains a full-width space',
-// 		REQ = { body: { name: 'username', password: 'pass　word' } };
-// 		// 'should not throw an error when name and password are valid',
-// 		REQ = { body: { name: 'username', password: 'password' } };
-// 	}
+	const test_1 = () =>{
+		// 'should throw an error when name is empty',
+		let REQ = { body: { name: '', password: 'password' } };
+		// 'should throw an error when password is empty',
+		REQ = { body: { name: 'username', password: '' } };
+		// 'should throw an error when name is undefined',
+		REQ = { body: { password: 'password' } };
+		// 'should throw an error when password is undefined',
+		REQ = { body: { name: 'username' } };
+		// 'should throw an error when name is null',
+		REQ = { body: { name: null, password: 'password' } };
+		// 'should throw an error when password is null',
+		REQ = { body: { name: 'username', password: null } };
+		// 'should throw an error when name length is greater than 20',
+		REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
+		// 'should throw an error when password length is greater than 20',
+		REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
+		// 'should throw an error when name length is less than 4',
+		REQ = { body: { name: 'use', password: 'password' } };
+		// 'should throw an error when password length is less than 4',
+		REQ = { body: { name: 'username', password: 'pass' } };
+		// 'should throw an error when name contains a space',
+		REQ = { body: { name: 'user name', password: 'password' } };
+		// 'should throw an error when password contains a space',
+		REQ = { body: { name: 'username', password: 'pass word' } };
+		// 'should throw an error when name contains a full-width space',
+		REQ = { body: { name: 'user　name', password: 'password' } };
+		// 'should throw an error when password contains a full-width space',
+		REQ = { body: { name: 'username', password: 'pass　word' } };
+		// 'should not throw an error when name and password are valid',
+		REQ = { body: { name: 'username', password: 'password' } };
+	}
 
-// 	const test_2 = () =>{
-// 	// expect(user.username).toEqual('testuser');
-// 	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
-// 	// expect(user.user_permission).toEqual('admin');
-// 	user.user_permission === 'admin' ? "" : console.log('user.user_permission is not admin');
-// 	// expect(user.deletable).toEqual(1);
-// 	user.deletable === 1 ? "" : console.log('user.deletable is not 1');
-// 	// expect(user.writable).toEqual(1);
-// 	user.writable === 1 ? "" : console.log('user.writable is not 1');
-// 	// expect(user.readable).toEqual(1);
-// 	user.readable === 1 ? "" : console.log('user.readable is not 1');
-// 	// expect(user.likable).toEqual(1);
-// 	user.likable === 1 ? "" : console.log('user.likable is not 1');
-// 	// expect(user.commentable).toEqual(1);
-// 	user.commentable === 1 ? "" : console.log('user.commentable is not 1');
+	const test_2 = () =>{
+	// expect(user.username).toEqual('testuser');
+	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
+	// expect(user.user_permission).toEqual('admin');
+	user.user_permission === 'admin' ? "" : console.log('user.user_permission is not admin');
+	// expect(user.deletable).toEqual(1);
+	user.deletable === 1 ? "" : console.log('user.deletable is not 1');
+	// expect(user.writable).toEqual(1);
+	user.writable === 1 ? "" : console.log('user.writable is not 1');
+	// expect(user.readable).toEqual(1);
+	user.readable === 1 ? "" : console.log('user.readable is not 1');
+	// expect(user.likable).toEqual(1);
+	user.likable === 1 ? "" : console.log('user.likable is not 1');
+	// expect(user.commentable).toEqual(1);
+	user.commentable === 1 ? "" : console.log('user.commentable is not 1');
 
-// 	req = { body: { name: 'testuser', password: 'wrongpassword' } };
-// 	user = get_user_with_permission(req, db);
-// 	// expect(user).toBeNull();
-// 	user === null ? "" : console.log('user is not null');
-
-
-// 	req = { body: { name: 'nonexistentuser', password: 'password' } };
-// 	user = get_user_with_permission(req, db);
-// 	// expect(user).toBeNull();
-// 	user === null ? "" : console.log('user is not null');
+	req = { body: { name: 'testuser', password: 'wrongpassword' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).toBeNull();
+	user === null ? "" : console.log('user is not null');
 
 
-// 	req = { body: { name: "testuser'; DROP TABLE users; --", password: 'password' } };
-// 	user = get_user_with_permission(req, db);
-// 	// expect(user).toBeNull();
-// 	user === null ? "" : console.log('user is not null');
+	req = { body: { name: 'nonexistentuser', password: 'password' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).toBeNull();
+	user === null ? "" : console.log('user is not null');
 
 
-// 	req = { body: { name: 'testuser', password: 'password' } };
-// 	user = get_user_with_permission(req, db);
-// 	// expect(user).not.toBeNull();
-// 	user === null ? console.log('user is null') : "";
-// 	}
+	req = { body: { name: "testuser'; DROP TABLE users; --", password: 'password' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).toBeNull();
+	user === null ? "" : console.log('user is not null');
 
-// }
-// const test_insert_link = () =>{
-// 	// get_user_with_permission周りのテストはここで全部やる
-// 	const test_1 = () => {
-// 		req = { body: { name: 'testtest_user', password: 'password' } };
-// 		test_user = get_test_user_with_permission(req, db);
-// 		// expect(test_user).not.toBeNull();
-// 		test_user === null ? console.log('test_user is null') : "";
-// 		// expect(test_user.writable).toEqual(1);
-// 		test_user.writable === 1 ? "" : console.log('test_user.writable is not 1');
-// 		// expect(test_user.test_user_permission).toEqual('admin');
-// 		test_user.test_user_permission === 'admin' ? "" : console.log('test_user.test_user_permission is not admin');
-// 		// expect(test_user.test_username).toEqual('testtest_user');
-// 		test_user.test_username === 'testtest_user' ? "" : console.log('test_user.test_username is not testtest_user');
-// 		// expect(test_user.commentable).toEqual(1);
-// 		test_user.commentable === 1 ? "" : console.log('test_user.commentable is not 1');
-// 		// expect(test_user.deletable).toEqual(1);
-// 		test_user.deletable === 1 ? "" : console.log('test_user.deletable is not 1');
-// 		// expect(test_user.likable).toEqual(1);
-// 		test_user.likable === 1 ? "" : console.log('test_user.likable is not 1');
-// 		// expect(test_user.readable).toEqual(1);
-// 		test_user.readable === 1 ? "" : console.log('test_user.readable is not 1');
-// 	}
 
-// 	const test_2 = () => {
-// 		// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
-// 		error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
-// 		// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
-// 		error_check_for_insert_link('SELECT') === null ? null : console.log('SQLの予約語を含む場合はエラー error');
-// 		// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
-// 		error_check_for_insert_link('https::///google.co.jp') === null ? null : console.log('URLの形式が正しくありません error');
-// 		// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
-// 		error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
-// 		// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
-// 		error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
-// 		// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
-// 		error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
-// 		// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
-// 		error_check_for_insert_link('https://www.google.co.jp/') === 'OK' ? null : console.log('OK error');
-// 		// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
-// 		error_check_for_insert_link('https://www.youtube.com/') === 'OK' ? null : console.log('OK error');
-// 	}
+	req = { body: { name: 'testuser', password: 'password' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).not.toBeNull();
+	user === null ? console.log('user is null') : "";
+	}
 
-// 	const test_3 = () =>{
-// 		const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
-// 		// expect(link_exists).not.toBeNull();
-// 		link_exists === null ? console.log('link_exists is null') : "";
-// 		const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
-// 		// expect(link_not_exists).toBeUndefined();
-// 		link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
-// 	}
+}
 
-// 	const test_4 = () => {
-// 		let result = error_check_for_insert_tag(undefined);
-// 		result.status === false ? "" : console.log('result.status is not false');
-// 		result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
+const test_db_open = () =>{
+}
+const test_db_close = () =>{
+}
+const test_insert_link = () =>{
+	// get_user_with_permission周りのテストはここで全部やる
+	const test_1 = () => {
+		req = { body: { name: 'testtest_user', password: 'password' } };
+		test_user = get_test_user_with_permission(req, db);
+		// expect(test_user).not.toBeNull();
+		test_user === null ? console.log('test_user is null') : "";
+		// expect(test_user.writable).toEqual(1);
+		test_user.writable === 1 ? "" : console.log('test_user.writable is not 1');
+		// expect(test_user.test_user_permission).toEqual('admin');
+		test_user.test_user_permission === 'admin' ? "" : console.log('test_user.test_user_permission is not admin');
+		// expect(test_user.test_username).toEqual('testtest_user');
+		test_user.test_username === 'testtest_user' ? "" : console.log('test_user.test_username is not testtest_user');
+		// expect(test_user.commentable).toEqual(1);
+		test_user.commentable === 1 ? "" : console.log('test_user.commentable is not 1');
+		// expect(test_user.deletable).toEqual(1);
+		test_user.deletable === 1 ? "" : console.log('test_user.deletable is not 1');
+		// expect(test_user.likable).toEqual(1);
+		test_user.likable === 1 ? "" : console.log('test_user.likable is not 1');
+		// expect(test_user.readable).toEqual(1);
+		test_user.readable === 1 ? "" : console.log('test_user.readable is not 1');
+	}
 
-// 		result = error_check_for_insert_tag('test!');
-// 		result.status === false ? ''  : console.log('result.status is not false');
-// 		result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
+	const test_2 = () => {
+		// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
+		error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
+		// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
+		error_check_for_insert_link('SELECT') === null ? null : console.log('SQLの予約語を含む場合はエラー error');
+		// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
+		error_check_for_insert_link('https::///google.co.jp') === null ? null : console.log('URLの形式が正しくありません error');
+		// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
+		error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
+		// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
+		error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
+		// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
+		error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
+		// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
+		error_check_for_insert_link('https://www.google.co.jp/') === 'OK' ? null : console.log('OK error');
+		// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
+		error_check_for_insert_link('https://www.youtube.com/') === 'OK' ? null : console.log('OK error');
+	}
 
-// 		result = error_check_for_insert_tag('test tag');
-// 		result.status === false ? '' : console.log('result.status is not false');
-// 		result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
+	const test_3 = () =>{
+		const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
+		// expect(link_exists).not.toBeNull();
+		link_exists === null ? console.log('link_exists is null') : "";
+		const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
+		// expect(link_not_exists).toBeUndefined();
+		link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
+	}
 
-// 		result = error_check_for_insert_tag('testlong');
-// 		result.status === false ? '' : console.log('result.status is not false');
-// 		result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
+	const test_4 = () => {
+		let result = error_check_for_insert_tag(undefined);
+		result.status === false ? "" : console.log('result.status is not false');
+		result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
 
-// 		result = error_check_for_insert_tag('SELECT');
-// 		result.status === false ? '' : console.log('result.status is not false');
-// 		result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
+		result = error_check_for_insert_tag('test!');
+		result.status === false ? ''  : console.log('result.status is not false');
+		result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
 
-// 		result = error_check_for_insert_tag('test');
-// 		result.status === true ? '' : console.log('result.status is not true');
-// 		result.res === 'OK' ? '' : console.log('result.res is not OK');
-// 	};
+		result = error_check_for_insert_tag('test tag');
+		result.status === false ? '' : console.log('result.status is not false');
+		result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
 
-// }
+		result = error_check_for_insert_tag('testlong');
+		result.status === false ? '' : console.log('result.status is not false');
+		result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
+
+		result = error_check_for_insert_tag('SELECT');
+		result.status === false ? '' : console.log('result.status is not false');
+		result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
+
+		result = error_check_for_insert_tag('test');
+		result.status === true ? '' : console.log('result.status is not true');
+		result.res === 'OK' ? '' : console.log('result.res is not OK');
+	};
+
+}
 
 // const test_inert_comment = () =>{
 // 	const DATA_LIMIT = 100;
@@ -444,12 +449,17 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 	const res = await (await fetch(make_get_param())).json();
 	// resのjsonが{result: 'fail', error: error.message}の場合はエラーを投げる
 	if(res.result === 'fail') throw new Error(res.error);
-	hello_fetch_data = await (await fetch(make_get_param())).json();
+	const pre_result = await (await fetch(make_get_param())).json();
+	// pre_resultが空の場合はエラーを投げる
+	if(pre_result.length === 0) throw new Error('条件に一致するデータがありませんでした');
+	hello_fetch_data = pre_result;
 	} catch (error) {
 		console.log(error);
+		ERROR_MESSAGE = error.message;
 	}
-
 };
+
+
 
 const get_POST_object = (BODY_OBJ) => {
 	return {
@@ -469,9 +479,9 @@ const fetch_insert_link = async () => {
 		// LINKがURLの配列の文字列を含む場合はtrueを返す関数を1行で
 		// is_include_WHITE_LIST_URL(LINK, WHITE_LIST_URL_ARRAY) ? RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json() : (()=>{throw new Error('URL Error only' + WHITE_LIST_URL_ARRAY.join(" "))})();
 
-		RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
-
-		fetch_hello({});
+		RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : fetch_hello({});
+		console.log(RESPONSE.result);
 	} catch (error) {
 		// console.log(error);
 		ERROR_MESSAGE = error.message;
@@ -489,8 +499,17 @@ const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
 const fetch_insert_tag = async (LINK_ID) => {
+	try {
 	TAG = TAG_VAL.value;
-	RESPONSE = (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+	console.log(TAG);
+	RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : fetch_hello({});
+	console.log(RESPONSE.result);
+	// fetch_hello({});
+	} catch (error) {
+		// console.log(error);
+		ERROR_MESSAGE = error.message;
+	}
 };
 
 const fetch_get_tags_for_autocomplete = async () => {
