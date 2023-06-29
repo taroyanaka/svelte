@@ -41,10 +41,12 @@ const check_if_the_expected_value_is_in_ERROR_MESSAGE = (expected_value) => {
 }
 
 // test実行前と実行後にtest_dbを初期化する
-const test_db_init = async (TEST_END=false) =>{
+const test_db_setup = async () =>{
 	NAME = 'testuser';
-	PASSWORD = 'password';
+	PASSWORD = 'duct_mean_fuckst1ck';
 	TEST_MODE = 'TEST_MODE';
+}
+const test_db_init = async (TEST_END=false) =>{
 	const fetch_test_db_init = async (CLOSE=false) => {
 	try {
 		CLOSE === false
@@ -56,6 +58,7 @@ const test_db_init = async (TEST_END=false) =>{
 		ERROR_MESSAGE = error.message;
 	}
 	}
+	console.log(TEST_END);
 	TEST_END === false
 		? await fetch_test_db_init()
 		: await fetch_test_db_init(true);
@@ -521,6 +524,11 @@ onMount(async () => {
 		asyncの関数をon:clickをトリガーに実行する場合は
 		{() => FUNCTION_NAME()}
 		と書く(キショイ書き方だと思った) -->
+	<button on:click={() => test_db_setup()}>test_db_setup</button>
+	<button on:click={() => test_db_init()}>test_db_init</button>
+	<button on:click={() => test_db_init(true)}>test_db_END</button>
+
+
 	<button on:click={() => fetch_hello({})}>clear condition</button>
 	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
 	<!-- more_res_flatten_objをeachでfetch_helloのボタンを作る -->
