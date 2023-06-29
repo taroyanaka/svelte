@@ -30,37 +30,91 @@ let USER = '';
 
 
 
-// 期待した値がERROR_MESSAGEに入っているかどうかをチェックする関数
-// en: check if the expected value is in ERROR_MESSAGE
-const check_if_the_expected_value_is_in_ERROR_MESSAGE = (expected_value) => {
-	if (ERROR_MESSAGE.indexOf(expected_value) === -1) {
-		console.log('ERROR_MESSAGEに期待した値が入っていません');
-		console.log('ERROR_MESSAGE: ' + ERROR_MESSAGE);
-		console.log('expected_value: ' + expected_value);
+const test_get_user_with_permission = () =>{
+
+	const test_1 = () =>{
+		// 'should throw an error when name is empty',
+		let REQ = { body: { name: '', password: 'password' } };
+		// 'should throw an error when password is empty',
+		REQ = { body: { name: 'username', password: '' } };
+		// 'should throw an error when name is undefined',
+		REQ = { body: { password: 'password' } };
+		// 'should throw an error when password is undefined',
+		REQ = { body: { name: 'username' } };
+		// 'should throw an error when name is null',
+		REQ = { body: { name: null, password: 'password' } };
+		// 'should throw an error when password is null',
+		REQ = { body: { name: 'username', password: null } };
+		// 'should throw an error when name length is greater than 20',
+		REQ = { body: { name: 'usernameusernameusername', password: 'password' } };
+		// 'should throw an error when password length is greater than 20',
+		REQ = { body: { name: 'username', password: 'passwordpasswordpassword' } };
+		// 'should throw an error when name length is less than 4',
+		REQ = { body: { name: 'use', password: 'password' } };
+		// 'should throw an error when password length is less than 4',
+		REQ = { body: { name: 'username', password: 'pass' } };
+		// 'should throw an error when name contains a space',
+		REQ = { body: { name: 'user name', password: 'password' } };
+		// 'should throw an error when password contains a space',
+		REQ = { body: { name: 'username', password: 'pass word' } };
+		// 'should throw an error when name contains a full-width space',
+		REQ = { body: { name: 'user　name', password: 'password' } };
+		// 'should throw an error when password contains a full-width space',
+		REQ = { body: { name: 'username', password: 'pass　word' } };
+		// 'should not throw an error when name and password are valid',
+		REQ = { body: { name: 'username', password: 'password' } };
 	}
+
+	const test_2 = () =>{
+	// expect(user.username).toEqual('testuser');
+	user.username === 'testuser' ? "" : console.log('user.username is not testuser');
+	// expect(user.user_permission).toEqual('admin');
+	user.user_permission === 'admin' ? "" : console.log('user.user_permission is not admin');
+	// expect(user.deletable).toEqual(1);
+	user.deletable === 1 ? "" : console.log('user.deletable is not 1');
+	// expect(user.writable).toEqual(1);
+	user.writable === 1 ? "" : console.log('user.writable is not 1');
+	// expect(user.readable).toEqual(1);
+	user.readable === 1 ? "" : console.log('user.readable is not 1');
+	// expect(user.likable).toEqual(1);
+	user.likable === 1 ? "" : console.log('user.likable is not 1');
+	// expect(user.commentable).toEqual(1);
+	user.commentable === 1 ? "" : console.log('user.commentable is not 1');
+
+	req = { body: { name: 'testuser', password: 'wrongpassword' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).toBeNull();
+	user === null ? "" : console.log('user is not null');
+
+
+	req = { body: { name: 'nonexistentuser', password: 'password' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).toBeNull();
+	user === null ? "" : console.log('user is not null');
+
+
+	req = { body: { name: "testuser'; DROP TABLE users; --", password: 'password' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).toBeNull();
+	user === null ? "" : console.log('user is not null');
+
+
+	req = { body: { name: 'testuser', password: 'password' } };
+	user = get_user_with_permission(req, db);
+	// expect(user).not.toBeNull();
+	user === null ? console.log('user is null') : "";
+	}
+
 }
 
-// test実行前と実行後にtest_dbを初期化する
-const test_db_init = async (TEST_END=false) =>{
+const test_db_open = () =>{
+
 	NAME = 'testuser';
 	PASSWORD = 'password';
-	TEST_MODE = 'TEST_MODE';
-	const fetch_test_db_init = async (CLOSE=false) => {
-	try {
-		CLOSE === false
-			? RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
-			: RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE, test_mode_close: 'TEST_MODE_CLOSE' }))).json();
-		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
-		console.log(RESPONSE.result);
-	} catch (error) {
-		ERROR_MESSAGE = error.message;
-	}
-	}
-	TEST_END === false
-		? await fetch_test_db_init()
-		: await fetch_test_db_init(true);
-}
 
+}
+const test_db_close = () =>{
+}
 const test_insert_link = () =>{
 	// get_user_with_permission周りのテストはここで全部やる
 	const test_1 = () => {
