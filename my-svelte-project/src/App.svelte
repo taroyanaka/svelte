@@ -30,14 +30,16 @@ let USER = '';
 
 
 
-// 期待した値がERROR_MESSAGEに入っているかどうかをチェックする関数
-// en: check if the expected value is in ERROR_MESSAGE
-const check_if_the_expected_value_is_in_ERROR_MESSAGE = (expected_value) => {
-	if (ERROR_MESSAGE.indexOf(expected_value) === -1) {
-		console.log('ERROR_MESSAGEに期待した値が入っていません');
-		console.log('ERROR_MESSAGE: ' + ERROR_MESSAGE);
-		console.log('expected_value: ' + expected_value);
-	}
+const insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR = async (element, data, button, expected_value) => {
+			// 指定した要素に指定したデータを挿入する
+			// en: Insert the specified data into the specified element
+			element.value = data;
+			// 指定したボタンをクリックする
+			// en: Click the specified button
+			button.click();
+			// ERROR_MESSAGEに期待する値が入っているかどうかをチェックする
+			// en: Check if the expected value is in ERROR_MESSAGE
+			ERROR_MESSAGE === expected_value ? console.log('OK, no problem') : console.log('ERROR_MESSAGE is not ' + expected_value);
 }
 
 // test実行前と実行後にtest_dbを初期化する
@@ -64,6 +66,17 @@ const test_db_init = async (TEST_END=false) =>{
 		: await fetch_test_db_init(true);
 }
 
+
+const test_sample = async () =>{
+    // LINK = 'SELECT';
+    LINK = 'https::///google.co.jp';
+	await fetch_insert_link();
+    // ERROR_MESSAGE === 'SQLの予約語を含む場合はエラー'
+    ERROR_MESSAGE === 'URLの形式が正しくありません'
+		? console.log('OK')
+		: console.log('NG');
+}
+
 const test_insert_link = () =>{
 	// get_user_with_permission周りのテストはここで全部やる
 	const test_1 = () => {
@@ -88,16 +101,33 @@ const test_insert_link = () =>{
 	}
 
 	const test_2 = () => {
+		// 指定した要素に指定したデータを挿入して、指定したボタンをクリックし、ERRORに期待する値が入っているかどうかをチェックする関数
+		// en: A function that inserts the specified data into the specified element, clicks the specified button, and checks whether the expected value is in ERROR.
+
+
 		// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
-		error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
+		// error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
+
+		insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR(document.querySelector('.link'), undefined, document.querySelector('.insert_link'), 'linkが空です');
+
 		// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
 		error_check_for_insert_link('SELECT') === null ? null : console.log('SQLの予約語を含む場合はエラー error');
+
+
+		insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR(LINK, 'SELECT', fetch_insert_link(), 'SQLの予約語を含む場合はエラー');
+
+
 		// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
 		error_check_for_insert_link('https::///google.co.jp') === null ? null : console.log('URLの形式が正しくありません error');
+
+		insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR(document.querySelector('.link'), 'https::///google.co.jp', document.querySelector('.insert_link'), 'URLの形式が正しくありません');
+
 		// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
 		error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
 		// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
 		error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
+
+
 		// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
 		error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
 		// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
@@ -515,8 +545,8 @@ onMount(async () => {
 <input bind:value={NAME} type="text" placeholder="name">
 <input bind:value={PASSWORD} type="text" placeholder="password">
 <input bind:value={TEST_MODE} type="text" placeholder="TEST_MODE">
-<input bind:value={LINK} type="text" placeholder="link_url">
-<button on:click={fetch_insert_link}>insert_link</button>
+<input bind:value={LINK} type="text" placeholder="link_url" class="link">
+<button on:click={fetch_insert_link} class="insert_link">insert_link</button>
 </div>
 
 <div>
@@ -527,6 +557,7 @@ onMount(async () => {
 	<button on:click={() => test_db_setup()}>test_db_setup</button>
 	<button on:click={() => test_db_init()}>test_db_init</button>
 	<button on:click={() => test_db_init(true)}>test_db_END</button>
+	<button on:click={() => test_sample()}>test_sample</button>
 
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
