@@ -22,7 +22,6 @@ const WHITE_LIST_URL_ARRAY = [
 	'https://www.youtube.com/',
 ];
 let ERROR_MESSAGE = "";
-let SUCCESS_MESSAGE = '';
 
 let ORDER_BY = 'DESC';
 let ORDER_BY_COLUMN = 'links.id';
@@ -30,113 +29,52 @@ let REQ_TAG = '';
 let USER = '';
 
 
-const test_db_init_on_start = async () =>{
-try {
-	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
-	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
-	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
-	console.log(RESPONSE.result);
-} catch (error) {
-	ERROR_MESSAGE = error.message;
-}
+
+const insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR = async (element, data, button, expected_value) => {
+			// 指定した要素に指定したデータを挿入する
+			// en: Insert the specified data into the specified element
+			element.value = data;
+			// 指定したボタンをクリックする
+			// en: Click the specified button
+			button.click();
+			// ERROR_MESSAGEに期待する値が入っているかどうかをチェックする
+			// en: Check if the expected value is in ERROR_MESSAGE
+			ERROR_MESSAGE === expected_value ? console.log('OK, no problem') : console.log('ERROR_MESSAGE is not ' + expected_value);
 }
 
-const test_db_init_on_end = async () =>{
-try {
-	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
-	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
-	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
-	console.log(RESPONSE.result);
-} catch (error) {
-	ERROR_MESSAGE = error.message;
+// test実行前と実行後にtest_dbを初期化する
+const test_db_setup = async () =>{
+	NAME = 'testuser';
+	PASSWORD = 'duct_mean_fuckst1ck';
+	TEST_MODE = 'TEST_MODE';
 }
+const test_db_init = async (TEST_END=false) =>{
+	const fetch_test_db_init = async (CLOSE=false) => {
+	try {
+		CLOSE === false
+			? RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
+			: RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE, test_mode_close: 'TEST_MODE_CLOSE' }))).json();
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+	}
+	}
+	console.log(TEST_END);
+	TEST_END === false
+		? await fetch_test_db_init()
+		: await fetch_test_db_init(true);
 }
 
-let ERROR_MESSAGE_STACK = [];
-// let OK_STACK = []; // 'OK stack'?? is that a 🦸 name??
-let SUCCESS_MESSAGE_STACK = [];
-const test_sample_for_LINK = async () =>{
+
+const test_sample = async () =>{
     // LINK = 'SELECT';
     LINK = 'https::///google.co.jp';
 	await fetch_insert_link();
     // ERROR_MESSAGE === 'SQLの予約語を含む場合はエラー'
     ERROR_MESSAGE === 'URLの形式が正しくありません'
-		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', 'URLの形式が正しくありません']))
+		? console.log('OK')
 		: console.log('NG');
-}
-const test_for_LINK = async (
-	{
-		Data='SELECT',
-		Exe_fn=fetch_insert_link,
-		Expect_result='SQLの予約語を含む場合はエラー'
-	}
-	) =>{
-		LINK = Data;
-		await Exe_fn();
-		SUCCESS_MESSAGE === 'success'
-		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-		: null;
-		ERROR_MESSAGE === Expect_result
-			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-			: console.log('NG');
-}
-const test_sample_exe = async ()=>{
-	await test_db_init_on_start();
-	await test_for_LINK({
-		Data: 'SELECT',
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'SQLの予約語を含む場合はエラー'
-	});
-	await test_for_LINK({
-		Data: 'https::///google.co.jp',
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'URLの形式が正しくありません'
-	});
-// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
-// error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
-
-	await test_for_LINK({
-		Data: 'https://google.co.jp/'.repeat(1000),
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'URLが長すぎます'
-	});
-
-// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
-// error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
-	await test_for_LINK({
-		Data: 'https://hogehoge.com/',
-		Exe_fn: fetch_insert_link,
-		Expect_result: '許可されていないURLです'
-	});
-
-
-// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
-// error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
-	await test_for_LINK({
-		Data: 'https://www.yahoo.co.jp/',
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'OK'
-	});
-// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
-// error_check_for_insert_link('https://www.google.co.jp/') === 'OK' ? null : console.log('OK error');
-	await test_for_LINK({
-		Data: 'https://www.google.co.jp/',
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'OK'
-	});
-
-
-// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
-// error_check_for_insert_link('https://www.youtube.com/') === 'OK' ? null : console.log('OK error');
-	await test_for_LINK({
-		Data: 'https://www.youtube.com/',
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'OK'
-	});
-
-	console.log(ERROR_MESSAGE_STACK);
-	console.log(SUCCESS_MESSAGE_STACK);
-	await test_db_init_on_end();
 }
 
 const test_insert_link = () =>{
@@ -170,11 +108,19 @@ const test_insert_link = () =>{
 		// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
 		// error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
 
+		insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR(document.querySelector('.link'), undefined, document.querySelector('.insert_link'), 'linkが空です');
+
 		// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
 		error_check_for_insert_link('SELECT') === null ? null : console.log('SQLの予約語を含む場合はエラー error');
 
+
+		insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR(LINK, 'SELECT', fetch_insert_link(), 'SQLの予約語を含む場合はエラー');
+
+
 		// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
 		error_check_for_insert_link('https::///google.co.jp') === null ? null : console.log('URLの形式が正しくありません error');
+
+		insert_data_and_click_button_and_check_if_the_expected_value_is_in_ERROR(document.querySelector('.link'), 'https::///google.co.jp', document.querySelector('.insert_link'), 'URLの形式が正しくありません');
 
 		// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
 		error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
@@ -227,6 +173,213 @@ const test_insert_link = () =>{
 
 }
 
+// const test_inert_comment = () =>{
+// 	const DATA_LIMIT = 100;
+
+// 	const test_1 = ()=>{
+// 	// 'should return an error message when the comment is undefined'
+// 	let error = error_check_insert_comment(undefined, DATA_LIMIT);
+// 	// expect(error).to.equal('commentが空の場合はエラー');
+// 	error === 'commentが空の場合はエラー' ? "" : console.log('error is not commentが空の場合はエラー');
+// 	};
+// 	const test_2 = ()=>{
+// 	// 'should return an error message when the comment length exceeds the data limit'
+// 	let comment = 'a'.repeat(DATA_LIMIT + 1);
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('commentの文字数がdata_limitを超える場合はエラー');
+// 	error === 'commentの文字数がdata_limitを超える場合はエラー' ? "" : console.log('error is not commentの文字数がdata_limitを超える場合はエラー');
+// 	};
+// 	const test_3 = ()=>{
+// 	// 'should return an error message when the comment length is 0'
+// 	error = error_check_insert_comment('', DATA_LIMIT);
+// 	// expect(error).to.equal('0文字の場合はエラー');
+// 	error === '0文字の場合はエラー' ? "" : console.log('error is not 0文字の場合はエラー');
+// 	};
+// 	const test_4 = ()=>{
+// 	// 'should return an error message when the comment contains symbols'
+// 	comment = 'This is a comment with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('記号を含む場合はエラー');
+// 	error === '記号を含む場合はエラー' ? "" : console.log('error is not 記号を含む場合はエラー');
+// 	};
+// 	const test_5 = ()=>{
+// 	// 'should return an error message when the comment contains whitespace'
+// 	comment = 'This is a comment with whitespace';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('空白を含む場合はエラー');
+// 	error === '空白を含む場合はエラー' ? "" : console.log('error is not 空白を含む場合はエラー');
+// 	};
+// 	const test_6 = ()=>{
+// 	// 'should return an error message when the comment length is greater than 300'
+// 	comment = 'a'.repeat(301);
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('300文字以上はエラー');
+// 	error === '300文字以上はエラー' ? "" : console.log('error is not 300文字以上はエラー');
+// 	};
+// 	const test_7 = ()=>{
+// 	// 'should return an error message when the comment contains a reserved SQL word'
+// 	comment = 'SELECT * FROM comments';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('SQLの予約語を含む場合はエラー');
+// 	error === 'SQLの予約語を含む場合はエラー' ? "" : console.log('error is not SQLの予約語を含む場合はエラー');
+// 	};
+// 	const test_8 = ()=>{
+// 	// 'should return OK when the comment is valid'
+// 	comment = 'This is a valid comment';
+// 	error = error_check_insert_comment(comment, DATA_LIMIT);
+// 	// expect(error).to.equal('OK');
+// 	error === 'OK' ? "" : console.log('error is not OK');
+// 	};
+
+// 	// db.prepare(`SELECT COUNT(*) AS count FROM comments WHERE test_user_id = ? AND link_id = ?`).get(test_user.test_user_id, req.body.link_id).count > 0 ? (()=>{throw new Error('既に同じcommentが存在する場合はエラー')})() : null;
+// 	const test_9 = ()=>{
+// 	// 'should return an error message when the comment already exists'
+// 	error_check_insert_comment('This comment already exists', DATA_LIMIT);
+// 	// 同じcommentを入れる
+// 	error = error_check_insert_comment('This comment already exists', DATA_LIMIT);
+// 	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
+// 	error === '既に同じcommentが存在する場合はエラー' ? "" : console.log('error is not 既に同じcommentが存在する場合はエラー');
+// 	};
+
+// 	// expect(error).to.equal('既に同じcommentが存在する場合はエラー');
+// }
+
+// const test_inert_comment_reply = () =>{
+// 	const test_1 = () =>{
+// 		const DATA_LIMIT = 100;
+
+// 		// 'should return an error message when the comment reply is undefined'
+// 		let error = error_check_insert_comment_reply(undefined, DATA_LIMIT);
+// 		// expect(error).to.equal('comment_replyが空の場合はエラー');
+// 		error === 'comment_replyが空の場合はエラー' ? null : console.log('error_check_insert_comment_reply(undefined, DATA_LIMIT) failed');
+
+// 		// 'should return an error message when the comment reply length exceeds the data limit'
+// 		let commentReply = 'a'.repeat(DATA_LIMIT + 1);
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('comment_replyの文字数がdata_limitを超える場合はエラー');
+// 		error === 'comment_replyの文字数がdata_limitを超える場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+// 		// 'should return an error message when the comment reply length is 0'
+// 		error = error_check_insert_comment_reply('', DATA_LIMIT);
+// 		// expect(error).to.equal('0文字の場合はエラー');
+// 		error === '0文字の場合はエラー' ? null : console.log('error_check_insert_comment_reply("", DATA_LIMIT) failed');
+
+// 		// 'should return an error message when the comment reply contains symbols'
+// 		commentReply = 'This is a comment reply with symbols!@#$%^&*()_+-={}[]|\\:;"<>,.?/';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('記号を含む場合はエラー');
+// 		error === '記号を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+// 		// 'should return an error message when the comment reply contains whitespace'
+// 		commentReply = 'This is a comment reply with whitespace';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('空白を含む場合はエラー');
+// 		error === '空白を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+// 		// 'should return an error message when the comment reply length is greater than 10'
+// 		commentReply = 'a'.repeat(11);
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('10文字以上はエラー');
+// 		error === '10文字以上はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+// 		// 'should return an error message when the comment reply contains a reserved SQL word'
+// 		commentReply = 'SELECT * FROM comments';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('SQLの予約語を含む場合はエラー');
+// 		error === 'SQLの予約語を含む場合はエラー' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+// 		// 'should return OK when the comment reply is valid'
+// 		commentReply = 'This is a valid comment reply';
+// 		error = error_check_insert_comment_reply(commentReply, DATA_LIMIT);
+// 		// expect(error).to.equal('OK');
+// 		error === 'OK' ? null : console.log('error_check_insert_comment_reply(commentReply, DATA_LIMIT) failed');
+
+// 	}
+
+// 	const test_2 = () =>{
+// 		// 'should insert a new comment reply into the comment_replies table'
+// 		const test_user = { test_user_id: 1 };
+// 		const req = { body: { comment_id: 1, comment_reply: 'test reply' } };
+// 		const now = () => new Date().toISOString();
+// 		result === 1 ? null : console.log('insertCommentReply failed');
+
+// 	}
+
+// 	const test_3 = () =>{
+// 		// 'should throw an error when a comment reply with the same test_user_id and comment_id already exists'
+// 		const test_user = { test_user_id: 1 };
+// 			const req = { body: { comment_id: 1 } };
+// 		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
+
+// 		// 'should not throw an error when a comment reply with the same test_user_id and comment_id does not exist'
+// 			const test_user = { test_user_id: 1 };
+// 			const req = { body: { comment_id: 2 } };
+// 		error === '既に同じcomment_replyが存在する場合はエラー' ? null : console.log('既に同じcomment_replyが存在する場合はエラー failed');
+		
+// 	}
+
+// 	const test_4 = () =>{
+
+// 		// 'should return a JSON response with a success message and comment reply ID'
+// 		const json = { result: 'success', comment_reply_id: 1 };
+// 		const status = 200;
+// 		const result = { lastInsertRowid: 1 };
+// 		const expectedResponse = {
+// 			result: 'success',
+// 			comment_reply_id: result.lastInsertRowid
+// 		};
+// 		status === 200 && json.result === 'success'
+// 			? ''
+// 			: console.log('should return a JSON response with a success message and comment reply ID');
+// 	}
+
+// }
+
+// const test_like_increment_or_decrement = () =>{
+// 	const test_1 = () =>{
+// 		// 'no existing test_user_id should return 400'
+// 		const test_user = { test_user_id: 100 };
+// 		const req = { body: { link_id: 1 } };
+// 		const result = 
+// 		result === undefined ? res.status(400).send('test_user does not exist') : null;
+
+// 		// 'no existing link_id should return 400'
+// 		const test_user = { test_user_id: 1 };
+// 		const req = { body: { link_id: 100 } };
+// 		const result =
+// 		result === undefined ? res.status(400).send('Link does not exist') : null;
+// 	}
+// 	const test_2 = () => {
+// 		// 'should throw an error when the test_user has already liked the link'
+// 		let like_exists = { id: 1, test_user_id: 100, link_id: 100 };
+// 			like_fetch();
+// 		error === 'そんなlikeは無えよ' ? null : console.log('そんなlikeは無えよ無えよ error');
+
+
+// 		// 'should not throw an error when the test_user has not liked the link before'
+// 		like_exists = { id: 1, test_user_id: 1, link_id: 1 };
+// 		like_fetch();
+// 		error === 'そんなlikeは無えよ' ? console.log('そんなlikeは無えよ無えよ error') : null;
+// 	}
+	
+// }
+
+
+
+// testを作る
+// switch(PATTERN_NUM){
+// 		case 1: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
+// 		case 2: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1',null]; break;
+// 		case 3: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,'user1']; break;
+// 		case 4: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1','user1']; break;
+// 		case 5: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id','tag1',null]; break;
+// 		case 6: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,'user1']; break;
+// 		case 7: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['ASC','links.id',null,null]; break;
+
+// 		case 0: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id','tag1','user1']; break;
+// 		default: [ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER] = ['DESC','links.id',null,null]; break;
+// }
+// 上記のswitch文で設定したパターンのテストを作る
 
 // ramda.jsで全ての組み合わせを作る関数
 // R.xprod(['DESC','ASC'], ['links.id','links.name'], ['tag1','tag2','tag3'], ['user1','user2','user3']);
@@ -312,8 +465,6 @@ const fetch_insert_link = async () => {
 		// is_include_WHITE_LIST_URL(LINK, WHITE_LIST_URL_ARRAY) ? RESPONSE = (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json() : (()=>{throw new Error('URL Error only' + WHITE_LIST_URL_ARRAY.join(" "))})();
 
 		RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
-
-		RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : fetch_hello({});
 		console.log(RESPONSE.result);
 	} catch (error) {
@@ -321,7 +472,6 @@ const fetch_insert_link = async () => {
 		ERROR_MESSAGE = error.message;
 	}
 };
-
 
 
 const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
@@ -404,8 +554,9 @@ onMount(async () => {
 		asyncの関数をon:clickをトリガーに実行する場合は
 		{() => FUNCTION_NAME()}
 		と書く(キショイ書き方だと思った) -->
-	<button on:click={() => test_db_init_on_start()}>test_db_init_on_start</button>
-	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
+	<button on:click={() => test_db_setup()}>test_db_setup</button>
+	<button on:click={() => test_db_init()}>test_db_init</button>
+	<button on:click={() => test_db_init(true)}>test_db_END</button>
 	<button on:click={() => test_sample()}>test_sample</button>
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
