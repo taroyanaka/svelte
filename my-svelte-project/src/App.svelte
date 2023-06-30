@@ -406,7 +406,6 @@ onMount(async () => {
 		と書く(キショイ書き方だと思った) -->
 	<button on:click={() => test_db_init_on_start()}>test_db_init_on_start</button>
 	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
-	<button on:click={() => test_sample()}>test_sample</button>
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
 	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
