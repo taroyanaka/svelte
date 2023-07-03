@@ -181,7 +181,6 @@ const test_insert_link = () =>{
 		// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
 		error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
 
-
 		// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
 		error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
 		// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
@@ -248,6 +247,7 @@ const more_res_flatten_obj = more_res_flatten.map((item) => {
 });
 
 const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+
 	try {
 	console.log(
 		ORDER_BY_PARAM,
@@ -267,10 +267,10 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 	// getパラメーターを作る関数。[ORDER_BY,ORDER_BY_COLUMN,REQ_TAG,USER]にnullが含まれている場合はパラメーターに含めない
 	const make_get_param = () => {
 		const get_param_array = [];
-		if(ORDER_BY) get_param_array.push(`order_by=${ORDER_BY}`);
-		if(ORDER_BY_COLUMN) get_param_array.push(`order_by_column=${ORDER_BY_COLUMN}`);
-		if(REQ_TAG) get_param_array.push(`tag=${REQ_TAG}`);
-		if(USER) get_param_array.push(`user=${USER}`);
+		if(ORDER_BY) {get_param_array.push(`order_by=${ORDER_BY}`)};
+		if(ORDER_BY_COLUMN) {get_param_array.push(`order_by_column=${ORDER_BY_COLUMN}`)};
+		if(REQ_TAG) {get_param_array.push(`tag=${REQ_TAG}`)};
+		if(USER) {get_param_array.push(`user=${USER}`)};
 		// const endpoint = 'http://localhost:8000/read_all_test';
 		const endpoint = 'http://localhost:8000/read_all';
 		// const endpoint = 'http://localhost:8000/read_all2';
@@ -289,7 +289,10 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 		console.log(error);
 		ERROR_MESSAGE = error.message;
 	}
+
 };
+
+
 
 
 
@@ -321,8 +324,6 @@ const fetch_insert_link = async () => {
 		ERROR_MESSAGE = error.message;
 	}
 };
-
-
 
 const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
 // const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
@@ -362,7 +363,7 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 onMount(async () => {
 	try {
 		await fetch_hello({});
-		await fetch_get_tags_for_autocomplete();	
+		// await fetch_get_tags_for_autocomplete();	
 	} catch (error) {
 		console.log(error);		
 	}
@@ -435,15 +436,15 @@ onMount(async () => {
 			{/each}
 		</div>
 
-		<div>
-			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
-			<datalist id="autocomplete_list">
-				{#each ALL_TAGS as item, index}
-				<option value={item.tag}>
-				{/each}
-			</datalist>
-			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
-		</div>
+		<!-- <div> -->
+			<!-- <input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}> -->
+			<!-- <datalist id="autocomplete_list"> -->
+				<!-- {#each ALL_TAGS as item, index} -->
+				<!-- <option value={item.tag}> -->
+				<!-- {/each} -->
+			<!-- </datalist> -->
+			<!-- <button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button> -->
+		<!-- </div> -->
 
 		<a href={item.link} target="_blank">{item.link}</a>
 		<div>created_at: {item.created_at}</div>
@@ -491,7 +492,10 @@ onMount(async () => {
 	</li>
 	{/each}
 </ul>
-	
+
+
+
+
 <style>
 	.comment_zone, .reply_zone{
 		margin-left: 2rem;
