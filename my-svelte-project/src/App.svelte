@@ -266,7 +266,7 @@ const get_POST_object = (BODY_OBJ) => {
 
 // URLの配列の文字列から始まる場合はtrueを返す関数を1行で
 const is_include_WHITE_LIST_URL = (target_url_str, WHITE_LIST_URL_ARRAY) => WHITE_LIST_URL_ARRAY.some((WHITE_LIST_URL) => target_url_str.startsWith(WHITE_LIST_URL));
-
+let hoge = null;
 const fetch_insert_link = async () => {
 	try {
 		// LINKがURLの配列の文字列を含む場合はtrueを返す関数を1行で
@@ -274,9 +274,15 @@ const fetch_insert_link = async () => {
 
 		RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
 
-		console.log(RESPONSE.result);
+		console.log(RESPONSE);
+		hoge = RESPONSE.text();
 
-		RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		// RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.status === 400 ? console.log(
+				'RESPONSE.status: RESPONSE.status === 400'
+			) : null;
+
+			RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 		console.log(RESPONSE.result);
 	} catch (error) {
