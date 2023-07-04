@@ -134,61 +134,19 @@ const test_sample_exe = async ()=>{
 		Expect_result: 'OK'
 	});
 
+	// すでに登録されているURLを登録しようとした場合はエラー
+	await test_for_LINK({
+		Data: 'https://www.google.co.jp/',
+		Exe_fn: fetch_insert_link,
+		Expect_result: '同じlinkが存在します'
+	});
+
 	console.log(ERROR_MESSAGE_STACK);
 	console.log(SUCCESS_MESSAGE_STACK);
 	await test_db_init_on_end();
 }
 
 const test_insert_link = () =>{
-	// get_user_with_permission周りのテストはここで全部やる
-	const test_1 = () => {
-		req = { body: { name: 'testtest_user', password: 'password' } };
-		test_user = get_test_user_with_permission(req, db);
-		// expect(test_user).not.toBeNull();
-		test_user === null ? console.log('test_user is null') : "";
-		// expect(test_user.writable).toEqual(1);
-		test_user.writable === 1 ? "" : console.log('test_user.writable is not 1');
-		// expect(test_user.test_user_permission).toEqual('admin');
-		test_user.test_user_permission === 'admin' ? "" : console.log('test_user.test_user_permission is not admin');
-		// expect(test_user.test_username).toEqual('testtest_user');
-		test_user.test_username === 'testtest_user' ? "" : console.log('test_user.test_username is not testtest_user');
-		// expect(test_user.commentable).toEqual(1);
-		test_user.commentable === 1 ? "" : console.log('test_user.commentable is not 1');
-		// expect(test_user.deletable).toEqual(1);
-		test_user.deletable === 1 ? "" : console.log('test_user.deletable is not 1');
-		// expect(test_user.likable).toEqual(1);
-		test_user.likable === 1 ? "" : console.log('test_user.likable is not 1');
-		// expect(test_user.readable).toEqual(1);
-		test_user.readable === 1 ? "" : console.log('test_user.readable is not 1');
-	}
-
-	const test_2 = () => {
-		// 指定した要素に指定したデータを挿入して、指定したボタンをクリックし、ERRORに期待する値が入っているかどうかをチェックする関数
-		// en: A function that inserts the specified data into the specified element, clicks the specified button, and checks whether the expected value is in ERROR.
-
-
-		// expect(error_check_for_insert_link(undefined)).toEqual({res: 'linkが空です', status: 400});
-		// error_check_for_insert_link(undefined) === null ? null : console.log('linkが空です error');
-
-		// expect(error_check_for_insert_link('SELECT')).toEqual({res: 'SQLの予約語を含む場合はエラー', status: 400});
-		error_check_for_insert_link('SELECT') === null ? null : console.log('SQLの予約語を含む場合はエラー error');
-
-		// expect(error_check_for_insert_link('https::///google.co.jp')).toEqual({res: 'URLの形式が正しくありません', status: 400});
-		error_check_for_insert_link('https::///google.co.jp') === null ? null : console.log('URLの形式が正しくありません error');
-
-		// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
-		error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
-		// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
-		error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
-
-		// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
-		error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
-		// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
-		error_check_for_insert_link('https://www.google.co.jp/') === 'OK' ? null : console.log('OK error');
-		// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
-		error_check_for_insert_link('https://www.youtube.com/') === 'OK' ? null : console.log('OK error');
-	}
-
 	const test_3 = () =>{
 		const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
 		// expect(link_exists).not.toBeNull();
@@ -316,12 +274,15 @@ const fetch_insert_link = async () => {
 
 		RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
 
+		console.log(RESPONSE.result);
+
 		RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
-		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : fetch_hello({});
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 		console.log(RESPONSE.result);
 	} catch (error) {
-		// console.log(error);
 		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
 	}
 };
 
