@@ -242,7 +242,7 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 	const pre_result = await (await fetch(make_get_param())).json();
 	// pre_resultが空の場合はエラーを投げる
 	if(pre_result.length === 0) throw new Error('条件に一致するデータがありませんでした');
-	hello_fetch_data = pre_result;
+	hello_fetch_data = pre_result.message;
 	} catch (error) {
 		console.log(error);
 		ERROR_MESSAGE = error.message;
@@ -275,7 +275,7 @@ const fetch_insert_link = async () => {
 		RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
 
 		console.log(RESPONSE);
-		hoge = RESPONSE.text();
+		// hoge = RESPONSE.text();
 
 		// RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.status === 400 ? console.log(
