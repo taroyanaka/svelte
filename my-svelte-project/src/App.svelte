@@ -147,14 +147,14 @@ const test_sample_exe = async ()=>{
 }
 
 const test_insert_link = () =>{
-	const test_3 = () =>{
-		const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
-		// expect(link_exists).not.toBeNull();
-		link_exists === null ? console.log('link_exists is null') : "";
-		const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
-		// expect(link_not_exists).toBeUndefined();
-		link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
-	}
+	// const test_3 = () =>{
+	// 	const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
+	// 	// expect(link_exists).not.toBeNull();
+	// 	link_exists === null ? console.log('link_exists is null') : "";
+	// 	const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
+	// 	// expect(link_not_exists).toBeUndefined();
+	// 	link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
+	// }
 
 	const test_4 = () => {
 		let result = error_check_for_insert_tag(undefined);
@@ -315,11 +315,13 @@ const fetch_insert_tag = async (LINK_ID) => {
 	}
 };
 
+// let TMP = [];
 const fetch_get_tags_for_autocomplete = async () => {
 	const json = (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
 					.json();
 	const RES = await json;
-	ALL_TAGS = await RES.tags;
+	// TMP = RES;
+	ALL_TAGS = await RES.message;
 };
 
 const remove_error_message = () => ERROR_MESSAGE = "";
@@ -330,7 +332,7 @@ const remove_error_message = () => ERROR_MESSAGE = "";
 onMount(async () => {
 	try {
 		await fetch_hello({});
-		// await fetch_get_tags_for_autocomplete();	
+		await fetch_get_tags_for_autocomplete();	
 	} catch (error) {
 		console.log(error);		
 	}
@@ -403,15 +405,15 @@ onMount(async () => {
 			{/each}
 		</div>
 
-		<!-- <div> -->
-			<!-- <input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}> -->
-			<!-- <datalist id="autocomplete_list"> -->
-				<!-- {#each ALL_TAGS as item, index} -->
-				<!-- <option value={item.tag}> -->
-				<!-- {/each} -->
-			<!-- </datalist> -->
-			<!-- <button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button> -->
-		<!-- </div> -->
+		<div>
+			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
+			<datalist id="autocomplete_list">
+				{#each ALL_TAGS as item, index}
+				<option value={item.tag}>
+				{/each}
+			</datalist>
+			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
+		</div>
 
 		<a href={item.link} target="_blank">{item.link}</a>
 		<div>created_at: {item.created_at}</div>
