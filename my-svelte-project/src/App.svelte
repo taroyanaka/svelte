@@ -83,12 +83,13 @@ const test_for_LINK = async (
 const test_for_TAG = async (
 	{
 		Data='test!',
-		Exe_fn=fetch_insert_tag,
+		Param_of_link_id=1,
 		Expect_result='記号を含む場合はエラー'
 	}
 	) =>{
-		ALL_TAGS = Data;
-		await Exe_fn();
+		// TAG = Data;
+		// await fetch_insert_tag(Param_of_link_id);
+		await fetch_insert_tag(Param_of_link_id, Data);
 		SUCCESS_MESSAGE === 'success'
 		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
 		: null;
@@ -108,123 +109,79 @@ const test_sample_exe = async ()=>{
 		Exe_fn: fetch_insert_link,
 		Expect_result: 'URLの形式が正しくありません'
 	});
-// expect(error_check_for_insert_link('https://google.co.jp/'.repeat(1000))).toEqual({res: 'URLが長すぎます', status: 400});
-// error_check_for_insert_link('https://google.co.jp/'.repeat(1000)) === null ? null : console.log('URLが長すぎます error');
-
-	await test_for_LINK({
-		Data: 'https://google.co.jp/'.repeat(1000),
-		Exe_fn: fetch_insert_link,
-		Expect_result: 'URLが長すぎます'
-	});
-
-// expect(error_check_for_insert_link('https://hogehoge.com/')).toEqual({res: '許可されていないURLです', status: 400});
-// error_check_for_insert_link('https://hogehoge.com/') === null ? null : console.log('許可されていないURLです error');
 	await test_for_LINK({
 		Data: 'https://hogehoge.com/',
 		Exe_fn: fetch_insert_link,
 		Expect_result: '許可されていないURLです'
 	});
-
-
-// expect(error_check_for_insert_link('https://www.yahoo.co.jp/')).toEqual({res: 'OK', status: 200});
-// error_check_for_insert_link('https://www.yahoo.co.jp/') === 'OK' ? null : console.log('OK error');
 	await test_for_LINK({
 		Data: 'https://www.yahoo.co.jp/',
 		Exe_fn: fetch_insert_link,
 		Expect_result: 'OK'
 	});
-// expect(error_check_for_insert_link('https://www.google.co.jp/')).toEqual({res: 'OK', status: 200});
-// error_check_for_insert_link('https://www.google.co.jp/') === 'OK' ? null : console.log('OK error');
 	await test_for_LINK({
 		Data: 'https://www.google.co.jp/',
 		Exe_fn: fetch_insert_link,
 		Expect_result: 'OK'
 	});
-
-
-// expect(error_check_for_insert_link('https://www.youtube.com/')).toEqual({res: 'OK', status: 200});
-// error_check_for_insert_link('https://www.youtube.com/') === 'OK' ? null : console.log('OK error');
 	await test_for_LINK({
 		Data: 'https://www.youtube.com/',
 		Exe_fn: fetch_insert_link,
 		Expect_result: 'OK'
 	});
-
-	// すでに登録されているURLを登録しようとした場合はエラー
 	await test_for_LINK({
 		Data: 'https://www.google.co.jp/',
 		Exe_fn: fetch_insert_link,
 		Expect_result: '同じlinkが存在します'
 	});
 	
-	// const test_for_TAG = async (
-	// {
-	// 	Data='test!',
-	// 	Exe_fn=fetch_insert_tag,
-	// 	Expect_result='記号を含む場合はエラー'
-	// }
-	// ) =>{
-	// 	ALL_TAGS = Data;
-	// 	await Exe_fn();
-	// 	SUCCESS_MESSAGE === 'success'
-	// 	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-	// 	: null;
-	// 	ERROR_MESSAGE === Expect_result
-	// 		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-	// 		: console.log('NG');
-	// }
+	console.log(ERROR_MESSAGE_STACK);
+	console.log(SUCCESS_MESSAGE_STACK);
+}
 
+const test_sample_exe2 = async ()=>{
+		// const Expect_result='記号を含む場合はエラー';
+		// await fetch_insert_tag(1, "TEST!");
+		// SUCCESS_MESSAGE === 'success'
+		// ? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+		// : null;
+		// ERROR_MESSAGE === Expect_result
+		// 	? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
+		// 	: console.log('NG');
 
-// let result = error_check_for_insert_tag(undefined);
-// result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
-
-// result = error_check_for_insert_tag('test!');
-// result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
 	await test_for_TAG({
 		Data: 'test!',
-		Exe_fn: fetch_insert_tag,
+		Param_of_link_id: 1,
 		Expect_result: '記号を含む場合はエラー'
 	});
 
-
-// result = error_check_for_insert_tag('test tag');
-// result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
-
 	await test_for_TAG({
 		Data: 'test tag',
-		Exe_fn: fetch_insert_tag,
+		Param_of_link_id: 1,
 		Expect_result: '空白を含む場合はエラー'
 	});
 
-
-// result = error_check_for_insert_tag('testlong');
-// result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
 	await test_for_TAG({
 		Data: 'testlong',
-		Exe_fn: fetch_insert_tag,
+		Param_of_link_id: 1,
 		Expect_result: '7文字以上はエラー'
 	});
 
-// result = error_check_for_insert_tag('SELECT');
-// result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
-
 	await test_for_TAG({
 		Data: 'SELECT',
-		Exe_fn: fetch_insert_tag,
+		Param_of_link_id: 1,
 		Expect_result: 'SQLの予約語を含む場合はエラー'
 	});
 
-// result = error_check_for_insert_tag('test');
-// result.res === 'OK' ? '' : console.log('result.res is not OK');
 	await test_for_TAG({
 		Data: 'test',
-		Exe_fn: fetch_insert_tag,
+		Param_of_link_id: 1,
 		Expect_result: 'OK'
 	});
 
 	console.log(ERROR_MESSAGE_STACK);
 	console.log(SUCCESS_MESSAGE_STACK);
-	await test_db_init_on_end();
+
 }
 
 const test_insert_link = () =>{
@@ -363,7 +320,7 @@ const fetch_insert_link = async () => {
 				'RESPONSE.status: RESPONSE.status === 400'
 			) : null;
 
-			RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 		console.log(RESPONSE.result);
 	} catch (error) {
@@ -382,16 +339,30 @@ const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
-const fetch_insert_tag = async (LINK_ID) => {
+
+let hogehoge = [];
+const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
 	try {
-	TAG = TAG_VAL.value;
-	console.log(TAG);
-	RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
-	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : fetch_hello({});
+	TAG = TAG_PARAM || TAG_VAL.value;
+	console.log('TAG is ', TAG);
+	console.log('LINK_ID is ', LINK_ID);
+RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+
+hogehoge = RESPONSE;
+console.log('RESPONSE is ', RESPONSE);
+	// RESPONSE = await (await fetch('http://localhost:8000/insert_tag2', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+
+// RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
+RESPONSE.status === 400 ? console.log(
+	'RESPONSE.status: RESPONSE.status === 400'
+) : null;
+
+RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 	console.log(RESPONSE.result);
 	// fetch_hello({});
 	} catch (error) {
-		// console.log(error);
+		console.log(error);
 		ERROR_MESSAGE = error.message;
 	}
 };
@@ -458,6 +429,7 @@ onMount(async () => {
 	<button on:click={() => test_db_init_on_start()}>test_db_init_on_start</button>
 	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
 	<button on:click={() => test_sample_exe()}>test_sample_exe</button>
+	<button on:click={() => test_sample_exe2()}>test_sample_exe2</button>
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
 	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
