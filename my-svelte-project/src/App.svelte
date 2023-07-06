@@ -80,6 +80,22 @@ const test_for_LINK = async (
 			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
 			: console.log('NG');
 }
+const test_for_TAG = async (
+	{
+		Data='test!',
+		Exe_fn=fetch_insert_tag,
+		Expect_result='記号を含む場合はエラー'
+	}
+	) =>{
+		ALL_TAGS = Data;
+		await Exe_fn();
+		SUCCESS_MESSAGE === 'success'
+		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+		: null;
+		ERROR_MESSAGE === Expect_result
+			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
+			: console.log('NG');
+}
 const test_sample_exe = async ()=>{
 	await test_db_init_on_start();
 	await test_for_LINK({
@@ -140,6 +156,71 @@ const test_sample_exe = async ()=>{
 		Exe_fn: fetch_insert_link,
 		Expect_result: '同じlinkが存在します'
 	});
+	
+	// const test_for_TAG = async (
+	// {
+	// 	Data='test!',
+	// 	Exe_fn=fetch_insert_tag,
+	// 	Expect_result='記号を含む場合はエラー'
+	// }
+	// ) =>{
+	// 	ALL_TAGS = Data;
+	// 	await Exe_fn();
+	// 	SUCCESS_MESSAGE === 'success'
+	// 	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+	// 	: null;
+	// 	ERROR_MESSAGE === Expect_result
+	// 		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
+	// 		: console.log('NG');
+	// }
+
+
+// let result = error_check_for_insert_tag(undefined);
+// result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
+
+// result = error_check_for_insert_tag('test!');
+// result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
+	await test_for_TAG({
+		Data: 'test!',
+		Exe_fn: fetch_insert_tag,
+		Expect_result: '記号を含む場合はエラー'
+	});
+
+
+// result = error_check_for_insert_tag('test tag');
+// result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
+
+	await test_for_TAG({
+		Data: 'test tag',
+		Exe_fn: fetch_insert_tag,
+		Expect_result: '空白を含む場合はエラー'
+	});
+
+
+// result = error_check_for_insert_tag('testlong');
+// result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
+	await test_for_TAG({
+		Data: 'testlong',
+		Exe_fn: fetch_insert_tag,
+		Expect_result: '7文字以上はエラー'
+	});
+
+// result = error_check_for_insert_tag('SELECT');
+// result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
+
+	await test_for_TAG({
+		Data: 'SELECT',
+		Exe_fn: fetch_insert_tag,
+		Expect_result: 'SQLの予約語を含む場合はエラー'
+	});
+
+// result = error_check_for_insert_tag('test');
+// result.res === 'OK' ? '' : console.log('result.res is not OK');
+	await test_for_TAG({
+		Data: 'test',
+		Exe_fn: fetch_insert_tag,
+		Expect_result: 'OK'
+	});
 
 	console.log(ERROR_MESSAGE_STACK);
 	console.log(SUCCESS_MESSAGE_STACK);
@@ -156,31 +237,31 @@ const test_insert_link = () =>{
 	// 	link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
 	// }
 
-	const test_4 = () => {
-		let result = error_check_for_insert_tag(undefined);
-		result.status === false ? "" : console.log('result.status is not false');
-		result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
+const test_4 = () => {
+let result = error_check_for_insert_tag(undefined);
+result.status === false ? "" : console.log('result.status is not false');
+result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
 
-		result = error_check_for_insert_tag('test!');
-		result.status === false ? ''  : console.log('result.status is not false');
-		result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
+result = error_check_for_insert_tag('test!');
+result.status === false ? ''  : console.log('result.status is not false');
+result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
 
-		result = error_check_for_insert_tag('test tag');
-		result.status === false ? '' : console.log('result.status is not false');
-		result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
+result = error_check_for_insert_tag('test tag');
+result.status === false ? '' : console.log('result.status is not false');
+result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
 
-		result = error_check_for_insert_tag('testlong');
-		result.status === false ? '' : console.log('result.status is not false');
-		result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
+result = error_check_for_insert_tag('testlong');
+result.status === false ? '' : console.log('result.status is not false');
+result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
 
-		result = error_check_for_insert_tag('SELECT');
-		result.status === false ? '' : console.log('result.status is not false');
-		result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
+result = error_check_for_insert_tag('SELECT');
+result.status === false ? '' : console.log('result.status is not false');
+result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
 
-		result = error_check_for_insert_tag('test');
-		result.status === true ? '' : console.log('result.status is not true');
-		result.res === 'OK' ? '' : console.log('result.res is not OK');
-	};
+result = error_check_for_insert_tag('test');
+result.status === true ? '' : console.log('result.status is not true');
+result.res === 'OK' ? '' : console.log('result.res is not OK');
+};
 
 }
 
