@@ -29,7 +29,9 @@ let ORDER_BY_COLUMN = 'links.id';
 let REQ_TAG = '';
 let USER = '';
 
-
+const test_db_init_only_set_name_password_test_mode = async () =>{
+	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
+}
 const test_db_init_on_start = async () =>{
 try {
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
@@ -150,6 +152,12 @@ const test_sample_exe2 = async ()=>{
 		// 	: console.log('NG');
 
 	await test_for_TAG({
+		// Data: ,
+		Param_of_link_id: 1,
+		Expect_result: '記号を含む場合はエラー'
+	});
+
+	await test_for_TAG({
 		Data: 'test!',
 		Param_of_link_id: 1,
 		Expect_result: '記号を含む場合はエラー'
@@ -178,6 +186,27 @@ const test_sample_exe2 = async ()=>{
 		Param_of_link_id: 1,
 		Expect_result: 'OK'
 	});
+
+	// 既に同じタグがついています
+	await test_for_TAG({
+		Data: 'test',
+		Param_of_link_id: 1,
+		Expect_result: '既に同じタグがついています'
+	});
+
+	// 別のlinkへのtagはエラーにならない
+	await test_for_TAG({
+		Data: 'test',
+		Param_of_link_id: 2,
+		Expect_result: 'OK'
+	});
+
+	// 既に同じタグがついています
+	await test_for_TAG({
+		Data: 'test',
+		Param_of_link_id: 2,
+		Expect_result: '既に同じタグがついています'
+	})
 
 	console.log(ERROR_MESSAGE_STACK);
 	console.log(SUCCESS_MESSAGE_STACK);
@@ -358,6 +387,7 @@ RESPONSE.status === 400 ? console.log(
 ) : null;
 
 RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+RESPONSE.status === 200 ? (await fetch_hello({})) : null;
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 	console.log(RESPONSE.result);
 	// fetch_hello({});
@@ -426,6 +456,7 @@ onMount(async () => {
 		asyncの関数をon:clickをトリガーに実行する場合は
 		{() => FUNCTION_NAME()}
 		と書く(キショイ書き方だと思った) -->
+	<button on:click={() => test_db_init_only_set_name_password_test_mode()}>test_db_init_only_set_name_password_test_mode</button>
 	<button on:click={() => test_db_init_on_start()}>test_db_init_on_start</button>
 	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
 	<button on:click={() => test_sample_exe()}>test_sample_exe</button>
