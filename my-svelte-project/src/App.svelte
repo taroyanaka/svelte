@@ -368,14 +368,12 @@ const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
-let COLLECT_VALUE = null;
+let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 const fetch_get_collect_value_for_test = async () => {
 	try {
-	// const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ }))).json();
+	// COLLECT_VALUE = null;
 	const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ name: NAME, password: PASSWORD }))).json();
-	// COLLECT_VALUE = RESULT_OF_TEST.message;
-	COLLECT_VALUE = RESULT_OF_TEST;
-	// fetch_hello({});
+	COLLECT_VALUE = RESULT_OF_TEST.message;
 	} catch (error) {
 		console.log(error);
 	}
@@ -443,6 +441,20 @@ onMount(async () => {
 	{#if ERROR_MESSAGE}
 		<button on:click={remove_error_message}>remove_error_message</button>
 	{/if}
+</div>
+
+<div>
+<!-- 上記のobjを#eachでレンダリングする -->
+	{#each COLLECT_VALUE as obj}
+		<div>
+			{#each Object.keys(obj) as key}
+				<div>
+					{key}: {obj[key]}
+				</div>
+			{/each}
+		</div>
+	{/each}
+
 </div>
 
 
