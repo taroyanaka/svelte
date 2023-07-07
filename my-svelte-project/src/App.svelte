@@ -368,8 +368,19 @@ const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
+let COLLECT_VALUE = null;
+const fetch_get_collect_value_for_test = async () => {
+	try {
+	// const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ }))).json();
+	const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ name: NAME, password: PASSWORD }))).json();
+	// COLLECT_VALUE = RESULT_OF_TEST.message;
+	COLLECT_VALUE = RESULT_OF_TEST;
+	// fetch_hello({});
+	} catch (error) {
+		console.log(error);
+	}
+};
 
-let hogehoge = [];
 const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
 	try {
 	TAG = TAG_PARAM || TAG_VAL.value;
@@ -377,7 +388,6 @@ const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
 	console.log('LINK_ID is ', LINK_ID);
 RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 
-hogehoge = RESPONSE;
 console.log('RESPONSE is ', RESPONSE);
 	// RESPONSE = await (await fetch('http://localhost:8000/insert_tag2', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 
@@ -456,6 +466,8 @@ onMount(async () => {
 		asyncの関数をon:clickをトリガーに実行する場合は
 		{() => FUNCTION_NAME()}
 		と書く(キショイ書き方だと思った) -->
+	<button on:click={() => fetch_get_collect_value_for_test()}>fetch_get_collect_value_for_test</button>
+
 	<button on:click={() => test_db_init_only_set_name_password_test_mode()}>test_db_init_only_set_name_password_test_mode</button>
 	<button on:click={() => test_db_init_on_start()}>test_db_init_on_start</button>
 	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
