@@ -99,6 +99,24 @@ const test_for_TAG = async (
 			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
 			: console.log('NG');
 }
+
+const test_for_COMMENT = async (
+	{
+		Data=('a'.repeat(51)),
+		Param_of_link_id=1,
+		Expect_result='commentの文字数がdata_limitを超える場合はエラー'
+	}
+	) =>{
+		COMMENT = Data;
+		await fetch_insert_comment(Param_of_link_id);
+		SUCCESS_MESSAGE === 'success'
+		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+		: null;
+		ERROR_MESSAGE === Expect_result
+			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
+			: console.log('NG');
+}
+
 const test_sample_exe = async ()=>{
 	await test_db_init_on_start();
 	await test_for_LINK({
@@ -213,43 +231,80 @@ const test_sample_exe2 = async ()=>{
 
 }
 
-const test_insert_link = () =>{
-	// const test_3 = () =>{
-	// 	const link_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.google.co.jp/');
-	// 	// expect(link_exists).not.toBeNull();
-	// 	link_exists === null ? console.log('link_exists is null') : "";
-	// 	const link_not_exists = db.prepare(`SELECT * FROM links WHERE link = ?`).get('https://www.yahoo.co.jp/');
-	// 	// expect(link_not_exists).toBeUndefined();
-	// 	link_not_exists === undefined ? "" : console.log('link_not_exists is not undefined');
-	// }
+const test_sample_exe3 = async () => {
+	// const reserved_words = ['SELECT', 'FROM', 'WHERE', 'INSERT', 'DELETE', 'UPDATE', 'DROP', 'ALTER', 'CREATE', 'TABLE', 'INTO', 'VALUES', 'AND', 'OR', 'NOT', 'NULL', 'TRUE', 'FALSE'];
+    // switch (true) {
+    //     case comment === undefined: return 'commentが空の場合はエラー';
+    //     case comment.length > DATA_LIMIT: return 'commentの文字数がdata_limitを超える場合はエラー';
+    //     case comment.length === 0: return '0文字の場合はエラー';
+    //     case comment.match(/[!-/:-@[-`{-~]/g): return '記号を含む場合はエラー';
+    //     case comment.match(/\s/g): return '空白を含む場合はエラー';
+    //     case comment.length > 300: return '300文字以上はエラー';
+    //     case reserved_words.includes(comment): return 'SQLの予約語を含む場合はエラー';
+    //     default: return 'OK';
+    // }
+// 'should return "commentが空の場合はエラー" when comment is undefined'
+// error_check_insert_comment(undefined, 100);
 
-const test_4 = () => {
-let result = error_check_for_insert_tag(undefined);
-result.status === false ? "" : console.log('result.status is not false');
-result.res === 'tagが空です' ? "" : console.log('result.res is not tagが空です');
+// 'commentの文字数がdata_limitを超える場合はエラー'
+// 'should return "commentの文字数がdata_limit(test userは1000)を超える場合はエラー" when comment length is greater than data limit'
+// error_check_insert_comment('a'.repeat(1500), 50);
+await test_for_COMMENT({
+	Data: 'a'.repeat(1500),
+	Param_of_link_id: 1,
+	Expect_result: 'commentの文字数がdata_limit(test userは50)を超える場合はエラー'
+});
 
-result = error_check_for_insert_tag('test!');
-result.status === false ? ''  : console.log('result.status is not false');
-result.res === '記号を含む場合はエラー' ? '' : console.log('result.res is not 記号を含む場合はエラー');
+// 'should return "0文字の場合はエラー" when comment length is 0'
+// error_check_insert_comment('', 100);
+await test_for_COMMENT({
+	Data: '',
+	Param_of_link_id: 1,
+	Expect_result: '0文字の場合はエラー'
+});
 
-result = error_check_for_insert_tag('test tag');
-result.status === false ? '' : console.log('result.status is not false');
-result.res === '空白を含む場合はエラー' ? '' : console.log('result.res is not 空白を含む場合はエラー');
+// 'should return "記号を含む場合はエラー" when comment contains symbols'
+// error_check_insert_comment('This is a comment with ! symbol', 100);
+await test_for_COMMENT({
+	Data: 'This is a comment with ! symbol',
+	Param_of_link_id: 1,
+	Expect_result: '記号を含む場合はエラー'
+});
 
-result = error_check_for_insert_tag('testlong');
-result.status === false ? '' : console.log('result.status is not false');
-result.res === '7文字以上はエラー' ? '' : console.log('result.res is not 7文字以上はエラー');
+// 'should return "空白を含む場合はエラー" when comment contains spaces'
+// error_check_insert_comment('This is a comment with spaces', 100);
+await test_for_COMMENT({
+	Data: 'This is a comment with spaces',
+	Param_of_link_id: 1,
+	Expect_result: '空白を含む場合はエラー'
+});
 
-result = error_check_for_insert_tag('SELECT');
-result.status === false ? '' : console.log('result.status is not false');
-result.res === 'SQLの予約語を含む場合はエラー' ? '' : console.log('result.res is not SQLの予約語を含む場合はエラー');
+// 'should return "300文字以上はエラー" when comment length is greater than 300'
+// error_check_insert_comment('a'.repeat(301), 100);
+await test_for_COMMENT({
+	Data: 'a'.repeat(301),
+	Param_of_link_id: 1,
+	Expect_result: '300文字以上はエラー'
+});
 
-result = error_check_for_insert_tag('test');
-result.status === true ? '' : console.log('result.status is not true');
-result.res === 'OK' ? '' : console.log('result.res is not OK');
-};
+// 'should return "SQLの予約語を含む場合はエラー" when comment contains SQL reserved words'
+// error_check_insert_comment('SELECT * FROM comments', 100);
+await test_for_COMMENT({
+	Data: 'SELECT * FROM comments',
+	Param_of_link_id: 1,
+	Expect_result: 'SQLの予約語を含む場合はエラー'
+});
+
+// 'should return "OK" when comment is valid'
+// error_check_insert_comment('This is a valid comment', 100);
+await test_for_COMMENT({
+	Data: 'This is a valid comment',
+	Param_of_link_id: 1,
+	Expect_result: 'OK'
+});
 
 }
+
 
 
 // ramda.jsで全ての組み合わせを作る関数
@@ -371,7 +426,6 @@ const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await
 let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 const fetch_get_collect_value_for_test = async () => {
 	try {
-	// COLLECT_VALUE = null;
 	const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ name: NAME, password: PASSWORD }))).json();
 	COLLECT_VALUE = RESULT_OF_TEST.message;
 	} catch (error) {
@@ -380,6 +434,7 @@ const fetch_get_collect_value_for_test = async () => {
 };
 
 const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
+
 	try {
 	TAG = TAG_PARAM || TAG_VAL.value;
 	console.log('TAG is ', TAG);
@@ -387,9 +442,7 @@ const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
 RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 
 console.log('RESPONSE is ', RESPONSE);
-	// RESPONSE = await (await fetch('http://localhost:8000/insert_tag2', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 
-// RESPONSE.result === 'success' ? SUCCESS_MESSAGE = RESPONSE.result : null;
 RESPONSE.status === 400 ? console.log(
 	'RESPONSE.status: RESPONSE.status === 400'
 ) : null;
@@ -485,6 +538,7 @@ onMount(async () => {
 	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
 	<button on:click={() => test_sample_exe()}>test_sample_exe</button>
 	<button on:click={() => test_sample_exe2()}>test_sample_exe2</button>
+	<button on:click={() => test_sample_exe3()}>test_sample_exe3</button>
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
 	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
