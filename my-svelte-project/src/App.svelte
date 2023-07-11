@@ -249,76 +249,63 @@ const test_sample_exe2 = async ()=>{
 }
 
 const test_sample_exe3 = async () => {
-	// const reserved_words = ['SELECT', 'FROM', 'WHERE', 'INSERT', 'DELETE', 'UPDATE', 'DROP', 'ALTER', 'CREATE', 'TABLE', 'INTO', 'VALUES', 'AND', 'OR', 'NOT', 'NULL', 'TRUE', 'FALSE'];
-    // switch (true) {
-    //     case comment === undefined: return 'commentが空の場合はエラー';
-    //     case comment.length > DATA_LIMIT: return 'commentの文字数がdata_limitを超える場合はエラー';
-    //     case comment.length === 0: return '0文字の場合はエラー';
-    //     case comment.match(/[!-/:-@[-`{-~]/g): return '記号を含む場合はエラー';
-    //     case comment.match(/\s/g): return '空白を含む場合はエラー';
-    //     case comment.length > 300: return '300文字以上はエラー';
-    //     case reserved_words.includes(comment): return 'SQLの予約語を含む場合はエラー';
-    //     default: return 'OK';
-    // }
-// 'should return "commentが空の場合はエラー" when comment is undefined'
-// error_check_insert_comment(undefined, 100);
 
-// 'commentの文字数がdata_limitを超える場合はエラー'
-// 'should return "commentの文字数がdata_limit(test userは1000)を超える場合はエラー" when comment length is greater than data limit'
-// error_check_insert_comment('a'.repeat(1500), 50);
-await test_for_COMMENT({
-	Data: 'a'.repeat(1500),
-	Param_of_link_id: 1,
-	Expect_result: 'commentの文字数がdata_limit(test userは50)を超える場合はエラー'
-});
+	// 'commentの文字数がdata_limitを超える場合はエラー'
+	// 'should return "commentの文字数がdata_limit(test userは1000)を超える場合はエラー" when comment length is greater than data limit'
+	// error_check_insert_comment('a'.repeat(1500), 50);
+	await test_for_COMMENT({
+		Data: 'a'.repeat(1500),
+		Param_of_link_id: 1,
+		Expect_result: 'commentの文字数がdata_limit(test userは50)を超える場合はエラー'
+	});
 
-// 'should return "0文字の場合はエラー" when comment length is 0'
-// error_check_insert_comment('', 100);
-await test_for_COMMENT({
-	Data: '',
-	Param_of_link_id: 1,
-	Expect_result: '0文字の場合はエラー'
-});
+	// 'should return "0文字の場合はエラー" when comment length is 0'
+	// error_check_insert_comment('', 100);
+	await test_for_COMMENT({
+		Data: '',
+		Param_of_link_id: 1,
+		Expect_result: '0文字の場合はエラー'
+	});
 
-// 'should return "記号を含む場合はエラー" when comment contains symbols'
-// error_check_insert_comment('This is a comment with ! symbol', 100);
-await test_for_COMMENT({
-	Data: 'This is a comment with ! symbol',
-	Param_of_link_id: 1,
-	Expect_result: '記号を含む場合はエラー'
-});
+	// 'should return "記号を含む場合はエラー" when comment contains symbols'
+	// error_check_insert_comment('This is a comment with ! symbol', 100);
+	await test_for_COMMENT({
+		Data: 'This is a comment with ! symbol',
+		Param_of_link_id: 1,
+		Expect_result: '記号を含む場合はエラー'
+	});
 
-// 'should return "空白を含む場合はエラー" when comment contains spaces'
-// error_check_insert_comment('This is a comment with spaces', 100);
-await test_for_COMMENT({
-	Data: 'This is a comment with spaces',
-	Param_of_link_id: 1,
-	Expect_result: '空白を含む場合はエラー'
-});
+	// 'should return "空白を含む場合はエラー" when comment contains spaces'
+	// error_check_insert_comment('This is a comment with spaces', 100);
+	await test_for_COMMENT({
+		Data: 'This is a comment with spaces',
+		Param_of_link_id: 1,
+		Expect_result: '空白を含む場合はエラー'
+	});
 
-// 'should return "300文字以上はエラー" when comment length is greater than 300'
-// error_check_insert_comment('a'.repeat(301), 100);
-await test_for_COMMENT({
-	Data: 'a'.repeat(301),
-	Param_of_link_id: 1,
-	Expect_result: '300文字以上はエラー'
-});
+	// 'should return "300文字以上はエラー" when comment length is greater than 300'
+	// error_check_insert_comment('a'.repeat(301), 100);
+	await test_for_COMMENT({
+		Data: 'a'.repeat(301),
+		Param_of_link_id: 1,
+		Expect_result: '300文字以上はエラー'
+	});
 
-// 'should return "SQLの予約語を含む場合はエラー" when comment contains SQL reserved words'
-// error_check_insert_comment('SELECT * FROM comments', 100);
-await test_for_COMMENT({
-	Data: 'SELECT * FROM comments',
-	Param_of_link_id: 1,
-	Expect_result: 'SQLの予約語を含む場合はエラー'
-});
+	// 'should return "SQLの予約語を含む場合はエラー" when comment contains SQL reserved words'
+	// error_check_insert_comment('SELECT * FROM comments', 100);
+	await test_for_COMMENT({
+		Data: 'SELECT * FROM comments',
+		Param_of_link_id: 1,
+		Expect_result: 'SQLの予約語を含む場合はエラー'
+	});
 
-// 'should return "OK" when comment is valid'
-// error_check_insert_comment('This is a valid comment', 100);
-await test_for_COMMENT({
-	Data: 'This is a valid comment',
-	Param_of_link_id: 1,
-	Expect_result: 'OK'
-});
+	// 'should return "OK" when comment is valid'
+	// error_check_insert_comment('This is a valid comment', 100);
+	await test_for_COMMENT({
+		Data: 'This is a valid comment',
+		Param_of_link_id: 1,
+		Expect_result: 'OK'
+	});
 
 }
 
@@ -527,7 +514,22 @@ const fetch_insert_comment_reply = async (Comment_id) => {
 		console.log(error.message);
 	}
 };
-const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
+// const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
+const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => {
+	try {
+		RESPONSE = await (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
+		RESPONSE.status === 400 ? console.log(
+				'RESPONSE.status: RESPONSE.status === 400'
+			) : null;
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
+	}
+};
 
 let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 const fetch_get_collect_value_for_test = async () => {
