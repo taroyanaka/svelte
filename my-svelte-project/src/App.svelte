@@ -418,7 +418,27 @@ const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000
 // const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
 
 const fetch_like_increment_or_decrement = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json();
-const fetch_insert_comment = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
+// const fetch_insert_comment = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
+const fetch_insert_comment = async (LINK_ID) => {
+
+	try {
+		RESPONSE = await (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
+
+		console.log(RESPONSE);
+
+		RESPONSE.status === 400 ? console.log(
+				'RESPONSE.status: RESPONSE.status === 400'
+			) : null;
+
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
+	}
+};
 const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
 const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
@@ -596,6 +616,10 @@ onMount(async () => {
 		</div>
 
 		<ul class="comment_zone">{#each item.comments_and_replies as comments_and_reply, INDEX}
+			<!-- <li>KOME: {comments_and_reply}</li> -->
+			<!-- <li>KOME1: {comments_and_reply['reply']}</li> -->
+			<!-- <li>KOME2: {comments_and_reply['comment']}</li> -->
+
 			<li>comment: {comments_and_reply[INDEX]['comment']}</li>
 			<li>created_at: {comments_and_reply[INDEX]['created_at']}</li>
 			<!-- <li>id: {comments_and_reply[INDEX]['id']}</li> -->
@@ -620,6 +644,7 @@ onMount(async () => {
 				{/each}</ul>
 			</li>
 		{/each}</ul>
+
 	</li>
 	{/each}
 </ul>
