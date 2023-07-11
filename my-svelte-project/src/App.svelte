@@ -117,6 +117,23 @@ const test_for_COMMENT = async (
 			: console.log('NG');
 }
 
+const test_for_COMMENT_REPLY = async (
+	{
+		Data=('a'.repeat(51)),
+		Param_of_comment_id=1,
+		Expect_result='commentの文字数がdata_limitを超える場合はエラー'
+	}
+) =>{
+	COMMENT_REPLY = Data;
+	await fetch_insert_comment_reply(Param_of_comment_id);
+	SUCCESS_MESSAGE === 'success'
+	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+	: null;
+	ERROR_MESSAGE === Expect_result
+		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
+		: console.log('NG');
+}
+
 const test_sample_exe = async ()=>{
 	await test_db_init_on_start();
 	await test_for_LINK({
@@ -305,6 +322,61 @@ await test_for_COMMENT({
 
 }
 
+const test_sample_exe4 = async () =>{
+
+	// 'comment_replyが空の場合はエラー'
+	// 'comment_replyの文字数がdata_limitを超える場合はエラー'
+	await test_for_COMMENT_REPLY({
+		Data: 'a'.repeat(1500),
+		Param_of_comment_id: 1,
+		Expect_result: 'comment_replyの文字数がdata_limit(test userは50)を超える場合はエラー'
+	});
+	// '0文字の場合はエラー'
+	await test_for_COMMENT_REPLY({
+		Data: '',
+		Param_of_comment_id: 1,
+		Expect_result: '0文字の場合はエラー'
+	});
+	// '記号を含む場合はエラー'
+	await test_for_COMMENT_REPLY({
+		Data: 'This is a comment with ! symbol',
+		Param_of_comment_id: 1,
+		Expect_result: '記号を含む場合はエラー'
+	});
+	// '空白を含む場合はエラー'
+	await test_for_COMMENT_REPLY({
+		Data: 'This is a comment with spaces',
+		Param_of_comment_id: 1,
+		Expect_result: '空白を含む場合はエラー'
+	});
+	// '10文字以上はエラー'
+	await test_for_COMMENT_REPLY({
+		Data: 'a'.repeat(11),
+		Param_of_comment_id: 1,
+		Expect_result: '10文字以上はエラー'
+	});
+	// 'SQLの予約語を含む場合はエラー'
+	await test_for_COMMENT_REPLY({
+		Data: 'SELECT * FROM comments',
+		Param_of_comment_id: 1,
+		Expect_result: 'SQLの予約語を含む場合はエラー'
+	});
+
+	// 'OK'
+	await test_for_COMMENT_REPLY({
+		Data: 'ValidRep',
+		Param_of_comment_id: 1,
+		Expect_result: 'OK'
+	});
+
+	// 同じユーザーから同じcommentへのreplyが既に存在する場合はエラー
+	await test_for_COMMENT_REPLY({
+		Data: 'ValidRep',
+		Param_of_comment_id: 1,
+		Expect_result: '同じユーザーから同じcommentへのreplyが既に存在する場合はエラー'
+	});
+}
+
 
 
 // ramda.jsで全ての組み合わせを作る関数
@@ -419,10 +491,10 @@ const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000
 
 const fetch_like_increment_or_decrement = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json();
 // const fetch_insert_comment = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
-const fetch_insert_comment = async (LINK_ID) => {
+const fetch_insert_comment = async (Link_id) => {
 
 	try {
-		RESPONSE = await (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
+		RESPONSE = await (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: Link_id, comment: COMMENT }))).json();
 
 		console.log(RESPONSE);
 
@@ -440,7 +512,21 @@ const fetch_insert_comment = async (LINK_ID) => {
 	}
 };
 const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
-const fetch_insert_comment_reply = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID, comment_reply: COMMENT_REPLY }))).json();
+const fetch_insert_comment_reply = async (Comment_id) => {
+	try {
+		RESPONSE = await (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: Comment_id, comment_reply: COMMENT_REPLY }))).json();
+		RESPONSE.status === 400 ? console.log(
+				'RESPONSE.status: RESPONSE.status === 400'
+			) : null;
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
+	}
+};
 const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
 
 let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
@@ -559,6 +645,7 @@ onMount(async () => {
 	<button on:click={() => test_sample_exe()}>test_sample_exe</button>
 	<button on:click={() => test_sample_exe2()}>test_sample_exe2</button>
 	<button on:click={() => test_sample_exe3()}>test_sample_exe3</button>
+	<button on:click={() => test_sample_exe4()}>test_sample_exe4</button>
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
 	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
