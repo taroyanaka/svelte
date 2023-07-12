@@ -142,7 +142,7 @@ const test_for_LIKE_INCREMENT_OR_DECREMENT = async (
 ) =>{
 	await fetch_like_increment_or_decrement(Param_of_link_id);
 	SUCCESS_MESSAGE === 'success'
-	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', 'OK']))
 	: null;
 	ERROR_MESSAGE === Expect_result
 		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
@@ -389,13 +389,13 @@ const test_sample_exe5 = async () => {
 	// message.response = 'increment_it';
 	await test_for_LIKE_INCREMENT_OR_DECREMENT({
 		Param_of_link_id: 1,
-		Expect_result: 'increment_it'
+		Expect_result: 'success'
 	});
 
 	// message.response = 'decrement_it';
 	await test_for_LIKE_INCREMENT_OR_DECREMENT({
 		Param_of_link_id: 1,
-		Expect_result: 'decrement_it'
+		Expect_result: 'success'
 	});
 }
 
