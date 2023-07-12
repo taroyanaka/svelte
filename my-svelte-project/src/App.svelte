@@ -134,6 +134,21 @@ const test_for_COMMENT_REPLY = async (
 		: console.log('NG');
 }
 
+const test_for_LIKE_INCREMENT_OR_DECREMENT = async (
+	{
+		Param_of_link_id=1,
+		Expect_result='success'
+	}
+) =>{
+	await fetch_like_increment_or_decrement(Param_of_link_id);
+	SUCCESS_MESSAGE === 'success'
+	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
+	: null;
+	ERROR_MESSAGE === Expect_result
+		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
+		: console.log('NG');
+}
+
 const test_sample_exe = async ()=>{
 	await test_db_init_on_start();
 	await test_for_LINK({
@@ -332,7 +347,7 @@ const test_sample_exe4 = async () =>{
 	});
 	// '空白を含む場合はエラー'
 	await test_for_COMMENT_REPLY({
-		Data: 'This is a comment with spaces',
+		Data: 'spa ces',
 		Param_of_comment_id: 1,
 		Expect_result: '空白を含む場合はエラー'
 	});
@@ -364,7 +379,25 @@ const test_sample_exe4 = async () =>{
 	});
 }
 
+const test_sample_exe5 = async () => {
+	// link_idがありません
+	await test_for_LIKE_INCREMENT_OR_DECREMENT({
+		Param_of_link_id: 1000000000,
+		Expect_result: 'link_idがありません'
+	});
 
+	// message.response = 'increment_it';
+	await test_for_LIKE_INCREMENT_OR_DECREMENT({
+		Param_of_link_id: 1,
+		Expect_result: 'increment_it'
+	});
+
+	// message.response = 'decrement_it';
+	await test_for_LIKE_INCREMENT_OR_DECREMENT({
+		Param_of_link_id: 1,
+		Expect_result: 'decrement_it'
+	});
+}
 
 // ramda.jsで全ての組み合わせを作る関数
 // R.xprod(['DESC','ASC'], ['links.id','links.name'], ['tag1','tag2','tag3'], ['user1','user2','user3']);
@@ -476,19 +509,24 @@ const fetch_insert_link = async () => {
 const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
 // const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
 
-const fetch_like_increment_or_decrement = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json();
+const fetch_like_increment_or_decrement = async (LINK_ID) => {
+	try {
+	RESPONSE = await (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json()
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
+	}
+};
 // const fetch_insert_comment = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
 const fetch_insert_comment = async (Link_id) => {
-
 	try {
 		RESPONSE = await (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: Link_id, comment: COMMENT }))).json();
-
-		console.log(RESPONSE);
-
-		RESPONSE.status === 400 ? console.log(
-				'RESPONSE.status: RESPONSE.status === 400'
-			) : null;
-
+		RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
 		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 		console.log(RESPONSE.result);
@@ -502,9 +540,7 @@ const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http
 const fetch_insert_comment_reply = async (Comment_id) => {
 	try {
 		RESPONSE = await (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: Comment_id, comment_reply: COMMENT_REPLY }))).json();
-		RESPONSE.status === 400 ? console.log(
-				'RESPONSE.status: RESPONSE.status === 400'
-			) : null;
+		RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
 		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 		console.log(RESPONSE.result);
@@ -514,13 +550,10 @@ const fetch_insert_comment_reply = async (Comment_id) => {
 		console.log(error.message);
 	}
 };
-// const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
-const fetch_delete_comment_reply = async (COMMENT_REPLY_ID) => {
+const fetch_delete_comment_reply = async (Comment_reply_id) => {
 	try {
-		RESPONSE = await (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: COMMENT_REPLY_ID }))).json();
-		RESPONSE.status === 400 ? console.log(
-				'RESPONSE.status: RESPONSE.status === 400'
-			) : null;
+		RESPONSE = await (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: Comment_reply_id }))).json();
+		RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
 		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
 		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 		console.log(RESPONSE.result);
@@ -648,6 +681,7 @@ onMount(async () => {
 	<button on:click={() => test_sample_exe2()}>test_sample_exe2</button>
 	<button on:click={() => test_sample_exe3()}>test_sample_exe3</button>
 	<button on:click={() => test_sample_exe4()}>test_sample_exe4</button>
+	<button on:click={() => test_sample_exe5()}>test_sample_exe5</button>
 
 	<button on:click={() => fetch_hello({})}>clear condition</button>
 	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
