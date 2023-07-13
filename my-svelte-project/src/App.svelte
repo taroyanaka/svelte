@@ -33,55 +33,48 @@ const test_db_init_only_set_name_password_test_mode = async () =>{
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
 }
 const test_db_init_on_start = async () =>{
-try {
+	try {
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
 	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
 	console.log(RESPONSE.result);
-} catch (error) {
+	} catch (error) {
 	ERROR_MESSAGE = error.message;
+	}
 }
-}
-
 const test_db_init_on_end = async () =>{
-try {
+	try {
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
 	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
 	console.log(RESPONSE.result);
-} catch (error) {
+	} catch (error) {
 	ERROR_MESSAGE = error.message;
-}
+	}
 }
 
 let ERROR_MESSAGE_STACK = [];
 // let OK_STACK = []; // 'OK stack'?? is that a 🦸 name??
 let SUCCESS_MESSAGE_STACK = [];
-const test_sample_for_LINK = async () =>{
-    // LINK = 'SELECT';
-    LINK = 'https::///google.co.jp';
-	await fetch_insert_link();
-    // ERROR_MESSAGE === 'SQLの予約語を含む場合はエラー'
-    ERROR_MESSAGE === 'URLの形式が正しくありません'
-		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', 'URLの形式が正しくありません']))
+const message_stacker = (Data, Expect_result) =>{
+	SUCCESS_MESSAGE === 'success'
+		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', (Data?Data+'は':'') + 'OK']))
+		: null;
+	ERROR_MESSAGE === Expect_result
+		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
 		: console.log('NG');
 }
 const test_for_LINK = async (
 	{
 		Data='SELECT',
-		Exe_fn=fetch_insert_link,
 		Expect_result='SQLの予約語を含む場合はエラー'
 	}
 	) =>{
-		LINK = Data;
-		await Exe_fn();
-		SUCCESS_MESSAGE === 'success'
-		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-		: null;
-		ERROR_MESSAGE === Expect_result
-			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-			: console.log('NG');
+	LINK = Data;
+	await fetch_insert_link();
+	message_stacker(Data, Expect_result);
 }
+
 const test_for_TAG = async (
 	{
 		Data='test!',
@@ -89,15 +82,8 @@ const test_for_TAG = async (
 		Expect_result='記号を含む場合はエラー'
 	}
 	) =>{
-		// TAG = Data;
-		// await fetch_insert_tag(Param_of_link_id);
-		await fetch_insert_tag(Param_of_link_id, Data);
-		SUCCESS_MESSAGE === 'success'
-		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-		: null;
-		ERROR_MESSAGE === Expect_result
-			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-			: console.log('NG');
+	await fetch_insert_tag(Param_of_link_id, Data);
+	message_stacker(Data, Expect_result);
 }
 
 const test_for_COMMENT = async (
@@ -107,14 +93,9 @@ const test_for_COMMENT = async (
 		Expect_result='commentの文字数がdata_limitを超える場合はエラー'
 	}
 	) =>{
-		COMMENT = Data;
-		await fetch_insert_comment(Param_of_link_id);
-		SUCCESS_MESSAGE === 'success'
-		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-		: null;
-		ERROR_MESSAGE === Expect_result
-			? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-			: console.log('NG');
+	COMMENT = Data;
+	await fetch_insert_comment(Param_of_link_id);
+	message_stacker(Data, Expect_result);
 }
 
 const test_for_COMMENT_REPLY = async (
@@ -126,64 +107,48 @@ const test_for_COMMENT_REPLY = async (
 ) =>{
 	COMMENT_REPLY = Data;
 	await fetch_insert_comment_reply(Param_of_comment_id);
-	SUCCESS_MESSAGE === 'success'
-	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-	: null;
-	ERROR_MESSAGE === Expect_result
-		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-		: console.log('NG');
+	message_stacker(Data, Expect_result);
 }
 
 const test_for_LIKE_INCREMENT_OR_DECREMENT = async (
 	{
+		Data='',
 		Param_of_link_id=1,
 		Expect_result='success'
 	}
 ) =>{
 	await fetch_like_increment_or_decrement(Param_of_link_id);
-	SUCCESS_MESSAGE === 'success'
-	? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', 'OK']))
-	: null;
-	ERROR_MESSAGE === Expect_result
-		? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-		: console.log('NG');
+	message_stacker(Data, Expect_result);
 }
 
 const test_sample_exe = async ()=>{
 	await test_db_init_on_start();
 	await test_for_LINK({
 		Data: 'SELECT',
-		Exe_fn: fetch_insert_link,
 		Expect_result: 'SQLの予約語を含む場合はエラー'
 	});
 	await test_for_LINK({
 		Data: 'https::///google.co.jp',
-		Exe_fn: fetch_insert_link,
 		Expect_result: 'URLの形式が正しくありません'
 	});
 	await test_for_LINK({
 		Data: 'https://hogehoge.com/',
-		Exe_fn: fetch_insert_link,
 		Expect_result: '許可されていないURLです'
 	});
 	await test_for_LINK({
 		Data: 'https://www.yahoo.co.jp/',
-		Exe_fn: fetch_insert_link,
 		Expect_result: 'OK'
 	});
 	await test_for_LINK({
 		Data: 'https://www.google.co.jp/',
-		Exe_fn: fetch_insert_link,
 		Expect_result: 'OK'
 	});
 	await test_for_LINK({
 		Data: 'https://www.youtube.com/',
-		Exe_fn: fetch_insert_link,
 		Expect_result: 'OK'
 	});
 	await test_for_LINK({
 		Data: 'https://www.google.co.jp/',
-		Exe_fn: fetch_insert_link,
 		Expect_result: '同じlinkが存在します'
 	});
 	
@@ -192,65 +157,47 @@ const test_sample_exe = async ()=>{
 }
 
 const test_sample_exe2 = async ()=>{
-		// const Expect_result='記号を含む場合はエラー';
-		// await fetch_insert_tag(1, "TEST!");
-		// SUCCESS_MESSAGE === 'success'
-		// ? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', Data + 'はOK']))
-		// : null;
-		// ERROR_MESSAGE === Expect_result
-		// 	? (console.log('OK'), ERROR_MESSAGE_STACK.push(['OK', Expect_result]))
-		// 	: console.log('NG');
-
 	await test_for_TAG({
-		// Data: ,
 		Param_of_link_id: 1,
 		Expect_result: '記号を含む場合はエラー'
 	});
-
 	await test_for_TAG({
 		Data: 'test!',
 		Param_of_link_id: 1,
 		Expect_result: '記号を含む場合はエラー'
 	});
-
 	await test_for_TAG({
 		Data: 'test tag',
 		Param_of_link_id: 1,
 		Expect_result: '空白を含む場合はエラー'
 	});
-
 	await test_for_TAG({
 		Data: 'testlong',
 		Param_of_link_id: 1,
 		Expect_result: '7文字以上はエラー'
 	});
-
 	await test_for_TAG({
 		Data: 'SELECT',
 		Param_of_link_id: 1,
 		Expect_result: 'SQLの予約語を含む場合はエラー'
 	});
-
 	await test_for_TAG({
 		Data: 'test',
 		Param_of_link_id: 1,
 		Expect_result: 'OK'
 	});
-
 	// 既に同じタグがついています
 	await test_for_TAG({
 		Data: 'test',
 		Param_of_link_id: 1,
 		Expect_result: '既に同じタグがついています'
 	});
-
 	// 別のlinkへのtagはエラーにならない
 	await test_for_TAG({
 		Data: 'test',
 		Param_of_link_id: 2,
 		Expect_result: 'OK'
 	});
-
 	// 既に同じタグがついています
 	await test_for_TAG({
 		Data: 'test',
@@ -260,20 +207,18 @@ const test_sample_exe2 = async ()=>{
 
 	console.log(ERROR_MESSAGE_STACK);
 	console.log(SUCCESS_MESSAGE_STACK);
-
 }
 
 const test_sample_exe3 = async () => {
-
 	// 'commentの文字数がdata_limitを超える場合はエラー'
 	// 'should return "commentの文字数がdata_limit(test userは1000)を超える場合はエラー" when comment length is greater than data limit'
 	// error_check_insert_comment('a'.repeat(1500), 50);
+
 	await test_for_COMMENT({
 		Data: 'a'.repeat(1500),
 		Param_of_link_id: 1,
 		Expect_result: 'commentの文字数がdata_limit(test userは50)を超える場合はエラー'
 	});
-
 	// 'should return "0文字の場合はエラー" when comment length is 0'
 	// error_check_insert_comment('', 100);
 	await test_for_COMMENT({
@@ -281,15 +226,6 @@ const test_sample_exe3 = async () => {
 		Param_of_link_id: 1,
 		Expect_result: '0文字の場合はエラー'
 	});
-
-	// 'should return "記号を含む場合はエラー" when comment contains symbols'
-	// error_check_insert_comment('This is a comment with ! symbol', 100);
-	await test_for_COMMENT({
-		Data: 'This is a comment with ! symbol',
-		Param_of_link_id: 1,
-		Expect_result: '記号を含む場合はエラー'
-	});
-
 	// 'should return "空白を含む場合はエラー" when comment contains spaces'
 	// error_check_insert_comment('This is a comment with spaces', 100);
 	await test_for_COMMENT({
@@ -297,7 +233,13 @@ const test_sample_exe3 = async () => {
 		Param_of_link_id: 1,
 		Expect_result: '空白を含む場合はエラー'
 	});
-
+	// 'should return "記号を含む場合はエラー" when comment contains symbols'
+	// error_check_insert_comment('This is a comment with ! symbol', 100);
+	await test_for_COMMENT({
+		Data: 'This!Symbol',
+		Param_of_link_id: 1,
+		Expect_result: '記号を含む場合はエラー'
+	});
 	// 'should return "300文字以上はエラー" when comment length is greater than 300'
 	// error_check_insert_comment('a'.repeat(301), 100);
 	await test_for_COMMENT({
@@ -305,7 +247,6 @@ const test_sample_exe3 = async () => {
 		Param_of_link_id: 1,
 		Expect_result: '300文字以上はエラー'
 	});
-
 	// 'should return "SQLの予約語を含む場合はエラー" when comment contains SQL reserved words'
 	// error_check_insert_comment('SELECT * FROM comments', 100);
 	await test_for_COMMENT({
@@ -313,19 +254,16 @@ const test_sample_exe3 = async () => {
 		Param_of_link_id: 1,
 		Expect_result: 'SQLの予約語を含む場合はエラー'
 	});
-
 	// 'should return "OK" when comment is valid'
 	// error_check_insert_comment('This is a valid comment', 100);
 	await test_for_COMMENT({
-		Data: 'This is a valid comment',
+		Data: 'ThisIsaValidComment',
 		Param_of_link_id: 1,
 		Expect_result: 'OK'
 	});
-
 }
 
 const test_sample_exe4 = async () =>{
-
 	// 'comment_replyが空の場合はエラー'
 	// 'comment_replyの文字数がdata_limitを超える場合はエラー'
 	await test_for_COMMENT_REPLY({
@@ -341,7 +279,7 @@ const test_sample_exe4 = async () =>{
 	});
 	// '記号を含む場合はエラー'
 	await test_for_COMMENT_REPLY({
-		Data: 'This is a comment with ! symbol',
+		Data: 'This!Symbol',
 		Param_of_comment_id: 1,
 		Expect_result: '記号を含む場合はエラー'
 	});
@@ -363,14 +301,12 @@ const test_sample_exe4 = async () =>{
 		Param_of_comment_id: 1,
 		Expect_result: 'SQLの予約語を含む場合はエラー'
 	});
-
 	// 'OK'
 	await test_for_COMMENT_REPLY({
 		Data: 'ValidRep',
 		Param_of_comment_id: 1,
 		Expect_result: 'OK'
 	});
-
 	// 同じユーザーから同じcommentへのreplyが既に存在する場合はエラー
 	await test_for_COMMENT_REPLY({
 		Data: 'ValidRep',
@@ -385,14 +321,17 @@ const test_sample_exe5 = async () => {
 		Param_of_link_id: 1000000000,
 		Expect_result: 'link_idがありません'
 	});
-
 	// message.response = 'increment_it';
 	await test_for_LIKE_INCREMENT_OR_DECREMENT({
 		Param_of_link_id: 1,
 		Expect_result: 'success'
 	});
-
 	// message.response = 'decrement_it';
+	await test_for_LIKE_INCREMENT_OR_DECREMENT({
+		Param_of_link_id: 1,
+		Expect_result: 'success'
+	});
+	// do like again
 	await test_for_LIKE_INCREMENT_OR_DECREMENT({
 		Param_of_link_id: 1,
 		Expect_result: 'success'
