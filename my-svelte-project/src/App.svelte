@@ -26,6 +26,7 @@ let SUCCESS_MESSAGE = '';
 
 let ORDER_BY = 'DESC';
 let ORDER_BY_COLUMN = 'links.id';
+// let ORDER_BY_COLUMN = 'invalid_column';
 let REQ_TAG = '';
 let USER = '';
 
@@ -358,6 +359,7 @@ const more_res_flatten_obj = more_res_flatten.map((item) => {
 });
 
 const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+// const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='invalid_column', REQ_TAG_PARAM, USER_PARAM}) => {
 
 	try {
 	console.log(
@@ -388,7 +390,7 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.
 		const get_param = get_param_array.join('&');
 		return `${endpoint}?${get_param}`;
 	};
-	// console.log(make_get_param());
+	console.log(make_get_param());
 	const res = await (await fetch(make_get_param())).json();
 	// resのjsonが{result: 'fail', error: error.message}の場合はエラーを投げる
 	if(res.result === 'fail') throw new Error(res.error);
