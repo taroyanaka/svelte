@@ -491,7 +491,7 @@ const fetch_insert_comment = async (Link_id) => {
 	}
 };
 const fetch_delete_comment = async (COMMENT_ID) => {
-	
+
 	try {
 	// RESPONSE = (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
 	RESPONSE = await (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
@@ -696,7 +696,8 @@ onMount(async () => {
 
 		<!-- <div>like_count: {item.like_count}</div> -->
 		<!-- like_countの数だけ😇が表示される -->
-		{#each Array(item.like_count) as item, index}
+		<!-- {#each Array(item.like_count) as item, index} -->
+		{#each item.likes as item, index}
 		<span>😇</span>
 		{/each}
 		<button on:click={fetch_like_increment_or_decrement(item.id)}>like_increment_or_decrement</button>
