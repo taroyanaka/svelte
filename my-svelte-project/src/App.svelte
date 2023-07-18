@@ -447,7 +447,20 @@ const fetch_insert_link = async () => {
 	}
 };
 
-const fetch_delete_link = async (LINK_ID) => (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
+const fetch_delete_link = async (LINK_ID) => {
+	try {
+	// RESPONSE = await (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json()
+	RESPONSE = await (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
+	}
+}
 // const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
 
 const fetch_like_increment_or_decrement = async (LINK_ID) => {
@@ -477,7 +490,21 @@ const fetch_insert_comment = async (Link_id) => {
 		console.log(error.message);
 	}
 };
-const fetch_delete_comment = async (COMMENT_ID) => RESPONSE = (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
+const fetch_delete_comment = async (COMMENT_ID) => {
+	
+	try {
+	// RESPONSE = (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
+	RESPONSE = await (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+		RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+		RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+		console.log(RESPONSE.result);
+	} catch (error) {
+		ERROR_MESSAGE = error.message;
+		console.log(error);
+		console.log(error.message);
+	}
+}
 const fetch_insert_comment_reply = async (Comment_id) => {
 	try {
 		RESPONSE = await (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: Comment_id, comment_reply: COMMENT_REPLY }))).json();
