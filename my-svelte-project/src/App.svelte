@@ -688,6 +688,7 @@ onMount(async () => {
 			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		</div>
 
+		<button on:click={fetch_delete_link(item.id)}>fetch_delete_link</button>
 		<a href={item.link} target="_blank">{item.link}</a>
 		<div>created_at: {item.created_at}</div>
 		<!-- <div>updated_at: {item.updated_at}</div> -->
