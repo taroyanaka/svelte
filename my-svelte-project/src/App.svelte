@@ -23,8 +23,9 @@ const WHITE_LIST_URL_ARRAY = [
 ];
 
 
-let ORDER_BY = 'DESC';
-let ORDER_BY_COLUMN = 'links.id';
+let ORDER_BY = 'ASC';
+// let ORDER_BY_COLUMN = 'links.id';
+let ORDER_BY_COLUMN = 'id';
 let REQ_TAG = '';
 let USER = '';
 
@@ -205,7 +206,13 @@ const test_sample_exe2 = async () => {
 		Data: 'test',
 		Param_of_link_id: 2,
 		Expect_result: '既に同じタグがついています'
-	})
+	});
+
+	await test_for_TAG({
+		Data: 'TEST',
+		Param_of_link_id: 1,
+		Expect_result: 'OK'
+	});
 
 	console.log(ERROR_MESSAGE_STACK);
 	console.log(SUCCESS_MESSAGE_STACK);
@@ -340,7 +347,8 @@ const test_sample_exe5 = async () => {
 	});
 }
 
-const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='id', REQ_TAG_PARAM, USER_PARAM}) => {
+	console.log(ORDER_BY_COLUMN_PARAM);
 	try {
 	ORDER_BY = ORDER_BY_PARAM; // ? ORDER_BY_PARAM : 'DESC';
 	ORDER_BY_COLUMN = ORDER_BY_COLUMN_PARAM; // ? ORDER_BY_COLUMN_PARAM : 'links.id';
@@ -463,6 +471,27 @@ const fetch_get_tags_for_autocomplete = async () => {
 
 const remove_error_message = () => ERROR_MESSAGE = "";
 
+// <button on:click={() => ORDER_BY_COLUMN === 'links.id' ? ORDER_BY_COLUMN = 'created_at' : ORDER_BY_COLUMN === 'created_at' ? ORDER_BY_COLUMN = 'updated_at' : ORDER_BY_COLUMN = 'links.id'}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button>
+// const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='links.id', REQ_TAG_PARAM, USER_PARAM}) => {
+const order_by_column_and_fetch_hello = async () => {
+	switch (true) {
+		case ORDER_BY_COLUMN === 'id' : ORDER_BY_COLUMN = 'created_at'; break;
+		case ORDER_BY_COLUMN === 'created_at' : ORDER_BY_COLUMN = 'updated_at'; break;
+		case ORDER_BY_COLUMN === 'updated_at' :  ORDER_BY_COLUMN = 'id'; break;
+		default: ORDER_BY_COLUMN = 'id'; break;
+	}
+	await fetch_hello({
+		ORDER_BY_PARAM: 'ASC',
+		// ORDER_BY_PARAM: 'DESC',
+		ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
+		// REQ_TAG_PARAM: null,
+		// REQ_TAG_PARAM: 'test',
+		REQ_TAG_PARAM: 'TEST',
+		// USER_PARAM: null,
+		// USER_PARAM: 'user1',
+	});
+}
+
 // onMount(fetch_hello({}));
 onMount(async () => {
 	try {
@@ -540,7 +569,8 @@ onMount(async () => {
 	<!-- ['links.id', 'created_at', 'updated_at'] -->
 	<!-- <input bind:value={ORDER_BY_COLUMN} type="text" placeholder="ORDER_BY_COLUMN"> -->
 	<!-- ORDER_BY_COLUMNをlinks.id, created_at, updated_atをswitchする(デフォルトはlinks.id) -->
-	<button on:click={() => ORDER_BY_COLUMN === 'links.id' ? ORDER_BY_COLUMN = 'created_at' : ORDER_BY_COLUMN === 'created_at' ? ORDER_BY_COLUMN = 'updated_at' : ORDER_BY_COLUMN = 'links.id'}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button>
+	<!-- <button on:click={() => ORDER_BY_COLUMN === 'links.id' ? ORDER_BY_COLUMN = 'created_at' : ORDER_BY_COLUMN === 'created_at' ? ORDER_BY_COLUMN = 'updated_at' : ORDER_BY_COLUMN = 'links.id'}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button> -->
+	<button on:click={() => order_by_column_and_fetch_hello()}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button>
 </div>
 
 <ul>
