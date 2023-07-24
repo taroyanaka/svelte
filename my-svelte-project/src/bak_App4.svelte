@@ -21,20 +21,14 @@ const WHITE_LIST_URL_ARRAY = [
 	'https://www.google.co.jp/',
 	'https://www.youtube.com/',
 ];
-
+let ERROR_MESSAGE = "";
+let SUCCESS_MESSAGE = '';
 
 let ORDER_BY = 'DESC';
 let ORDER_BY_COLUMN = 'links.id';
+// let ORDER_BY_COLUMN = 'invalid_column';
 let REQ_TAG = '';
 let USER = '';
-
-let ERROR_MESSAGE = "";
-let SUCCESS_MESSAGE = '';
-let ERROR_MESSAGE_STACK = [];
-let SUCCESS_MESSAGE_STACK = [];
-let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
-
-
 
 const test_db_init_only_set_name_password_test_mode = async () =>{
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
@@ -44,6 +38,7 @@ const test_db_init_on_start = async () =>{
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
 	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
+	console.log(RESPONSE.result);
 	} catch (error) {
 	ERROR_MESSAGE = error.message;
 	}
@@ -53,11 +48,15 @@ const test_db_init_on_end = async () =>{
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
 	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
+	console.log(RESPONSE.result);
 	} catch (error) {
 	ERROR_MESSAGE = error.message;
 	}
 }
 
+let ERROR_MESSAGE_STACK = [];
+// let OK_STACK = []; // 'OK stack'?? is that a 🦸 name??
+let SUCCESS_MESSAGE_STACK = [];
 const message_stacker = (Data, Expect_result) =>{
 	SUCCESS_MESSAGE === 'success'
 		? (console.log('OK'), SUCCESS_MESSAGE_STACK.push(['OK', (Data?Data+'は':'') + 'OK']))
@@ -123,7 +122,7 @@ const test_for_LIKE_INCREMENT_OR_DECREMENT = async (
 	message_stacker(Data, Expect_result);
 }
 
-const test_sample_exe = async () => {
+const test_sample_exe = async ()=>{
 	await test_db_init_on_start();
 	await test_for_LINK({
 		Data: 'SELECT',
@@ -158,7 +157,7 @@ const test_sample_exe = async () => {
 	console.log(SUCCESS_MESSAGE_STACK);
 }
 
-const test_sample_exe2 = async () => {
+const test_sample_exe2 = async ()=>{
 	await test_for_TAG({
 		Param_of_link_id: 1,
 		Expect_result: '記号を含む場合はエラー'
@@ -265,7 +264,7 @@ const test_sample_exe3 = async () => {
 	});
 }
 
-const test_sample_exe4 = async () => {
+const test_sample_exe4 = async () =>{
 	// 'comment_replyが空の場合はエラー'
 	// 'comment_replyの文字数がdata_limitを超える場合はエラー'
 	await test_for_COMMENT_REPLY({
@@ -383,69 +382,117 @@ const get_POST_object = (BODY_OBJ) => {
 
 const response_handling = async (RESPONSE) => {
 	try {
-	// RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
 	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
-	(RESPONSE.result === 'fail' || RESPONSE.status === 400) ? (()=>{throw new Error(RESPONSE.message)})() : (await fetch_hello({}));
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
 	} catch (error) {
 		(()=>{throw new Error(error.message)})();
 	}
 }
 
+
 // URLの配列の文字列から始まる場合はtrueを返す関数を1行で
 const is_include_WHITE_LIST_URL = (target_url_str, WHITE_LIST_URL_ARRAY) => WHITE_LIST_URL_ARRAY.some((WHITE_LIST_URL) => target_url_str.startsWith(WHITE_LIST_URL));
 let hoge = null;
 const fetch_insert_link = async () => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 };
+
 const fetch_delete_link = async (LINK_ID) => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 }
+// const fetch_delete_link = async (LINK_ID) => console.log(LINK_ID);
+
 const fetch_like_increment_or_decrement = async (LINK_ID) => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json()
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 };
+// const fetch_insert_comment = async (LINK_ID) => RESPONSE = (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, comment: COMMENT }))).json();
 const fetch_insert_comment = async (Link_id) => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: Link_id, comment: COMMENT }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 };
 const fetch_delete_comment = async (COMMENT_ID) => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 }
 const fetch_insert_comment_reply = async (Comment_id) => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: Comment_id, comment_reply: COMMENT_REPLY }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 };
 const fetch_delete_comment_reply = async (Comment_reply_id) => {
+
 	try {
 	RESPONSE = await (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: Comment_reply_id }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
-};
-const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
-	try {
-	TAG = TAG_PARAM || TAG_VAL.value;
-	RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
-	await response_handling(RESPONSE);
-	} catch (error) {ERROR_MESSAGE = error.message;}
+	RESPONSE.status === 400 ? console.log('RESPONSE.status: RESPONSE.status === 400') : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	ERROR_MESSAGE = error.message;
+	console.log(error);
+	console.log(error.message);
+	}
 };
 
-
+let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 const fetch_get_collect_value_for_test = async () => {
+
 	try {
 	const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ name: NAME, password: PASSWORD }))).json();
 	COLLECT_VALUE = RESULT_OF_TEST.message;
@@ -454,7 +501,27 @@ const fetch_get_collect_value_for_test = async () => {
 	}
 };
 
+const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
+
+	try {
+	TAG = TAG_PARAM || TAG_VAL.value;
+	console.log('TAG is ', TAG);
+	console.log('LINK_ID is ', LINK_ID);
+	RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+	RESPONSE.status === 400 ? console.log(
+		'RESPONSE.status: RESPONSE.status === 400'
+	) : null;
+	RESPONSE.status === 200 ? SUCCESS_MESSAGE = RESPONSE.result : null;
+	RESPONSE.status === 200 ? (await fetch_hello({})) : null;
+	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.message)})() : fetch_hello({});
+	} catch (error) {
+	console.log(error);
+	ERROR_MESSAGE = error.message;
+	}
+};
+
 const fetch_get_tags_for_autocomplete = async () => {
+	
 	const json = await (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
 					.json();
 	const RES = await json;
@@ -504,7 +571,8 @@ onMount(async () => {
 
 
 <div>
-
+<input bind:value={ORDER_BY} type="text" placeholder="ORDER_BY">
+<input bind:value={ORDER_BY_COLUMN} type="text" placeholder="ORDER_BY_COLUMN">
 <input bind:value={REQ_TAG} type="text" placeholder="REQ_TAG">
 <input bind:value={USER} type="text" placeholder="USER">
 </div>
@@ -513,6 +581,8 @@ onMount(async () => {
 <input bind:value={NAME} type="text" placeholder="name">
 <input bind:value={PASSWORD} type="text" placeholder="password">
 <input bind:value={TEST_MODE} type="text" placeholder="TEST_MODE">
+<input bind:value={LINK} type="text" placeholder="link_url" class="link">
+<button on:click={fetch_insert_link} class="insert_link">insert_link</button>
 </div>
 
 <div>
@@ -527,20 +597,10 @@ onMount(async () => {
 	<button on:click={() => test_sample_exe3()}>test_sample_exe3</button>
 	<button on:click={() => test_sample_exe4()}>test_sample_exe4</button>
 	<button on:click={() => test_sample_exe5()}>test_sample_exe5</button>
-</div>
 
-<div>
-	<input bind:value={LINK} type="text" placeholder="link_url" class="link">
-	<button on:click={fetch_insert_link} class="insert_link">insert_link</button>
 	<button on:click={() => fetch_hello({})}>clear condition</button>
-
-	<!-- <input bind:value={ORDER_BY} type="text" placeholder="ORDER_BY"> -->
-	<!-- ORDER_BYをDESCとASCをswitchする(デフォルトはDESC) -->
-	<button on:click={() => ORDER_BY === 'DESC' ? ORDER_BY = 'ASC' : ORDER_BY = 'DESC'}>ORDER_BY: {ORDER_BY}</button>
-	<!-- ['links.id', 'created_at', 'updated_at'] -->
-	<!-- <input bind:value={ORDER_BY_COLUMN} type="text" placeholder="ORDER_BY_COLUMN"> -->
-	<!-- ORDER_BY_COLUMNをlinks.id, created_at, updated_atをswitchする(デフォルトはlinks.id) -->
-	<button on:click={() => ORDER_BY_COLUMN === 'links.id' ? ORDER_BY_COLUMN = 'created_at' : ORDER_BY_COLUMN === 'created_at' ? ORDER_BY_COLUMN = 'updated_at' : ORDER_BY_COLUMN = 'links.id'}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button>
+	<button on:click={() => fetch_hello({USER_PARAM: 'user2'})}>user2</button>
+	
 </div>
 
 <ul>
