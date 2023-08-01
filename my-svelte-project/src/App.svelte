@@ -498,7 +498,8 @@ const order_by_and_fetch_hello = async () => {
 		// REQ_TAG_PARAM: 'TEST',
 	});
 }
-const req_tag_and_fetch_hello = async () => {
+const req_tag_and_fetch_hello = async (TAG) => {
+	REQ_TAG = TAG;
 	// switch (true) {
 	// 	case ORDER_BY === 'ASC' : ORDER_BY = 'DESC'; break;
 	// 	case ORDER_BY === 'DESC' :  ORDER_BY = 'ASC'; break;
@@ -507,7 +508,8 @@ const req_tag_and_fetch_hello = async () => {
 	await fetch_hello({
 		// ORDER_BY_PARAM: ORDER_BY,
 		// ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
-		REQ_TAG_PARAM: 'TEST',
+		// REQ_TAG_PARAM: 'TEST',
+		REQ_TAG_PARAM: REQ_TAG,
 	});
 }
 
@@ -601,7 +603,7 @@ onMount(async () => {
 			{#each item.tags as tags, INDEX}
 			<!-- <span>id: {tags.id}</span> -->
 			<!-- <span>{tags.tag}, </span> -->
-			<button on:click={() => req_tag_and_fetch_hello()}>{tags.tag}</button>
+			<button on:click={() => req_tag_and_fetch_hello(tags.tag)}>{tags.tag}</button>
 			{/each}
 		</div>
 
