@@ -481,14 +481,33 @@ const order_by_column_and_fetch_hello = async () => {
 		default: ORDER_BY_COLUMN = 'id'; break;
 	}
 	await fetch_hello({
-		ORDER_BY_PARAM: 'ASC',
-		// ORDER_BY_PARAM: 'DESC',
+		ORDER_BY_PARAM: ORDER_BY,
 		ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
-		// REQ_TAG_PARAM: null,
-		// REQ_TAG_PARAM: 'test',
 		REQ_TAG_PARAM: 'TEST',
-		// USER_PARAM: null,
-		// USER_PARAM: 'user1',
+	});
+}
+const order_by_and_fetch_hello = async () => {
+	switch (true) {
+		case ORDER_BY === 'ASC' : ORDER_BY = 'DESC'; break;
+		case ORDER_BY === 'DESC' :  ORDER_BY = 'ASC'; break;
+		default: ORDER_BY_COLUMN = 'DESC'; break;
+	}
+	await fetch_hello({
+		ORDER_BY_PARAM: ORDER_BY,
+		ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
+		// REQ_TAG_PARAM: 'TEST',
+	});
+}
+const req_tag_and_fetch_hello = async () => {
+	// switch (true) {
+	// 	case ORDER_BY === 'ASC' : ORDER_BY = 'DESC'; break;
+	// 	case ORDER_BY === 'DESC' :  ORDER_BY = 'ASC'; break;
+	// 	default: ORDER_BY_COLUMN = 'DESC'; break;
+	// }
+	await fetch_hello({
+		// ORDER_BY_PARAM: ORDER_BY,
+		// ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
+		REQ_TAG_PARAM: 'TEST',
 	});
 }
 
@@ -565,7 +584,8 @@ onMount(async () => {
 
 	<!-- <input bind:value={ORDER_BY} type="text" placeholder="ORDER_BY"> -->
 	<!-- ORDER_BYをDESCとASCをswitchする(デフォルトはDESC) -->
-	<button on:click={() => ORDER_BY === 'DESC' ? ORDER_BY = 'ASC' : ORDER_BY = 'DESC'}>ORDER_BY: {ORDER_BY}</button>
+	<!-- <button on:click={() => ORDER_BY === 'DESC' ? ORDER_BY = 'ASC' : ORDER_BY = 'DESC'}>ORDER_BY: {ORDER_BY}</button> -->
+	<button on:click={() => order_by_and_fetch_hello()}>ORDER_BY: {ORDER_BY}</button>
 	<!-- ['links.id', 'created_at', 'updated_at'] -->
 	<!-- <input bind:value={ORDER_BY_COLUMN} type="text" placeholder="ORDER_BY_COLUMN"> -->
 	<!-- ORDER_BY_COLUMNをlinks.id, created_at, updated_atをswitchする(デフォルトはlinks.id) -->
@@ -580,7 +600,8 @@ onMount(async () => {
 		<div>tag: 
 			{#each item.tags as tags, INDEX}
 			<!-- <span>id: {tags.id}</span> -->
-			<span>{tags.tag}, </span>
+			<!-- <span>{tags.tag}, </span> -->
+			<button on:click={() => req_tag_and_fetch_hello()}>{tags.tag}</button>
 			{/each}
 		</div>
 
