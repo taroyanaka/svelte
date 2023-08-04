@@ -485,7 +485,7 @@ const order_by_column_and_fetch_hello = async () => {
 		ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
 		REQ_TAG_PARAM: 'TEST',
 	});
-}
+};
 const order_by_and_fetch_hello = async () => {
 	switch (true) {
 		case ORDER_BY === 'ASC' : ORDER_BY = 'DESC'; break;
@@ -497,21 +497,19 @@ const order_by_and_fetch_hello = async () => {
 		ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
 		// REQ_TAG_PARAM: 'TEST',
 	});
-}
+};
 const req_tag_and_fetch_hello = async (TAG) => {
 	REQ_TAG = TAG;
-	// switch (true) {
-	// 	case ORDER_BY === 'ASC' : ORDER_BY = 'DESC'; break;
-	// 	case ORDER_BY === 'DESC' :  ORDER_BY = 'ASC'; break;
-	// 	default: ORDER_BY_COLUMN = 'DESC'; break;
-	// }
 	await fetch_hello({
-		// ORDER_BY_PARAM: ORDER_BY,
-		// ORDER_BY_COLUMN_PARAM: ORDER_BY_COLUMN,
-		// REQ_TAG_PARAM: 'TEST',
 		REQ_TAG_PARAM: REQ_TAG,
 	});
-}
+};
+const user_and_fetch_hello = async (USER) => {
+	const USER_VAL = USER ? USER : 'user1';
+	await fetch_hello({
+		USER_PARAM: USER_VAL,
+	});
+};
 
 // onMount(fetch_hello({}));
 onMount(async () => {
@@ -530,16 +528,14 @@ onMount(async () => {
 
 
 
-<!-- ERROR_MESSAGEを表示するdivタグ。クリックしたら非表示になる -->
+
 <div>
 	{ERROR_MESSAGE}
 	{#if ERROR_MESSAGE}
 		<button on:click={remove_error_message}>remove_error_message</button>
 	{/if}
 </div>
-
 <div>
-<!-- 上記のobjを#eachでレンダリングする -->
 	{#each COLLECT_VALUE as obj}
 		<div>
 			{#each Object.keys(obj) as key}
@@ -549,26 +545,18 @@ onMount(async () => {
 			{/each}
 		</div>
 	{/each}
-
 </div>
-
-
 <div>
-
-<input bind:value={REQ_TAG} type="text" placeholder="REQ_TAG">
-<input bind:value={USER} type="text" placeholder="USER">
+	<input bind:value={REQ_TAG} type="text" placeholder="REQ_TAG">
+	<input bind:value={USER} type="text" placeholder="USER">
 </div>
-
 <div>
-<input bind:value={NAME} type="text" placeholder="name">
-<input bind:value={PASSWORD} type="text" placeholder="password">
-<input bind:value={TEST_MODE} type="text" placeholder="TEST_MODE">
+	<input bind:value={NAME} type="text" placeholder="name">
+	<input bind:value={PASSWORD} type="text" placeholder="password">
+	<input bind:value={TEST_MODE} type="text" placeholder="TEST_MODE">
 </div>
-
 <div>
-	<!-- svelteにおいて、asyncの関数をon:clickをトリガーに実行する場合は {() => FUNCTION_NAME()} と書く(キショイ書き方だと思った) -->
 	<button on:click={() => fetch_get_collect_value_for_test()}>fetch_get_collect_value_for_test</button>
-
 	<button on:click={() => test_db_init_only_set_name_password_test_mode()}>test_db_init_only_set_name_password_test_mode</button>
 	<button on:click={() => test_db_init_on_start()}>test_db_init_on_start</button>
 	<button on:click={() => test_db_init_on_end()}>test_db_init_on_end</button>
@@ -578,6 +566,9 @@ onMount(async () => {
 	<button on:click={() => test_sample_exe4()}>test_sample_exe4</button>
 	<button on:click={() => test_sample_exe5()}>test_sample_exe5</button>
 </div>
+
+
+
 
 <div>
 	<input bind:value={LINK} type="text" placeholder="link_url" class="link">
@@ -622,7 +613,9 @@ onMount(async () => {
 		<div>created_at: {item.created_at}</div>
 		<!-- <div>updated_at: {item.updated_at}</div> -->
 		<!-- <div>user_id: {item.user_id}</div> -->
-		<div>username: {item.username}</div>
+
+		<!-- <div>username: {item.username}</div> -->
+		<button on:click={() => user_and_fetch_hello(item.username)}>{item.username}</button>
 
 		<!-- <div>like_count: {item.like_count}</div> -->
 		<!-- like_countの数だけ😇が表示される -->
