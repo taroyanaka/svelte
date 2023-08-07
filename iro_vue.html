@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script> -->
+  <script src="./vue@3.2.36.global.prod.js"></script>
+  <!-- curl -o p5.js https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js -->
+  <script src="./p5.js"></script>
+</head>
+<body>
+  <div id="app">
+
+new_color: <input class="val_button" type="text" v-bind:value="new_color" v-model="new_color">
+<!-- targetColorCode -->
+<!-- targetColorCode: <input class="val_button" type="text" v-bind:value="targetColorCode" v-model="targetColorCode"> -->
+<button v-on:click="random_color_to_wa_color()">random_color_to_wa_color</button>
+
+    <input class="val_button" type="text" v-bind:value="moji" v-on:input="moji = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="mojiSize" v-on:input="mojiSize = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="moji_x" v-on:input="moji_x = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="moji_y" v-on:input="moji_y = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="eye_0_x" v-on:input="eye_0_x = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="eye_0_y" v-on:input="eye_0_y = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="eye_1_x" v-on:input="eye_1_x = $event.target.value" step="100">
+    <input class="val_button" type="number" v-bind:value="eye_1_y" v-on:input="eye_1_y = $event.target.value" step="100">
+    <input class="val_button" type="button" value="update" v-on:click="setup(true)">
+    <input class="val_button" type="button" value="download" v-on:click="download_it">
+  </div>
+
+  <script>    
+          // カラーコードからRGB値に変換する関数
+          function hexToRgb(hex) {
+            let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? {
+                r: parseInt(result[1], 16),
+                g: parseInt(result[2], 16),
+                b: parseInt(result[3], 16)
+            } : null;
+        };
+
+    const app = Vue.createApp({
+      data() {
+        return {
+         new_color: '#FFFF00',
+
+          moji: 'Taro',
+          mojiSize: 100,
+          moji_x: 1200,
+          moji_y: 800,
+          eye_0_x: 800,
+          eye_0_y: 1000,
+          eye_1_x: 1400,
+          eye_1_y: 1000,
+          // let targetColorCode = '#35ff02'; // 置き換えたいカラーコード (ここでは赤色 #FF0000 に設定)
+          targetColorCode: '#35ff02',
+        //   黄色のカラーコードは#FFFF00
+          img: null,
+          img2: null,
+        wa_color: ['#fef4f4', '#96514d', '#e6b422', '#006e54', '#fdeff2', '#8d6449', '#d9a62e', '#00a381', '#e9dfe5', '#deb068', '#d3a243', '#38b48b', '#e4d2d8', '#bf794e', '#c89932', '#00a497', '#f6bfbc', '#bc763c', '#d0af4c', '#80aba9', '#f5b1aa', '#b98c46', '#8b968d', '#5c9291', '#f5b199', '#b79b5b', '#6e7955', '#478384', '#efab93', '#b77b57', '#767c6b', '#43676b', '#f2a0a1', '#b68d4c', '#888e7e', '#80989b', '#f0908d', '#ad7d4c', '#5a544b', '#2c4f54', '#ee827c', '#ad7d4c', '#56564b', '#1f3134', '#f09199', '#ae7c4f', '#555647', '#47585c', '#f4b3c2', '#ad7e4e', '#494a41', '#485859', '#eebbcb', '#ae7c58', '#6b6f59', '#6c848d', '#e8d3c7', '#a86f4c', '#474b42', '#53727d', '#e8d3d1', '#946243', '#333631', '#5b7e91', '#e6cde3', '#917347', '#5b6356', '#426579', '#e5abbe', '#956f29', '#726250', '#4c6473', '#e597b2', '#8c7042', '#9d896c', '#455765', '#e198b4', '#7b6c3e', '#94846a', '#44617b', '#e4ab9b', '#d8a373', '#897858', '#393f4c', '#e09e87', '#cd8c5c', '#716246', '#393e4f', '#d69090', '#cd5e3c', '#cbb994', '#203744', '#d4acad', '#cb8347', '#d6c6af', '#4d4c61', '#c97586', '#c37854', '#bfa46f', '#eaf4fc', '#c099a0', '#c38743', '#9e9478', '#eaedf7', '#b88884', '#c39143', '#a59564', '#e8ecef', '#b48a76', '#bf783a', '#715c1f', '#ebf6f7', '#a86965', '#bb5535', '#c7b370', '#c1e4e9', '#a25768', '#bb5520', '#dcd3b2', '#bce2e8', '#ec6d71', '#b55233', '#a19361', '#a2d7dd', '#eb6ea5', '#aa4f37', '#8f8667', '#abced8', '#e95295', '#9f563a', '#887938', '#a0d8ef', '#e7609e', '#9f563a', '#6a5d21', '#89c3eb', '#d0576b', '#9a493f', '#918754', '#84a2d4', '#c85179', '#98623c', '#a69425', '#83ccd2', '#e9546b', '#965042', '#ada250', '#84b9cb', '#e95464', '#965036', '#938b4b', '#698aab', '#c85554', '#95483f', '#8c8861', '#008899', '#c53d43', '#954e2a', '#a1a46d', '#00a3af', '#e83929', '#8f2e14', '#726d40', '#2a83a2', '#e60033', '#8a3319', '#928c36', '#59b9c6', '#e2041b', '#8a3b00', '#dccb18', '#2ca9e1', '#d7003a', '#852e19', '#d7cf3a', '#38a1db', '#c9171e', '#7b4741', '#c5c56a', '#0095d9', '#d3381c', '#773c30', '#c3d825', '#0094c8', '#ce5242', '#783c1d', '#b8d200', '#2792c3', '#d9333f', '#762f07', '#e0ebaf', '#007bbb', '#b94047', '#752100', '#d8e698', '#5383c3', '#ba2636', '#6c3524', '#c7dc68', '#5a79ba', '#b7282e', '#683f36', '#99ab4e', '#4c6cb3', '#a73836', '#664032', '#7b8d42', '#3e62ad', '#9e3d3f', '#6d3c32', '#69821b', '#1e50a2', '#a22041', '#583822', '#aacf53', '#507ea4', '#a22041', '#6c2c2f', '#b0ca71', '#19448e', '#f8f4e6', '#640125', '#b9d08b', '#164a84', '#ede4cd', '#f8b862', '#839b5c', '#165e83', '#e9e4d4', '#f6ad49', '#cee4ae', '#274a78', '#ebe1a9', '#f39800', '#82ae46', '#2a4073', '#f2f2b0', '#f08300', '#a8c97f', '#223a70', '#e4dc8a', '#ec6d51', '#9ba88d', '#192f60', '#f8e58c', '#ee7948', '#c8d5bb', '#1c305c', '#ddbb99', '#ed6d3d', '#c1d8ac', '#0f2350', '#d7a98c', '#ec6800', '#a8bf93', '#17184b', '#f2c9ac', '#ec6800', '#769164', '#0d0015', '#fff1cf', '#ee7800', '#d6e9ca', '#bbc8e6', '#fddea5', '#eb6238', '#93ca76', '#bbbcde', '#fce2c4', '#ea5506', '#93b881', '#8491c3', '#fde8d0', '#ea5506', '#badcad', '#8491c3', '#f9c89b', '#eb6101', '#97a791', '#4d5aaf', '#f7bd8f', '#e49e61', '#98d98e', '#4d5aaf', '#f6b894', '#e45e32', '#88cb7f', '#4a488e', '#f4dda5', '#e17b34', '#69b076', '#4d4398', '#f1bf99', '#dd7a56', '#6b7b6e', '#5654a2', '#f1bf99', '#db8449', '#bed2c3', '#706caa', '#efcd9a', '#d66a35', '#93b69c', '#68699b', '#efcd9a', '#ffd900', '#a6c8b2', '#867ba9', '#f0cfa0', '#ffd900', '#47885e', '#dbd0e6', '#edd3a1', '#ffea00', '#316745', '#a59aca', '#e0c38c', '#ffec47', '#68be8d', '#7058a3', '#f3bf88', '#fef263', '#3eb370', '#674598', '#f7b977', '#fcd575', '#007b43', '#674196', '#f19072', '#fbd26b', '#bed3ca', '#9079ad', '#f19072', '#f5e56b', '#92b5a9', '#745399', '#ee836f', '#eec362', '#7ebea5', '#65318e', '#eb9b6f', '#ebd842', '#7ebeab', '#522f60', '#e0815e', '#ffdb4f', '#028760', '#493759', '#df7163', '#fbca4d', '#3b7960', '#2e2930', '#d57c6b', '#fcc800', '#2f5d50', '#884898', '#d0826c', '#f8b500', '#3a5b52', '#c0a2c7', '#ca8269', '#fabf14', '#475950', '#460e44', '#bb5548', '#f7c114', '#00552e', '#74325c', '#ab6953', '#e6b422', '#005243', '#55295b'],
+
+        eye_0: [400, 600],
+        eye_1: [1000, 600],
+        }
+      },
+      mounted() {
+        this.setup();
+      },
+      watch: {
+    message: function(newValue, oldValue) {
+        // console.log(`messageが変更されました: ${oldValue} => ${newValue}`);
+        this.setup(true);
+      }
+    },
+      methods: {
+        update() {
+          // ボタンがクリックされたときに、フォームの値を更新する
+          this.moji = document.getElementById("moji").value;
+          this.mojiSize = document.getElementById("mojiSize").value;
+          this.moji_x = document.getElementById("moji_x").value;
+          this.moji_y = document.getElementById("moji_y").value;
+          this.eye_0_x = document.getElementById("eye_0_x").value;
+          this.eye_0_y = document.getElementById("eye_0_y").value;
+          this.eye_1_x = document.getElementById("eye_1_x").value;
+          this.eye_1_y = document.getElementById("eye_1_y").value;
+        },
+        download_it() {
+          // ダウンロード処理
+        },
+        // let randomIndex = Math.floor(Math.random() * wa_color.length); を関数にする
+        randomIndex() {
+          return Math.floor(Math.random() * this.wa_color.length);
+        },
+        
+
+        // wa_colorからランダムに色を取得して、new_colorにセットする
+        random_color_to_wa_color() {
+          this.new_color = this.wa_color[this.randomIndex()];
+          this.setup(true);
+        },
+
+        // p5.jsのsetupを行う関数
+        setup(UPDATE_FLAG) {
+            let new_color = this.new_color;
+            let targetColorCode = this.targetColorCode;
+            let eye_0 = this.eye_0;
+            let eye_1 = this.eye_1;
+            console.log(new_color);
+            const s = ( p ) => {
+                // すでに読み込まれたcanvasがあれば削除する
+   
+                let img;
+                let img2;
+                p.preload = function(){
+                    // 画像を読み込む
+                    img = p.loadImage('./35ff02.png');
+                    img2 = p.loadImage('./x.png');
+                }
+
+                p.setup = function() {
+                    UPDATE_FLAG ? p.remove() : null;
+
+                    p.createCanvas(img.width, img.height);
+                    p.image(img, 0, 0);
+
+                    p.loadPixels();
+
+                    // 画像内の各ピクセルをチェックして特定のカラーコードを置き換える
+                    for (let i = 0; i < p.pixels.length; i += 4) {
+                        let r = p.pixels[i];
+                        let g = p.pixels[i + 1];
+                        let b = p.pixels[i + 2];
+
+                        let currentColorCode = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+                        // ピクセルのカラーコードが特定のカラーコードと一致する場合、置き換える
+                        if (currentColorCode === targetColorCode) {
+                            // let replacementRGB = hexToRgb('#ff0000');
+                            let replacementRGB = hexToRgb(new_color);
+                            // let replacementRGB = hexToRgb('#FFFF00');
+                            p.pixels[i] = replacementRGB.r;
+                            p.pixels[i + 1] = replacementRGB.g;
+                            p.pixels[i + 2] = replacementRGB.b;
+                        }
+                    }
+
+                    p.updatePixels();
+
+                        // eye_0の位置に指定したファイル名の画像を表示する
+    p.image(
+        img2
+        , eye_0[0], eye_0[1]
+    );
+    p.image(
+        img2
+        , eye_1[0], eye_1[1]
+    );
+
+
+                };
+
+            };
+            // this.targetColorCode = new_color;
+
+            let myp5 = new p5(s);
+
+        },
+      },
+    });
+
+    app.mount('#app');
+
+
+  </script>
+</body>
+</html>
