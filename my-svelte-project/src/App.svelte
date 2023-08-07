@@ -590,7 +590,7 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 	{#each hello_fetch_data as item, index}
 	<br>
 	<br>
-	
+
 	<li>		
 		<!-- <div>id: {item.id}</div> -->
 		<!-- <div>tag:  -->
@@ -649,6 +649,7 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 			<!-- <li>comment: {comments_and_reply[INDEX]['comment']}</li> -->
 			<li>
 				{comments_and_reply[INDEX]['comment']}
+				<button on:click={() => user_and_fetch_hello(comments_and_reply[INDEX]['username'])}>{comments_and_reply[INDEX]['username']}</button>
 				<button on:click={fetch_delete_comment(comments_and_reply[INDEX]['id'])}>fetch_delete_comment</button>
 			</li>
 
@@ -663,10 +664,9 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 			<!-- <li>user_id: {comments_and_reply[INDEX]['user_id']}</li> -->
 
 			<!-- <li>username: {comments_and_reply[INDEX]['username']}</li> -->
-			<li>
-				<!-- {comments_and_reply[INDEX]['username']} -->
-				<button on:click={() => user_and_fetch_hello(comments_and_reply[INDEX]['username'])}>{comments_and_reply[INDEX]['username']}</button>
-			</li>
+
+			<!-- {comments_and_reply[INDEX]['username']} -->
+			<!-- <button on:click={() => user_and_fetch_hello(comments_and_reply[INDEX]['username'])}>{comments_and_reply[INDEX]['username']}</button> -->
 
 				<!-- fetch_insert_comment_reply -->
 				<input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
