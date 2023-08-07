@@ -588,9 +588,13 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 
 <ul>
 	{#each hello_fetch_data as item, index}
+	<br>
+	<br>
+	
 	<li>		
 		<!-- <div>id: {item.id}</div> -->
-		<div>tag: 
+		<!-- <div>tag:  -->
+		<div>
 			{#each item.tags as tags, INDEX}
 			<!-- <span>id: {tags.id}</span> -->
 			<!-- <span>{tags.tag}, </span> -->
@@ -608,8 +612,15 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 			<button on:click={fetch_insert_tag(item.id)}>fetch_insert_tag</button>
 		</div>
 
-		<button on:click={fetch_delete_link(item.id)}>fetch_delete_link</button>
-		<a href={item.link} target="_blank" class="link_text">{item.link}</a>
+
+		<ul>
+			<li>
+			<a href={item.link} target="_blank" class="link_text">{item.link}</a>
+			<button on:click={fetch_delete_link(item.id)}>fetch_delete_link</button>
+			</li>
+		</ul>
+
+		
 		<!-- <div>created_at: {item.created_at}</div> -->
 		<!-- <div>updated_at: {item.updated_at}</div> -->
 		<!-- <div>user_id: {item.user_id}</div> -->
@@ -674,6 +685,7 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 					<li>
 						{comment_reply['reply']}
 						<button on:click={() => user_and_fetch_hello(comment_reply['username'])}>{comment_reply['username']}</button>
+						<button on:click={fetch_delete_comment_reply(comment_reply['id'])}>fetch_delete_comment_reply</button>
 					</li>
 
 					<!-- <li>updated_at: {comment_reply['updated_at']}</li> -->
@@ -683,7 +695,8 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 					<!-- <li>{comment_reply['username']}</li> -->
 
 
-					<button on:click={fetch_delete_comment_reply(comment_reply['id'])}>fetch_delete_comment_reply</button>
+					<!-- <button on:click={fetch_delete_comment_reply(comment_reply['id'])}>fetch_delete_comment_reply</button> -->
+
 				{/each}</ul>
 			</li>
 		{/each}</ul>
