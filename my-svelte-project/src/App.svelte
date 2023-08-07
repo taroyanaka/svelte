@@ -528,8 +528,10 @@ onMount(async () => {
 
 
 
+name: <input bind:value={NAME} type="text" placeholder="name">
+password: <input bind:value={PASSWORD} type="password" placeholder="password">
 
-<div>
+<!-- <div>
 	{ERROR_MESSAGE}
 	{#if ERROR_MESSAGE}
 		<button on:click={remove_error_message}>remove_error_message</button>
@@ -551,8 +553,6 @@ onMount(async () => {
 	<input bind:value={USER} type="text" placeholder="USER">
 </div>
 <div>
-	<input bind:value={NAME} type="text" placeholder="name">
-	<input bind:value={PASSWORD} type="text" placeholder="password">
 	<input bind:value={TEST_MODE} type="text" placeholder="TEST_MODE">
 </div>
 <div>
@@ -565,15 +565,15 @@ onMount(async () => {
 	<button on:click={() => test_sample_exe3()}>test_sample_exe3</button>
 	<button on:click={() => test_sample_exe4()}>test_sample_exe4</button>
 	<button on:click={() => test_sample_exe5()}>test_sample_exe5</button>
-</div>
+</div> -->
 
 
 
 
 <div>
-	<input bind:value={LINK} type="text" placeholder="link_url" class="link">
+	link: <input bind:value={LINK} type="text" placeholder="link_url" class="link">
 	<button on:click={fetch_insert_link} class="insert_link">insert_link</button>
-	<button on:click={() => fetch_hello({})}>clear condition</button>
+	<button on:click={() => fetch_hello({})}>CLEAR</button>
 
 	<!-- <input bind:value={ORDER_BY} type="text" placeholder="ORDER_BY"> -->
 	<!-- ORDER_BYをDESCとASCをswitchする(デフォルトはDESC) -->
@@ -609,8 +609,8 @@ onMount(async () => {
 		</div>
 
 		<button on:click={fetch_delete_link(item.id)}>fetch_delete_link</button>
-		<a href={item.link} target="_blank">{item.link}</a>
-		<div>created_at: {item.created_at}</div>
+		<a href={item.link} target="_blank" class="link_text">{item.link}</a>
+		<!-- <div>created_at: {item.created_at}</div> -->
 		<!-- <div>updated_at: {item.updated_at}</div> -->
 		<!-- <div>user_id: {item.user_id}</div> -->
 
@@ -635,26 +635,54 @@ onMount(async () => {
 			<!-- <li>KOME1: {comments_and_reply['reply']}</li> -->
 			<!-- <li>KOME2: {comments_and_reply['comment']}</li> -->
 
-			<li>comment: {comments_and_reply[INDEX]['comment']}</li>
-			<li>created_at: {comments_and_reply[INDEX]['created_at']}</li>
-			<!-- <li>id: {comments_and_reply[INDEX]['id']}</li> -->
-			<button on:click={fetch_delete_comment(comments_and_reply[INDEX]['id'])}>fetch_delete_comment</button>
-			<li>updated_at: {comments_and_reply[INDEX]['updated_at']}</li>
-			<!-- <li>user_id: {comments_and_reply[INDEX]['user_id']}</li> -->
-			<li>username: {comments_and_reply[INDEX]['username']}</li>
+			<!-- <li>comment: {comments_and_reply[INDEX]['comment']}</li> -->
+			<li>
+				{comments_and_reply[INDEX]['comment']}
+				<button on:click={fetch_delete_comment(comments_and_reply[INDEX]['id'])}>fetch_delete_comment</button>
+			</li>
 
-			<!-- fetch_insert_comment_reply -->
-			<input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
-			<button on:click={fetch_insert_comment_reply(comments_and_reply[INDEX]['id'])}>fetch_insert_comment_reply</button>
-			<li class="reply_zone">comment_replies:
+			<!-- <li>created_at: {comments_and_reply[INDEX]['created_at']}</li> -->
+			<!-- <li>id: {comments_and_reply[INDEX]['id']}</li> -->
+
+
+			<!-- <button on:click={fetch_delete_comment(comments_and_reply[INDEX]['id'])}>fetch_delete_comment</button> -->
+
+			
+			<!-- <li>updated_at: {comments_and_reply[INDEX]['updated_at']}</li> -->
+			<!-- <li>user_id: {comments_and_reply[INDEX]['user_id']}</li> -->
+
+			<!-- <li>username: {comments_and_reply[INDEX]['username']}</li> -->
+			<li>
+				<!-- {comments_and_reply[INDEX]['username']} -->
+				<button on:click={() => user_and_fetch_hello(comments_and_reply[INDEX]['username'])}>{comments_and_reply[INDEX]['username']}</button>
+			</li>
+
+				<!-- fetch_insert_comment_reply -->
+				<input bind:value={COMMENT_REPLY} type="text" placeholder="comment_reply">
+				<button on:click={fetch_insert_comment_reply(comments_and_reply[INDEX]['id'])}>fetch_insert_comment_reply</button>
+
+
+			<li class="reply_zone">
+			<!-- <li class="reply_zone">comment_replies: -->
+
 				<ul>{#each comments_and_reply['comment_replies'] as comment_reply, INDEX}
 					<!-- <li>comment_reply: {comment_reply['comment_reply']}</li> -->
 					<!-- <li>created_at: {comment_reply['created_at']}</li> -->
 					<!-- <li>id: {comment_reply['id']}</li> -->
-					<li>reply: {comment_reply['reply']}</li>
+
+					<!-- <li>reply: {comment_reply['reply']}</li> -->
+					<li>
+						{comment_reply['reply']}
+						<button on:click={() => user_and_fetch_hello(comment_reply['username'])}>{comment_reply['username']}</button>
+					</li>
+
 					<!-- <li>updated_at: {comment_reply['updated_at']}</li> -->
 					<!-- <li>user_id: {comment_reply['user_id']}</li> -->
-					<li>username: {comment_reply['username']}</li>
+
+					<!-- <li>username: {comment_reply['username']}</li> -->
+					<!-- <li>{comment_reply['username']}</li> -->
+
+
 					<button on:click={fetch_delete_comment_reply(comment_reply['id'])}>fetch_delete_comment_reply</button>
 				{/each}</ul>
 			</li>
@@ -670,6 +698,10 @@ onMount(async () => {
 <style>
 	.comment_zone, .reply_zone{
 		margin-left: 2rem;
+	}
+	.link_text{
+		display: block;
+		font-size: 2rem;
 	}
 
 	@media (min-width: 640px) {
