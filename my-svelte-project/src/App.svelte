@@ -709,6 +709,9 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 </ul>
 
 
+<footer>
+  <p>Version 0.0.0.1</p>
+</footer>
 
 
 <style>
