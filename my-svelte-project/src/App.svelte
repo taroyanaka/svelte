@@ -35,6 +35,9 @@ let ERROR_MESSAGE_STACK = [];
 let SUCCESS_MESSAGE_STACK = [];
 let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 
+// let DOMAIN_NAME = 'http://localhost:8000/';
+let DOMAIN_NAME = 'https://spectrum-whip-sulfur.glitch.me/';
+
 
 
 const test_db_init_only_set_name_password_test_mode = async () =>{
@@ -43,7 +46,7 @@ const test_db_init_only_set_name_password_test_mode = async () =>{
 const test_db_init_on_start = async () =>{
 	try {
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
-	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
+	RESPONSE = await (await fetch(DOMAIN_NAME+'test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
 	} catch (error) {
 	ERROR_MESSAGE = error.message;
@@ -52,7 +55,7 @@ const test_db_init_on_start = async () =>{
 const test_db_init_on_end = async () =>{
 	try {
 	(NAME = 'testuser',PASSWORD = 'duct_mean_fuckst1ck',TEST_MODE = 'TEST_MODE');
-	RESPONSE = await (await fetch('http://localhost:8000/test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
+	RESPONSE = await (await fetch(DOMAIN_NAME+'test_db_init', get_POST_object({ name: NAME, password: PASSWORD, test_mode: TEST_MODE }))).json()
 	RESPONSE.result === 'fail' ? (()=>{throw new Error(RESPONSE.error)})() : null;
 	} catch (error) {
 	ERROR_MESSAGE = error.message;
@@ -360,7 +363,7 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='id', R
 		if(ORDER_BY_COLUMN) {get_param_array.push(`order_by_column=${ORDER_BY_COLUMN}`)};
 		if(REQ_TAG) {get_param_array.push(`tag=${REQ_TAG}`)};
 		if(USER) {get_param_array.push(`user=${USER}`)};
-		const endpoint = 'http://localhost:8000/read_all';
+		const endpoint = DOMAIN_NAME+'read_all';
 		const get_param = get_param_array.join('&');
 		return `${endpoint}?${get_param}`;
 	};
@@ -404,50 +407,50 @@ const is_include_WHITE_LIST_URL = (target_url_str, WHITE_LIST_URL_ARRAY) => WHIT
 let hoge = null;
 const fetch_insert_link = async () => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'insert_link', get_POST_object({ name: NAME, password: PASSWORD, link: LINK }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 };
 const fetch_delete_link = async (LINK_ID) => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'delete_link', get_POST_object({ name: NAME, password: PASSWORD, id: LINK_ID }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 }
 const fetch_like_increment_or_decrement = async (LINK_ID) => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json()
+	RESPONSE = await (await fetch(DOMAIN_NAME+'like_increment_or_decrement', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID }))).json()
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 };
 const fetch_insert_comment = async (Link_id) => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: Link_id, comment: COMMENT }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'insert_comment', get_POST_object({ name: NAME, password: PASSWORD, link_id: Link_id, comment: COMMENT }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 };
 const fetch_delete_comment = async (COMMENT_ID) => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'delete_comment', get_POST_object({ name: NAME, password: PASSWORD, comment_id: COMMENT_ID }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 }
 const fetch_insert_comment_reply = async (Comment_id) => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: Comment_id, comment_reply: COMMENT_REPLY }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'insert_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_id: Comment_id, comment_reply: COMMENT_REPLY }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 };
 const fetch_delete_comment_reply = async (Comment_reply_id) => {
 	try {
-	RESPONSE = await (await fetch('http://localhost:8000/delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: Comment_reply_id }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'delete_comment_reply', get_POST_object({ name: NAME, password: PASSWORD, comment_reply_id: Comment_reply_id }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 };
 const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
 	try {
 	TAG = TAG_PARAM || TAG_VAL.value;
-	RESPONSE = await (await fetch('http://localhost:8000/insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
+	RESPONSE = await (await fetch(DOMAIN_NAME+'insert_tag', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID, tag: TAG }))).json();
 	await response_handling(RESPONSE);
 	} catch (error) {ERROR_MESSAGE = error.message;}
 };
@@ -455,7 +458,7 @@ const fetch_insert_tag = async (LINK_ID, TAG_PARAM) => {
 
 const fetch_get_collect_value_for_test = async () => {
 	try {
-	const RESULT_OF_TEST = await (await fetch('http://localhost:8000/get_collect_value_for_test', get_POST_object({ name: NAME, password: PASSWORD }))).json();
+	const RESULT_OF_TEST = await (await fetch(DOMAIN_NAME+'get_collect_value_for_test', get_POST_object({ name: NAME, password: PASSWORD }))).json();
 	COLLECT_VALUE = RESULT_OF_TEST.message;
 	} catch (error) {
 	console.log(error);
@@ -463,7 +466,7 @@ const fetch_get_collect_value_for_test = async () => {
 };
 
 const fetch_get_tags_for_autocomplete = async () => {
-	const json = await (await fetch('http://localhost:8000/get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
+	const json = await (await fetch(DOMAIN_NAME+'get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
 					.json();
 	const RES = await json;
 	ALL_TAGS = await RES.message;
