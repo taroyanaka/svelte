@@ -38,6 +38,17 @@ let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 // let DOMAIN_NAME = 'http://localhost:8000/';
 let DOMAIN_NAME = 'https://spectrum-whip-sulfur.glitch.me/';
 
+// footerを開閉可能にする関数
+const toggle_footer = () => {
+	// openはcssのクラス名footer_openが適用される
+	// closeはcssのクラス名footer_closeが適用される
+
+	// footerの要素を取得
+	const footer = document.getElementById('footer');
+	footer.style = footer.className.includes('footer_open') ? 'display: none;' : 'display: block;';
+	footer.className = footer.className.includes('footer_open') ? 'footer_close' : 'footer_open';
+	
+}
 
 
 const test_db_init_only_set_name_password_test_mode = async () =>{
@@ -709,10 +720,19 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 </ul>
 
 
-<footer>
+<br>
+<!-- footerを開閉可能にする -->
+<button on:click={toggle_footer}>toggle_footer</button>
+<footer class="footer_open" id="footer" style="display: block;">
   <p>Version 0.0.0.1</p>
+  <p>client side hosting: </p><a href="https://taroyanaka.github.io/svelte/">https://taroyanaka.github.io/svelte/</a>
+  <p>server side hosting: </p><a href="https://glitch.com/edit/#!/spectrum-whip-sulfur?path=server.js%3A3%3A0">https://glitch.com/edit/#!/spectrum-whip-sulfur?path=server.js%3A3%3A0</a>
+  <p>client side source code: <p><a href="https://github.com/taroyanaka/svelte/">https://github.com/taroyanaka/svelte/</a>
+  <p>server side source code: <p><a href="https://github.com/taroyanaka/duct/">https://github.com/taroyanaka/duct/</a>
 </footer>
 
+<!-- :ja クライアント -->
+<!-- :en client -->
 
 <style>
 	.comment_zone, .reply_zone{
