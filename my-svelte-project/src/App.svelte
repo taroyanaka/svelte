@@ -35,8 +35,8 @@ let ERROR_MESSAGE_STACK = [];
 let SUCCESS_MESSAGE_STACK = [];
 let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 
-// let DOMAIN_NAME = 'http://localhost:8000/';
-let DOMAIN_NAME = 'https://spectrum-whip-sulfur.glitch.me/';
+let DOMAIN_NAME = 'http://localhost:8000/';
+// let DOMAIN_NAME = 'https://spectrum-whip-sulfur.glitch.me/';
 
 // footerを開閉可能にする関数
 const toggle_footer = () => {
