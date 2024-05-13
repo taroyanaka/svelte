@@ -64,7 +64,7 @@ GitHub Copilot: SvelteアプリケーションをGitHub Pagesにデプロイす�
     🙅‍♀️間違い: ソースを main ブランチに設定します。
     🙆‍♀️正解: githubのsettingsのpagesのブランチの項目は gh-pages /(root)
 
-   - ルートを `/(root)` に設定します。
+   - ルートをgh-pagesの `/(root)` に設定します。
    - `Save` をクリックして変更を保存します。
 
 5. ビルドされたSvelteアプリケーションをGitHub Pagesにデプロイします。以下の手順を実行して、ビルドされたSvelteアプリケーションをGitHub Pagesにデプロイしてください。
