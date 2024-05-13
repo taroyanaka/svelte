@@ -4,6 +4,16 @@ import { afterUpdate } from 'svelte';
 
 // $: if(fetch_message) {fetch_hello({});console.log("fetch_message");}
 
+
+let list_only_safe = true;
+const change_list_safe = async () => {
+	console.log("change_list_safe");
+	list_only_safe ? list_only_safe = false : list_only_safe = true;
+	await fetch_hello({});
+}
+
+
+
 let hello_fetch_data = [];
 let NAME = 'user1';
 let TEST_MODE = 'TEST_MODE';
@@ -361,6 +371,15 @@ const test_sample_exe5 = async () => {
 	});
 }
 
+const exe_list_only_safe = (Hello_Fetch_Data) => {
+	// このデータのlinkにtktube, 7mmtvが含まれている場合はfilterで除外する
+	const safe_list = Hello_Fetch_Data.filter((item) =>{
+		return !item.link.includes('tktube') && !item.link.includes('7mmtv') && !item.link.includes('musescore') && !item.link.includes('youtube')
+	});
+	return list_only_safe ? safe_list : Hello_Fetch_Data;
+}
+
+
 const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='id', REQ_TAG_PARAM, USER_PARAM}) => {
 	console.log(ORDER_BY_COLUMN_PARAM);
 	try {
@@ -384,6 +403,8 @@ const fetch_hello = async ({ORDER_BY_PARAM='DESC', ORDER_BY_COLUMN_PARAM='id', R
 	// pre_resultが空の場合はエラーを投げる
 	if(pre_result.length === 0) throw new Error('条件に一致するデータがありませんでした');
 	hello_fetch_data = pre_result.message;
+	hello_fetch_data = exe_list_only_safe(hello_fetch_data);
+	console.log("done");
 	} catch (error) {
 		console.log(error);
 		ERROR_MESSAGE = error.message;
@@ -477,10 +498,12 @@ const fetch_get_collect_value_for_test = async () => {
 };
 
 const fetch_get_tags_for_autocomplete = async () => {
+	console.log("fetch_get_tags_for_autocomplete");
 	const json = await (await fetch(DOMAIN_NAME+'get_tags_for_autocomplete', get_POST_object({ name: NAME, password: PASSWORD })))
 					.json();
 	const RES = await json;
 	ALL_TAGS = await RES.message;
+	console.log(ALL_TAGS);
 };
 
 const remove_error_message = () => ERROR_MESSAGE = "";
@@ -599,6 +622,13 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 	<!-- <button on:click={() => ORDER_BY_COLUMN === 'links.id' ? ORDER_BY_COLUMN = 'created_at' : ORDER_BY_COLUMN === 'created_at' ? ORDER_BY_COLUMN = 'updated_at' : ORDER_BY_COLUMN = 'links.id'}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button> -->
 	<button on:click={() => order_by_column_and_fetch_hello()}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button>
 </div>
+<div>
+	<!-- list_only_safeのtrue/false切り替えのcheckbox -->
+	<!-- <input type="checkbox" bind:checked={list_only_safe} id="list_only_safe"> -->
+	<!-- <input type="checkbox" bind:value={list_only_safe} on:change={fetch_hello({})} id="list_only_safe"> -->
+
+
+</div>
 
 <ul>
 	{#each hello_fetch_data as item, index}
@@ -617,7 +647,7 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 		</div>
 
 		<div>
-			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" id="hoge" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
+			<input bind:this={TAG_VAL} list="autocomplete_list" type="text" name="" bind:value={TAG} placeholder="tag" on:input={fetch_get_tags_for_autocomplete}>
 			<datalist id="autocomplete_list">
 				{#each ALL_TAGS as item, index}
 				<option value={item.tag}>
@@ -651,7 +681,7 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 		<button on:click={fetch_like_increment_or_decrement(item.id)}>like_increment_or_decrement</button>
 
 		<div>
-			<input type="text" name="" id="" bind:value={COMMENT} placeholder="comment">
+			<input type="text" name="" bind:value={COMMENT} placeholder="comment">
 			<button on:click={fetch_insert_comment(item.id)}>fetch_insert_comment</button>
 		</div>
 
@@ -729,6 +759,9 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
   <p>server side hosting: </p><a href="https://glitch.com/edit/#!/spectrum-whip-sulfur?path=server.js%3A3%3A0">https://glitch.com/edit/#!/spectrum-whip-sulfur?path=server.js%3A3%3A0</a>
   <p>client side source code: <p><a href="https://github.com/taroyanaka/svelte/">https://github.com/taroyanaka/svelte/</a>
   <p>server side source code: <p><a href="https://github.com/taroyanaka/duct/">https://github.com/taroyanaka/duct/</a>
+<!-- button list_only_safe switch -->
+<button on:click={() => change_list_safe()}>list_only_safe: {list_only_safe}</button>
+
 </footer>
 
 <!-- :ja クライアント -->
