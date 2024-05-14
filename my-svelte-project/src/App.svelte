@@ -1,4 +1,21 @@
 <script>
+// tagの絞り込み(req_tag_and_fetch_hello)が挙動が遅いしfilter元のfetch_hello_dataが軽いので,
+// クライアント側で絞り込むことにした
+let my_favorite_tag_list = [
+	'チェンソーマン',
+	'犬のかがやき',
+]
+// fetch_hello_dataの中からtagが含まれているものだけを返す関数
+const filter_by_tag_list = (fetch_hello_data, My_Favorite_Tag_List) => {
+	// My_Favorite_Tag_Listが空の場合はfetch_hello_dataをそのまま返す
+	if(My_Favorite_Tag_List.length === 0) return fetch_hello_data;
+	
+	return fetch_hello_data.filter((item) => {
+		return My_Favorite_Tag_List.some((tag) => item.tags.some((item_tag) => item_tag.tag === tag));
+	});
+}
+
+
 import { onMount } from 'svelte';
 import { afterUpdate } from 'svelte';
 
@@ -562,7 +579,12 @@ onMount(async () => {
 </script>
 
 
-
+<!-- filter_by_tag_list button -->
+<button on:click={() => hello_fetch_data = filter_by_tag_list(hello_fetch_data, my_favorite_tag_list)}>filter_by_tag_list</button>
+<!-- my_favorite_tag_listをlist表示 -->
+filter by {#each my_favorite_tag_list as item, index}
+	<div>{item}</div>
+{/each}
 
 
 name: <input bind:value={NAME} type="text" placeholder="name">
