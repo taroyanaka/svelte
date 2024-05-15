@@ -2,9 +2,11 @@
 // tagの絞り込み(req_tag_and_fetch_hello)が挙動が遅いしfilter元のfetch_hello_dataが軽いので,
 // クライアント側で絞り込むことにした
 const filter_by_bookmarks = async () => {
-	if(hello_fetch_data.length === 0) return hello_fetch_data;
+	// if(hello_fetch_data.length === 0) return hello_fetch_data;
 	// BOOKMARKSを元にfetch_hello_dataを絞り込む
-	if(BOOKMARKS.length === 0) return fetch_hello_data;
+	if(BOOKMARKS.length === 0){
+		filtered_by_bookmarks = [];
+	}
 	filtered_by_bookmarks = hello_fetch_data.filter((item) => {
 		return BOOKMARKS.some((bookmark) => item.tags.some((item_tag) => item_tag.tag === bookmark.tag));
 	});
@@ -537,12 +539,16 @@ const fetch_get_bookmarks = async () => {
 	console.log(error);
 	}
 };
-// '/delete_bookmark', (req, res) => {
-const fetch_delete_bookmark = async (LINK_ID) => {
+
+const fetch_delete_bookmark = async (Tag_Id) => {
 	try {
-	const json = await (await fetch(DOMAIN_NAME+'delete_bookmark', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID })))
+		console.log(Tag_Id);
+	const json = await (await fetch(DOMAIN_NAME+'delete_bookmark', get_POST_object({ name: NAME, password: PASSWORD, tag_id: Tag_Id })))
 					.json();
 	const RES = await json;
+	console.log(RES);
+	await fetch_get_bookmarks();
+	filter_by_bookmarks();
 	} catch (error) {
 	console.log(error);
 	}
@@ -556,6 +562,7 @@ const fetch_insert_bookmark = async (Tag_Id) => {
 	const json = await (await fetch(DOMAIN_NAME+'insert_bookmark', get_POST_object({ name: NAME, password: PASSWORD, tag_id: Tag_Id })))
 					.json();
 	const RES = await json;
+	await fetch_get_bookmarks();
 	} catch (error) {
 	console.log(error);
 	}
@@ -622,9 +629,15 @@ onMount(async () => {
 <button on:click={() => clear_filtered_by_bookmarks()}>clear_filtered_by_bookmarks</button>
 <button on:click={() => filter_by_bookmarks()}>filter_by_bookmarks</button>
 <!-- BOOKMARKSをlist表示 -->
-BOOKMARKS filter {#each BOOKMARKS as item, index}
-	<div>{item.tag}</div>
+<div>
+BOOKMARKS filter
+<br>
+{#each BOOKMARKS as item, index}
+	<span>{item.tag}</span>
+	<!-- delete_bookmark -->
+	<button on:click={() => fetch_delete_bookmark(item.tag_id)}>fetch_delete_bookmark</button>
 {/each}
+</div>
 
 
 name: <input bind:value={NAME} type="text" placeholder="name">
