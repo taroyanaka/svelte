@@ -4,7 +4,6 @@
 const filter_by_bookmarks = async () => {
 	if(hello_fetch_data.length === 0) return hello_fetch_data;
 	// BOOKMARKSを元にfetch_hello_dataを絞り込む
-	await fetch_get_bookmarks();
 	if(BOOKMARKS.length === 0) return fetch_hello_data;
 	filtered_by_bookmarks = hello_fetch_data.filter((item) => {
 		return BOOKMARKS.some((bookmark) => item.tags.some((item_tag) => item_tag.tag === bookmark.tag));
@@ -609,7 +608,7 @@ onMount(async () => {
 	try {
 		await fetch_hello({});
 		await fetch_get_tags_for_autocomplete();
-
+		await fetch_get_bookmarks();
 	} catch (error) {
 		console.log(error);		
 	}
