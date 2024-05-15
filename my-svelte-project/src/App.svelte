@@ -3,6 +3,7 @@
 // クライアント側で絞り込むことにした
 let my_favorite_tag_list = [
 	'チェンソーマン',
+	// 'ジャンプラ',
 	'犬のかがやき',
 ]
 // fetch_hello_dataの中からtagが含まれているものだけを返す関数
@@ -41,6 +42,7 @@ let COMMENT = 'comment1';
 let COMMENT_REPLY = 'reply1';
 let TAG = 'tag1';
 let ALL_TAGS = [];
+let BOOKMARKS = [];
 let RESPONSE;
 let TAG_VAL = "";
 const WHITE_LIST_URL_ARRAY = [
@@ -523,6 +525,42 @@ const fetch_get_tags_for_autocomplete = async () => {
 	console.log(ALL_TAGS);
 };
 
+// '/get_bookmarks', (req, res) => {
+const fetch_get_bookmarks = async () => {
+	try {
+	const json = await (await fetch(DOMAIN_NAME+'get_bookmarks', get_POST_object({ name: NAME, password: PASSWORD })))
+					.json();
+	const RES = await json;
+	BOOKMARKS = await RES.message;
+
+	} catch (error) {
+	console.log(error);
+	}
+};
+// '/delete_bookmark', (req, res) => {
+const fetch_delete_bookmark = async (LINK_ID) => {
+	try {
+	const json = await (await fetch(DOMAIN_NAME+'delete_bookmark', get_POST_object({ name: NAME, password: PASSWORD, link_id: LINK_ID })))
+					.json();
+	const RES = await json;
+	} catch (error) {
+	console.log(error);
+	}
+};
+
+// '/insert_bookmark', (req, res) => {
+const fetch_insert_bookmark = async (Tag_Id) => {
+	try {
+	// 	db.prepare(`SELECT * FROM bookmarks WHERE user_id = ? AND tag_id = ?`).get(user.user_id, req.body.tag_id) ? (()=>{throw new Error('同じbookmarkが存在します')})() : null;
+    // const response = db.prepare(`INSERT INTO bookmarks (user_id, tag_id, created_at, updated_at) VALUES (?, ?, ?, ?)`).run(user.user_id, req.body.tag_id, now(), now());
+	const json = await (await fetch(DOMAIN_NAME+'insert_bookmark', get_POST_object({ name: NAME, password: PASSWORD, tag_id: Tag_Id })))
+					.json();
+	const RES = await json;
+	} catch (error) {
+	console.log(error);
+	}
+};
+
 const remove_error_message = () => ERROR_MESSAGE = "";
 
 // <button on:click={() => ORDER_BY_COLUMN === 'links.id' ? ORDER_BY_COLUMN = 'created_at' : ORDER_BY_COLUMN === 'created_at' ? ORDER_BY_COLUMN = 'updated_at' : ORDER_BY_COLUMN = 'links.id'}>ORDER_BY_COLUMN: {ORDER_BY_COLUMN}</button>
@@ -569,7 +607,8 @@ const user_and_fetch_hello = async (USER) => {
 onMount(async () => {
 	try {
 		await fetch_hello({});
-		await fetch_get_tags_for_autocomplete();	
+		await fetch_get_tags_for_autocomplete();
+
 	} catch (error) {
 		console.log(error);		
 	}
