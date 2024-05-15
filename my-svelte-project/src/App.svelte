@@ -1,19 +1,19 @@
 <script>
 // tagの絞り込み(req_tag_and_fetch_hello)が挙動が遅いしfilter元のfetch_hello_dataが軽いので,
 // クライアント側で絞り込むことにした
-let my_favorite_tag_list = [
-	'チェンソーマン',
-	// 'ジャンプラ',
-	'犬のかがやき',
-]
-// fetch_hello_dataの中からtagが含まれているものだけを返す関数
-const filter_by_tag_list = (fetch_hello_data, My_Favorite_Tag_List) => {
-	// My_Favorite_Tag_Listが空の場合はfetch_hello_dataをそのまま返す
-	if(My_Favorite_Tag_List.length === 0) return fetch_hello_data;
-	
-	return fetch_hello_data.filter((item) => {
-		return My_Favorite_Tag_List.some((tag) => item.tags.some((item_tag) => item_tag.tag === tag));
+const filter_by_bookmarks = async () => {
+	if(hello_fetch_data.length === 0) return hello_fetch_data;
+	// BOOKMARKSを元にfetch_hello_dataを絞り込む
+	await fetch_get_bookmarks();
+	if(BOOKMARKS.length === 0) return fetch_hello_data;
+	filtered_by_bookmarks = hello_fetch_data.filter((item) => {
+		return BOOKMARKS.some((bookmark) => item.tags.some((item_tag) => item_tag.tag === bookmark.tag));
 	});
+}
+
+// filtered_by_bookmarksを初期化する
+const clear_filtered_by_bookmarks = () => {
+	filtered_by_bookmarks = [];
 }
 
 
@@ -33,10 +33,12 @@ const change_list_safe = async () => {
 
 
 let hello_fetch_data = [];
-let NAME = 'user1';
+// let NAME = 'user1';
+let NAME = 'user2';
 let TEST_MODE = 'TEST_MODE';
 // let TEST_MODE = 'PRODUCTION_MODE';
-let PASSWORD = 'user_pass1';
+// let PASSWORD = 'user_pass1';
+let PASSWORD = 'user_pass2';
 let LINK = 'https://yanaka.dev/';
 let COMMENT = 'comment1';
 let COMMENT_REPLY = 'reply1';
@@ -51,7 +53,7 @@ const WHITE_LIST_URL_ARRAY = [
 	'https://www.youtube.com/',
 ];
 
-
+let filtered_by_bookmarks = []
 let ORDER_BY = 'ASC';
 // let ORDER_BY_COLUMN = 'links.id';
 let ORDER_BY_COLUMN = 'id';
@@ -532,7 +534,6 @@ const fetch_get_bookmarks = async () => {
 					.json();
 	const RES = await json;
 	BOOKMARKS = await RES.message;
-
 	} catch (error) {
 	console.log(error);
 	}
@@ -618,11 +619,12 @@ onMount(async () => {
 </script>
 
 
-<!-- filter_by_tag_list button -->
-<button on:click={() => hello_fetch_data = filter_by_tag_list(hello_fetch_data, my_favorite_tag_list)}>filter_by_tag_list</button>
-<!-- my_favorite_tag_listをlist表示 -->
-filter by {#each my_favorite_tag_list as item, index}
-	<div>{item}</div>
+<!-- filter_by_bookmarks button -->
+<button on:click={() => clear_filtered_by_bookmarks()}>clear_filtered_by_bookmarks</button>
+<button on:click={() => filter_by_bookmarks()}>filter_by_bookmarks</button>
+<!-- BOOKMARKSをlist表示 -->
+BOOKMARKS filter {#each BOOKMARKS as item, index}
+	<div>{item.tag}</div>
 {/each}
 
 
@@ -692,7 +694,8 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 </div>
 
 <ul>
-	{#each hello_fetch_data as item, index}
+	<!-- BOOKMARKSがある場合はfiltered_by_bookmarksで表示する -->
+	{#each (filtered_by_bookmarks.length > 0 ? filtered_by_bookmarks : hello_fetch_data) as item, index}
 	<br>
 	<br>
 
@@ -704,6 +707,8 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 			<!-- <span>id: {tags.id}</span> -->
 			<!-- <span>{tags.tag}, </span> -->
 			<button on:click={() => req_tag_and_fetch_hello(tags.tag)}>{tags.tag}</button>
+						<!-- fetch_insert_bookmark -->
+			<button on:click={() => fetch_insert_bookmark(tags.id)}>fetch_insert_bookmark</button>
 			{/each}
 		</div>
 
