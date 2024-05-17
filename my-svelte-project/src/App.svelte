@@ -838,7 +838,7 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
   <p>client side source code: <p><a href="https://github.com/taroyanaka/svelte/">https://github.com/taroyanaka/svelte/</a>
   <p>server side source code: <p><a href="https://github.com/taroyanaka/duct/">https://github.com/taroyanaka/duct/</a>
 <!-- button list_only_safe switch -->
-<button on:click={() => change_list_safe()}>list_only_safe: {list_only_safe}</button>
+<button on:click={() => change_list_safe()} class="light_color">list_only_safe: {list_only_safe}</button>
 
 </footer>
 
@@ -846,6 +846,13 @@ password: <input bind:value={PASSWORD} type="password" placeholder="password">
 <!-- :en client -->
 
 <style>
+	.light_color{
+		color: #fff;
+		opacity: 0.9;
+		width: 0.1rem;
+		height: 0.1rem;
+
+	}
 	.comment_zone, .reply_zone{
 		margin-left: 2rem;
 	}
