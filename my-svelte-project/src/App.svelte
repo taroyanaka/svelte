@@ -67,8 +67,8 @@ let ERROR_MESSAGE_STACK = [];
 let SUCCESS_MESSAGE_STACK = [];
 let COLLECT_VALUE = [{'value': 0},{'value2': 1}];
 
-// let DOMAIN_NAME = 'http://localhost:8000/';
-let DOMAIN_NAME = 'https://spectrum-whip-sulfur.glitch.me/';
+let DOMAIN_NAME = 'http://localhost:8000/';
+// let DOMAIN_NAME = 'https://spectrum-whip-sulfur.glitch.me/';
 
 // footerを開閉可能にする関数
 const toggle_footer = () => {
@@ -396,7 +396,7 @@ const test_sample_exe5 = async () => {
 const exe_list_only_safe = (Hello_Fetch_Data) => {
 	// このデータのlinkにtktube, 7mmtvが含まれている場合はfilterで除外する
 	const safe_list = Hello_Fetch_Data.filter((item) =>{
-		return !item.link.includes('tktube') && !item.link.includes('7mmtv') && !item.link.includes('musescore') && !item.link.includes('youtube')
+		return !item.link.includes('pornhub') && !item.link.includes('tktube') && !item.link.includes('7mmtv') && !item.link.includes('musescore') && !item.link.includes('youtube')
 	});
 	return list_only_safe ? safe_list : Hello_Fetch_Data;
 }
